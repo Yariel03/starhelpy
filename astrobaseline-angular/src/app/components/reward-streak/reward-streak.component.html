@@ -134,13 +134,24 @@
         >
           <!-- Fila principal visible: Checkbox, Ícono, Nombre, Estado y Flecha -->
           <div class="exercise-main-row">
-            <div
+            <button
+              type="button"
               class="exercise-checkbox"
+              [class.checked]="ex.completed"
               (click)="toggleCompletion(ex.id, $event)"
-              title="Marcar como completado"
+              [title]="ex.completed ? 'Marcar como pendiente' : 'Marcar como completado'"
+              [attr.aria-checked]="ex.completed"
             >
-              <span class="check-mark">{{ ex.completed ? '✓' : '' }}</span>
-            </div>
+              @if (ex.completed) {
+                <svg class="check-svg" viewBox="0 0 20 20" fill="currentColor">
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              }
+            </button>
 
             <span class="exercise-icon">{{ ex.icon }}</span>
 
@@ -148,7 +159,7 @@
 
             <div class="row-right-actions">
               <span class="status-chip" [class.done]="ex.completed">
-                {{ ex.completed ? 'Completado' : 'Pendiente' }}
+                {{ ex.completed ? '✓ Completado' : '⏳ Pendiente' }}
               </span>
               <span class="expand-chevron" [class.rotated]="expandedExerciseId() === ex.id">
                 ▼
