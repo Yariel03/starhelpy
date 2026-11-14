@@ -43,6 +43,10 @@ export class NasaDonkiService {
   readonly secondsUntilNextCheck = signal<number>(60);
   readonly checkCount = signal<number>(0);
 
+  // Control de estado de monitoreo activo
+  readonly isMonitoringActive = signal<boolean>(false);
+  private countdownTimer: any = null;
+
   // Mensaje amigable para la mascota Star Helpy
   readonly helpyRadiationAnnouncement = computed(() => {
     const lvl = this.radiationLevel();
@@ -59,24 +63,38 @@ export class NasaDonkiService {
   });
 
   constructor() {
-    this.startRadiationMonitoring();
+    // No se inicia automáticamente: espera a que el astronauta inicie la misión
   }
 
-  // Iniciar monitoreo continuo cada minuto
+  // Iniciar monitoreo continuo cada minuto (solo cuando la misión inicia)
   startRadiationMonitoring(): void {
-    // Primera consulta inmediata
+    if (this.isMonitoringActive()) {
+      return; // Ya está activo, evitar llamadas redundantes
+    }
+    this.isMonitoringActive.set(true);
+
+    // Primera consulta inmediata tras iniciar la misión
     this.checkRadiationStatus();
 
     // Contador regresivo de segundos para la UI
-    setInterval(() => {
+    if (this.countdownTimer) clearInterval(this.countdownTimer);
+    this.countdownTimer = setInterval(() => {
       this.secondsUntilNextCheck.update((s) => (s <= 1 ? 60 : s - 1));
     }, 1000);
 
     // Consulta periódica a NASA DONKI cada 60 segundos (1 minuto)
+    if (this.pollTimer) clearInterval(this.pollTimer);
     this.pollTimer = setInterval(() => {
       this.checkRadiationStatus();
       this.secondsUntilNextCheck.set(60);
     }, this.POLL_INTERVAL_MS);
+  }
+
+  // Detener monitoreo
+  stopRadiationMonitoring(): void {
+    if (this.pollTimer) clearInterval(this.pollTimer);
+    if (this.countdownTimer) clearInterval(this.countdownTimer);
+    this.isMonitoringActive.set(false);
   }
 
   // Consulta al endpoint de NASA DONKI

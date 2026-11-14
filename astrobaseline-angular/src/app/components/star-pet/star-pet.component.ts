@@ -142,6 +142,9 @@ export class StarPetComponent implements OnInit {
     const initialX = Math.max(20, window.innerWidth - 130);
     const initialY = Math.max(80, window.innerHeight - 200);
     this.position.set({ x: initialX, y: initialY });
+
+    // Iniciar monitoreo de radiación espacial NASA DONKI solo tras iniciar la misión
+    this.nasa.startRadiationMonitoring();
   }
 
   // Eventos de arrastre con Ratón

@@ -29,6 +29,7 @@ export class MissionStateService {
 
   // Wizard de Configuración de Misión
   readonly isWizardOpen = signal<boolean>(true);
+  readonly isMissionStarted = signal<boolean>(false);
   readonly missionConfig = signal<MissionConfig>({
     daysInSpace: 60,
     destination: this.config.DESTINATIONS[0],
@@ -247,6 +248,7 @@ export class MissionStateService {
     this.selectedAstronaut.set(cfg.trainingGoal.id);
     this.selectedEnvironment.set(cfg.destination.environmentKey);
     this.isWizardOpen.set(false);
+    this.isMissionStarted.set(true);
   }
 
   /**
