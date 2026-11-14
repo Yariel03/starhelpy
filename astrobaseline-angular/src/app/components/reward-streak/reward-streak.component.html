@@ -1,0 +1,175 @@
+<div class="reward-streak-card">
+  <!-- SECCIÓN SUPERIOR: RACHA ESTILO DUOLINGO -->
+  <div class="streak-header-banner">
+    <div class="streak-main-info">
+      <div class="flame-container">
+        <span class="flame-emoji">🔥</span>
+        <div class="flame-aura"></div>
+      </div>
+
+      <div class="streak-texts">
+        <div class="streak-title-row">
+          <h2 class="streak-title">¡Racha de {{ streakDays() }} Días Activa!</h2>
+          <span class="streak-status-badge">⚡ En Llamas</span>
+        </div>
+        <p class="streak-motto">
+          ¡Disciplina espacial ejemplar! Has cumplido el protocolo de entrenamiento y telemetría sin interrupciones.
+        </p>
+      </div>
+    </div>
+
+    <!-- Píldoras de Recompensas y XP -->
+    <div class="rewards-pills">
+      <div class="reward-pill xp-pill" title="Puntos de experiencia acumulados en microgravedad">
+        <span class="pill-icon">⚡</span>
+        <div class="pill-meta">
+          <span class="pill-val">{{ xpPoints() }} XP</span>
+          <span class="pill-lbl">Puntos Orbitales</span>
+        </div>
+      </div>
+
+      <div class="reward-pill level-pill" title="Nivel alcanzado según la disciplina física">
+        <span class="pill-icon">🏆</span>
+        <div class="pill-meta">
+          <span class="pill-val">{{ currentLevel() }}</span>
+          <span class="pill-lbl">Rango de Rendimiento</span>
+        </div>
+      </div>
+
+      <div class="reward-pill shield-pill" title="Escudo de protección de racha activo">
+        <span class="pill-icon">🛡️</span>
+        <div class="pill-meta">
+          <span class="pill-val">Escudo Activo</span>
+          <span class="pill-lbl">Protección Cero-G</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PISTA VISUAL DE DÍAS CON CÍRCULOS QUE SE ENCIENDEN -->
+  <div class="streak-timeline-section">
+    <div class="timeline-header">
+      <span class="timeline-label">🔥 Historial de Racha y Próximos Hitos:</span>
+      <span class="timeline-sub">Los días completados se iluminan con fuego orbital</span>
+    </div>
+
+    <div class="timeline-track-wrapper">
+      <div class="timeline-track">
+        @for (node of streakNodes(); track node.day) {
+          <div
+            class="day-node"
+            [class.completed]="node.isCompleted"
+            [class.today]="node.isToday"
+            [class.future]="node.isFuture"
+            [title]="node.isCompleted ? 'Día ' + node.day + ' completado con éxito' : (node.isToday ? 'Día ' + node.day + ' (HOY en curso)' : 'Día ' + node.day + ' próximo')"
+          >
+            <!-- Conector entre círculos -->
+            @if (node.day > 1) {
+              <div class="node-connector" [class.active]="node.isCompleted || node.isToday"></div>
+            }
+
+            <div class="circle-box">
+              <span class="circle-number">{{ node.day }}</span>
+              @if (node.isCompleted) {
+                <span class="flame-sparkle">🔥</span>
+              }
+              @if (node.isToday) {
+                <span class="today-sparkle">⚡</span>
+              }
+              @if (node.isFuture) {
+                <span class="lock-sparkle">🔒</span>
+              }
+            </div>
+
+            <span class="node-caption">
+              @if (node.isToday) {
+                <strong class="today-tag">HOY</strong>
+              } @else {
+                Sol {{ node.day }}
+              }
+            </span>
+
+            @if (node.milestone) {
+              <div class="milestone-badge" [class.unlocked]="node.isCompleted || node.isToday">
+                {{ node.milestone }}
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- SECCIÓN INFERIOR: EJERCICIO PARA LA META SELECCIONADA POR EL ASTRONAUTA -->
+  <div class="exercise-protocol-section">
+    <div class="exercise-section-header">
+      <div class="goal-identity">
+        <img [src]="currentGoal().avatar" [alt]="currentGoal().name" class="goal-header-avatar" />
+        <div class="goal-header-meta">
+          <div class="goal-pill-tag">Meta de Entrenamiento Asignada</div>
+          <h3 class="goal-header-title">{{ currentGoal().name }}</h3>
+          <span class="goal-focus-text">{{ currentGoal().archetype }}</span>
+        </div>
+      </div>
+
+      <div class="routine-progress-box">
+        <div class="progress-labels">
+          <span class="progress-title">Progreso del Entrenamiento de Hoy</span>
+          <span class="progress-stat">{{ completedCount() }} / {{ currentExercises().length }} ejercicios ({{ progressPercentage() }}%)</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" [style.width.%]="progressPercentage()"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Enfoque de la rutina en microgravedad -->
+    <div class="routine-brief-box">
+      <span class="brief-icon">🎯</span>
+      <p class="brief-text">
+        <strong>Protocolo Específico:</strong> {{ currentGoal().routineFocus }}
+      </p>
+    </div>
+
+    <!-- Lista interactiva de ejercicios para la meta -->
+    <div class="exercises-grid">
+      @for (ex of currentExercises(); track ex.id) {
+        <div
+          class="exercise-item-card"
+          [class.done]="ex.completed"
+          (click)="toggleExercise(ex.id)"
+        >
+          <div class="exercise-checkbox">
+            <span class="check-mark">{{ ex.completed ? '✓' : '' }}</span>
+          </div>
+
+          <div class="exercise-icon-badge">
+            {{ ex.icon }}
+          </div>
+
+          <div class="exercise-details">
+            <div class="exercise-title-row">
+              <h4 class="exercise-name">{{ ex.name }}</h4>
+              <span class="status-chip" [class.done]="ex.completed">
+                {{ ex.completed ? 'Completado' : 'Pendiente' }}
+              </span>
+            </div>
+
+            <span class="exercise-target">🎯 {{ ex.target }}</span>
+            <p class="exercise-desc">{{ ex.description }}</p>
+          </div>
+        </div>
+      }
+    </div>
+
+    @if (progressPercentage() === 100) {
+      <div class="all-done-banner">
+        <span class="trophy-icon">🎉</span>
+        <div class="banner-texts">
+          <strong>¡Sesión Diaria Completada al 100%!</strong>
+          <p>Has asegurado la preservación muscular y cardiovascular de hoy. Racha protegida y +120 XP acreditados.</p>
+        </div>
+      </div>
+    }
+  </div>
+</div>

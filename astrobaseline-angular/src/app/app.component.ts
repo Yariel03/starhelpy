@@ -9,6 +9,7 @@ import { TrendsChartComponent } from './components/trends-chart/trends-chart.com
 import { QualityHeatmapComponent } from './components/quality-heatmap/quality-heatmap.component';
 import { MissionWizardComponent } from './components/mission-wizard/mission-wizard.component';
 import { RealtimeBpmComponent } from './components/realtime-bpm/realtime-bpm.component';
+import { RewardStreakComponent } from './components/reward-streak/reward-streak.component';
 import { BodyRegionKey, IndicatorKey } from './core/models/indicator.model';
 
 @Component({
@@ -23,6 +24,7 @@ import { BodyRegionKey, IndicatorKey } from './core/models/indicator.model';
     QualityHeatmapComponent,
     MissionWizardComponent,
     RealtimeBpmComponent,
+    RewardStreakComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
