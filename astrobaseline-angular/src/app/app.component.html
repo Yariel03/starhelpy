@@ -204,24 +204,6 @@
               </div>
             }
           </div>
-
-          <!-- Sección de Gráfica de Tendencias -->
-          <div class="trends-section">
-            <div class="trends-controls">
-              <label class="control-label">Evolución Temporal del Indicador:</label>
-              <select
-                [ngModel]="state.selectedIndicatorForTrends()"
-                (ngModelChange)="state.selectedIndicatorForTrends.set($event)"
-                class="form-select inline-select"
-              >
-                @for (key of config.INDICATOR_KEYS; track key) {
-                  <option [value]="key">{{ config.INDICATORS[key].label }}</option>
-                }
-              </select>
-            </div>
-
-            <app-trends-chart></app-trends-chart>
-          </div>
         </div>
       }
 
