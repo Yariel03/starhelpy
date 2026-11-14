@@ -100,7 +100,7 @@
     </div>
   </div>
 
-  <!-- SECCIÓN INFERIOR: EJERCICIO PARA LA META SELECCIONADA POR EL ASTRONAUTA -->
+  <!-- SECCIÓN INFERIOR: EJERCICIOS PARA LA META (SOLO 2, CON DETALLES EXPANDIBLES AL CLIC) -->
   <div class="exercise-protocol-section">
     <div class="exercise-section-header">
       <div class="goal-identity">
@@ -114,7 +114,7 @@
 
       <div class="routine-progress-box">
         <div class="progress-labels">
-          <span class="progress-title">Progreso del Entrenamiento de Hoy</span>
+          <span class="progress-title">Progreso de Hoy</span>
           <span class="progress-stat">{{ completedCount() }} / {{ currentExercises().length }} ejercicios ({{ progressPercentage() }}%)</span>
         </div>
         <div class="progress-bar-bg">
@@ -123,7 +123,7 @@
       </div>
     </div>
 
-    <!-- Enfoque de la rutina en microgravedad -->
+    <!-- Enfoque del protocolo -->
     <div class="routine-brief-box">
       <span class="brief-icon">🎯</span>
       <p class="brief-text">
@@ -131,33 +131,53 @@
       </p>
     </div>
 
-    <!-- Lista interactiva de ejercicios para la meta -->
-    <div class="exercises-grid">
+    <!-- Lista interactiva de los 2 ejercicios -->
+    <div class="exercises-container">
       @for (ex of currentExercises(); track ex.id) {
         <div
-          class="exercise-item-card"
+          class="exercise-accordion-card"
           [class.done]="ex.completed"
-          (click)="toggleExercise(ex.id)"
+          [class.expanded]="expandedExerciseId() === ex.id"
+          (click)="toggleDetails(ex.id)"
         >
-          <div class="exercise-checkbox">
-            <span class="check-mark">{{ ex.completed ? '✓' : '' }}</span>
-          </div>
+          <!-- Fila principal visible: Checkbox, Ícono, Nombre, Estado y Flecha -->
+          <div class="exercise-main-row">
+            <div
+              class="exercise-checkbox"
+              (click)="toggleCompletion(ex.id, $event)"
+              title="Marcar como completado"
+            >
+              <span class="check-mark">{{ ex.completed ? '✓' : '' }}</span>
+            </div>
 
-          <div class="exercise-icon-badge">
-            {{ ex.icon }}
-          </div>
+            <span class="exercise-icon">{{ ex.icon }}</span>
 
-          <div class="exercise-details">
-            <div class="exercise-title-row">
-              <h4 class="exercise-name">{{ ex.name }}</h4>
+            <span class="exercise-title">{{ ex.name }}</span>
+
+            <div class="row-right-actions">
               <span class="status-chip" [class.done]="ex.completed">
                 {{ ex.completed ? 'Completado' : 'Pendiente' }}
               </span>
+              <span class="expand-chevron" [class.rotated]="expandedExerciseId() === ex.id">
+                ▼
+              </span>
             </div>
-
-            <span class="exercise-target">🎯 {{ ex.target }}</span>
-            <p class="exercise-desc">{{ ex.description }}</p>
           </div>
+
+          <!-- Detalles expandibles al dar clic: Series, Repeticiones y Descripción -->
+          @if (expandedExerciseId() === ex.id) {
+            <div class="exercise-details-drawer">
+              <div class="detail-line target-line">
+                <span class="detail-label">🎯 Series & Repeticiones:</span>
+                <span class="detail-value highlight">{{ ex.target }}</span>
+              </div>
+
+              <div class="detail-line desc-line">
+                <span class="detail-label">📋 Descripción Biomecánica:</span>
+                <p class="detail-desc">{{ ex.description }}</p>
+              </div>
+            </div>
+          }
         </div>
       }
     </div>

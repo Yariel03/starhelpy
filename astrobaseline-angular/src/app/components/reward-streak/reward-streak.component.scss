@@ -446,92 +446,95 @@
     }
   }
 
-  .exercises-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 0.85rem;
+  .exercises-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
 
-    .exercise-item-card {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.85rem;
-      padding: 0.85rem 1rem;
+    .exercise-accordion-card {
       background: #ffffff;
       border: 1.5px solid #e2e8f0;
       border-radius: 12px;
+      overflow: hidden;
       cursor: pointer;
       transition: all 0.2s ease;
 
       &:hover {
         border-color: #93c5fd;
         box-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
-        transform: translateY(-2px);
       }
 
       &.done {
         background: #f8fafc;
-        border-color: #86efac;
+        border-color: #bbf7d0;
+
+        .exercise-title {
+          color: #475569;
+        }
 
         .exercise-checkbox {
           background: #16a34a;
           border-color: #16a34a;
           color: #ffffff;
         }
-
-        .exercise-name {
-          text-decoration: line-through;
-          color: #64748b;
-        }
       }
 
-      .exercise-checkbox {
-        width: 22px;
-        height: 22px;
-        border-radius: 6px;
-        border: 2px solid #cbd5e1;
+      &.expanded {
+        border-color: #2563eb;
+        box-shadow: 0 4px 14px rgba(37, 99, 235, 0.12);
+      }
+
+      .exercise-main-row {
         display: flex;
-        justify-content: center;
         align-items: center;
-        margin-top: 2px;
-        flex-shrink: 0;
-        transition: all 0.2s ease;
+        gap: 0.85rem;
+        padding: 0.85rem 1.15rem;
 
-        .check-mark {
-          font-size: 0.85rem;
-          font-weight: 800;
-        }
-      }
-
-      .exercise-icon-badge {
-        font-size: 1.5rem;
-        flex-shrink: 0;
-      }
-
-      .exercise-details {
-        display: flex;
-        flex-direction: column;
-        gap: 0.25rem;
-        flex: 1;
-
-        .exercise-title-row {
+        .exercise-checkbox {
+          width: 24px;
+          height: 24px;
+          border-radius: 6px;
+          border: 2px solid #cbd5e1;
           display: flex;
-          justify-content: space-between;
+          justify-content: center;
           align-items: center;
-          gap: 0.5rem;
+          flex-shrink: 0;
+          transition: all 0.2s ease;
+          background: #ffffff;
 
-          .exercise-name {
-            margin: 0;
-            font-size: 0.88rem;
-            font-weight: 700;
-            color: #1e293b;
-            line-height: 1.25;
+          &:hover {
+            border-color: #16a34a;
+            transform: scale(1.08);
           }
 
+          .check-mark {
+            font-size: 0.85rem;
+            font-weight: 800;
+          }
+        }
+
+        .exercise-icon {
+          font-size: 1.35rem;
+          flex-shrink: 0;
+        }
+
+        .exercise-title {
+          font-size: 0.95rem;
+          font-weight: 700;
+          color: #1e293b;
+          flex: 1;
+        }
+
+        .row-right-actions {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+
           .status-chip {
-            font-size: 0.65rem;
+            font-size: 0.7rem;
             font-weight: 700;
-            padding: 0.15rem 0.45rem;
-            border-radius: 4px;
+            padding: 0.2rem 0.55rem;
+            border-radius: 6px;
             background: #fef3c7;
             color: #92400e;
 
@@ -540,21 +543,71 @@
               color: #15803d;
             }
           }
-        }
 
-        .exercise-target {
-          font-size: 0.74rem;
-          font-weight: 600;
-          color: #2563eb;
-        }
+          .expand-chevron {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            transition: transform 0.25s ease;
 
-        .exercise-desc {
-          margin: 0;
-          font-size: 0.75rem;
-          color: #64748b;
-          line-height: 1.35;
+            &.rotated {
+              transform: rotate(180deg);
+              color: #2563eb;
+            }
+          }
         }
       }
+
+      .exercise-details-drawer {
+        background: #f8fafc;
+        border-top: 1px solid #e2e8f0;
+        padding: 0.85rem 1.15rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.55rem;
+        animation: drawerSlide 0.2s ease-out;
+
+        .detail-line {
+          display: flex;
+          flex-direction: column;
+          gap: 0.2rem;
+
+          .detail-label {
+            font-size: 0.74rem;
+            font-weight: 700;
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+          }
+
+          .detail-value {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #1e293b;
+
+            &.highlight {
+              color: #2563eb;
+            }
+          }
+
+          .detail-desc {
+            margin: 0;
+            font-size: 0.82rem;
+            color: #334155;
+            line-height: 1.45;
+          }
+        }
+      }
+    }
+  }
+
+  @keyframes drawerSlide {
+    from {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
     }
   }
 
@@ -669,8 +722,13 @@
     }
   }
 
-  .exercises-grid {
-    grid-template-columns: 1fr;
+  .exercises-container .exercise-accordion-card .exercise-main-row {
+    flex-wrap: wrap;
+    gap: 0.65rem;
+
+    .exercise-title {
+      min-width: 180px;
+    }
   }
 }
 
@@ -690,12 +748,11 @@
     }
   }
 
-  .exercise-item-card {
+  .exercises-container .exercise-accordion-card .exercise-main-row {
     padding: 0.75rem 0.85rem;
-    gap: 0.65rem;
 
-    .exercise-details .exercise-title-row .exercise-name {
-      font-size: 0.82rem;
+    .exercise-title {
+      font-size: 0.88rem;
     }
   }
 }

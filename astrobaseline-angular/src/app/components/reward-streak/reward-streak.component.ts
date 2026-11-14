@@ -23,6 +23,9 @@ export class RewardStreakComponent {
   readonly state = inject(MissionStateService);
   readonly config = inject(ConfigService);
 
+  // Ejercicio actualmente desplegado para ver detalles
+  readonly expandedExerciseId = signal<string | null>(null);
+
   // Días de racha acumulada
   readonly streakDays = computed(() => {
     const day = this.state.missionDay();
@@ -47,7 +50,6 @@ export class RewardStreakComponent {
   // Lista de días en el carrusel de racha (círculos que se encienden)
   readonly streakNodes = computed(() => {
     const current = this.streakDays();
-    // Mostramos una ventana de días: al menos hasta el día actual + 4 días futuros de meta
     const totalToShow = Math.max(14, current + 3);
     const nodes = [];
 
@@ -56,7 +58,6 @@ export class RewardStreakComponent {
       const isToday = d === current;
       const isFuture = d > current;
 
-      // Hitos especiales estilo Duolingo
       let milestone: string | null = null;
       if (d === 3) milestone = '🎖️ Hábito Cero-G';
       if (d === 7) milestone = '🚀 Racha 7D (+150 XP)';
@@ -85,56 +86,31 @@ export class RewardStreakComponent {
     );
   });
 
-  // Lista de ejercicios dinámicos según la meta elegida
-  // Inicializamos ejercicios completados
+  // Solo 2 ejercicios principales por meta, con detalles de series y repeticiones al expandir
   readonly exercisesList = signal<Record<string, DailyExercise[]>>({
     'A-01': [
       {
         id: 'cbum-1',
-        name: 'Sentadilla guiada con pistón neumático ARED',
-        description: 'Sobrecarga axial controlada para preservar densidad ósea lumbar y masa de cuádriceps.',
-        target: '4 series × 8-10 reps · 140 kg simulados',
+        name: 'Sentadilla con pistón neumático ARED',
+        description: 'Sobrecarga axial controlada para preservar densidad ósea lumbar y masa muscular de cuádriceps en microgravedad.',
+        target: '4 series × 8-10 repeticiones · Carga axial de 140 kg simulados',
         icon: '🏋️',
         completed: true,
       },
       {
         id: 'cbum-2',
         name: 'Peso muerto rumano antigravedad',
-        description: 'Tensión mecánica continua en isquiotibiales y cadena posterior sin compresión espinal.',
-        target: '4 series × 10 reps · 120 kg simulados',
+        description: 'Tensión mecánica excéntrica continua en isquiotibiales y cadena posterior para prevenir la atrofia del tronco.',
+        target: '4 series × 10 repeticiones · Carga guiada de 120 kg simulados',
         icon: '⚡',
-        completed: true,
-      },
-      {
-        id: 'cbum-3',
-        name: 'Press de banca horizontal con resistencia de vacío',
-        description: 'Mantiene la masa magra en pectorales, deltoides anterior y tríceps.',
-        target: '3 series × 12 reps · 95 kg simulados',
-        icon: '🛡️',
-        completed: true,
-      },
-      {
-        id: 'cbum-4',
-        name: 'Elevación de talones en plataforma ARED',
-        description: 'Previene la pérdida de fuerza en el tríceps sural (gemelos y sóleo) en microgravedad.',
-        target: '4 series × 15 reps · 100 kg simulados',
-        icon: '🦵',
         completed: false,
-      },
-      {
-        id: 'cbum-5',
-        name: 'Nutrición Anabólica & Control Glucémico',
-        description: 'Batido con 35g proteína de suero + 5g creatina para síntesis proteica máxima.',
-        target: 'Ventana post-entrenamiento · 1 servicio hermético',
-        icon: '🥤',
-        completed: true,
       },
     ],
     'A-02': [
       {
         id: 'spartacus-1',
         name: 'Protocolo HIIT en Cicloergómetro CEVIS',
-        description: 'Intervalos anaeróbicos para mantener VO2 max y respuesta contráctil del miocardio.',
+        description: 'Intervalos anaeróbicos de alta exigencia para mantener el VO2 max y la fuerza contráctil del miocardio.',
         target: '20 min · 30s sprint (95% FCM) / 30s recuperación activa',
         icon: '🚴',
         completed: true,
@@ -142,34 +118,10 @@ export class RewardStreakComponent {
       {
         id: 'spartacus-2',
         name: 'Carrera con arnés de carga en Cinta Rodante T2',
-        description: 'Simulación de 1.0g gravitatorio para impacto óseo y resistencia periférica.',
-        target: '45 min continuo a 11.5 km/h · Carga elástica completa',
+        description: 'Simulación biomecánica de impacto gravitatorio para mantener la masa ósea y resistencia vascular periférica.',
+        target: '45 min continuos a 11.5 km/h · Carga elástica de 1.0g simulado',
         icon: '🏃',
-        completed: true,
-      },
-      {
-        id: 'spartacus-3',
-        name: 'Circuito funcional espartano con bandas elásticas',
-        description: 'Calistenia tridimensional: zancadas, flexiones explosivas y estabilidad del core.',
-        target: '3 rondas × 15 reps sin pausa entre ejercicios',
-        icon: '⚡',
-        completed: true,
-      },
-      {
-        id: 'spartacus-4',
-        name: 'Remo elíptico en microgravedad con resistencia continua',
-        description: 'Condicionamiento cardiopulmonar de cuerpo entero y tracción muscular dorsal.',
-        target: '3 series × 25 reps continuas',
-        icon: '🚣',
         completed: false,
-      },
-      {
-        id: 'spartacus-5',
-        name: 'Rehidratación y Balance Electrolítico Orbital',
-        description: 'Suero con 750ml, sales de sodio y potasio para compensar sudoración en ambiente cerrado.',
-        target: '1 dosis post-cardio · Medir pulso en reposo',
-        icon: '💧',
-        completed: true,
       },
     ],
   });
@@ -193,8 +145,14 @@ export class RewardStreakComponent {
     return Math.round((this.completedCount() / total) * 100);
   });
 
-  // Alternar estado de completitud de un ejercicio
-  toggleExercise(exerciseId: string): void {
+  // Alternar apertura/cierre de la descripción detallada
+  toggleDetails(exerciseId: string): void {
+    this.expandedExerciseId.update((curr) => (curr === exerciseId ? null : exerciseId));
+  }
+
+  // Alternar estado de completitud (check)
+  toggleCompletion(exerciseId: string, event: Event): void {
+    event.stopPropagation();
     const gid = this.currentGoal().id;
     this.exercisesList.update((curr) => {
       const list = curr[gid] || curr['A-01'];
