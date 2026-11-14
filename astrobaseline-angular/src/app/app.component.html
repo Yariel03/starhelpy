@@ -102,7 +102,7 @@
           [class.active]="activeTab() === 'trends'"
           (click)="setTab('trends')"
         >
-          Tendencias
+          Telemetría
         </button>
         <button
           class="tab-btn"
@@ -132,13 +132,31 @@
         <div class="tab-pane dashboard-pane">
           <!-- RECOMPENSAS Y RACHA ESTILO DUOLINGO + EJERCICIO PARA LA META DEL ASTRONAUTA -->
           <app-reward-streak></app-reward-streak>
+        </div>
+      }
+
+      <!-- PESTAÑA 2: TELEMETRÍA (ANTES TENDENCIAS) -->
+      @if (activeTab() === 'trends') {
+        <div class="tab-pane telemetry-pane">
+          <!-- Cabecera de la sección de telemetría -->
+          <div class="telemetry-section-header">
+            <h3>Indicadores Biológicos y Fisiológicos en Tiempo Real</h3>
+            <p>Monitoreo continuo de signos vitales, desviaciones z-score vs línea base personal y acciones clínicas.</p>
+          </div>
 
           <!-- Cuadrícula de Tarjetas de Indicadores -->
           <div class="metrics-grid">
             @for (key of config.INDICATOR_KEYS; track key) {
               @let cfg = config.INDICATORS[key];
               @let res = state.evaluationResults()[key];
-              <div class="metric-card" [class.alert-border]="res && res.level === 2" [class.attention-border]="res && res.level === 1">
+              <div
+                class="metric-card"
+                [class.alert-border]="res && res.level === 2"
+                [class.attention-border]="res && res.level === 1"
+                [class.selected-trend]="state.selectedIndicatorForTrends() === key"
+                (click)="state.selectedIndicatorForTrends.set(key)"
+                title="Haz clic para graficar la evolución temporal de este indicador"
+              >
                 <div class="card-header">
                   <span class="metric-title">{{ cfg.label }}</span>
                   <app-badge [level]="res ? res.level : -1"></app-badge>
@@ -160,7 +178,7 @@
                 </div>
 
                 <!-- Sección desplegable de explicaciones clínicas -->
-                <div class="card-footer">
+                <div class="card-footer" (click)="$event.stopPropagation()">
                   <button
                     class="expand-btn"
                     (click)="toggleExpand(key)"
@@ -188,26 +206,24 @@
               </div>
             }
           </div>
-        </div>
-      }
 
-      <!-- PESTAÑA 2: TENDENCIAS -->
-      @if (activeTab() === 'trends') {
-        <div class="tab-pane trends-pane">
-          <div class="trends-controls">
-            <label class="control-label">Seleccionar Indicador:</label>
-            <select
-              [ngModel]="state.selectedIndicatorForTrends()"
-              (ngModelChange)="state.selectedIndicatorForTrends.set($event)"
-              class="form-select inline-select"
-            >
-              @for (key of config.INDICATOR_KEYS; track key) {
-                <option [value]="key">{{ config.INDICATORS[key].label }}</option>
-              }
-            </select>
+          <!-- Sección de Gráfica de Tendencias -->
+          <div class="trends-section">
+            <div class="trends-controls">
+              <label class="control-label">Evolución Temporal del Indicador:</label>
+              <select
+                [ngModel]="state.selectedIndicatorForTrends()"
+                (ngModelChange)="state.selectedIndicatorForTrends.set($event)"
+                class="form-select inline-select"
+              >
+                @for (key of config.INDICATOR_KEYS; track key) {
+                  <option [value]="key">{{ config.INDICATORS[key].label }}</option>
+                }
+              </select>
+            </div>
+
+            <app-trends-chart></app-trends-chart>
           </div>
-
-          <app-trends-chart></app-trends-chart>
         </div>
       }
 

@@ -503,69 +503,33 @@
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
+  }
 
-    .status-summary-card {
-      background: #ffffff;
-      border: 1px solid #e2e8f0;
+  // TAB 2: TELEMETRÍA (ANTES TRENDS)
+  .telemetry-pane {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+
+    .telemetry-section-header {
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(8px);
+      padding: 1rem 1.25rem;
       border-radius: 12px;
-      padding: 1.5rem;
-      display: grid;
-      grid-template-columns: 1fr 2fr;
-      gap: 2rem;
+      border: 1px solid rgba(226, 232, 240, 0.8);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 
-      .status-col {
-        .section-subtitle {
-          font-size: 0.85rem;
-          font-weight: 700;
-          color: #64748b;
-          text-transform: uppercase;
-          display: block;
-          margin-bottom: 0.5rem;
-        }
-
-        .badge-wrapper {
-          margin-bottom: 0.75rem;
-        }
-
-        .env-metadata {
-          font-size: 0.8rem;
-          color: #475569;
-          line-height: 1.4;
-        }
+      h3 {
+        margin: 0;
+        font-size: 1.15rem;
+        font-weight: 800;
+        color: #0f172a;
       }
 
-      .action-col {
-        display: flex;
-        flex-direction: column;
-        gap: 0.75rem;
-
-        .escalation-alert {
-          background: #eff6ff;
-          border-left: 4px solid #3b82f6;
-          padding: 0.75rem 1rem;
-          border-radius: 6px;
-          display: flex;
-          align-items: flex-start;
-          gap: 0.5rem;
-          font-size: 0.85rem;
-          color: #1e40af;
-
-          p {
-            margin: 0;
-          }
-        }
-
-        .due-warning {
-          background: #fef2f2;
-          border-left: 4px solid #ef4444;
-          padding: 0.65rem 1rem;
-          border-radius: 6px;
-          font-size: 0.85rem;
-          color: #991b1b;
-          display: flex;
-          align-items: center;
-          gap: 0.4rem;
-        }
+      p {
+        margin: 0.25rem 0 0 0;
+        font-size: 0.82rem;
+        color: #64748b;
       }
     }
 
@@ -584,17 +548,24 @@
 
       .metric-card {
         background: #ffffff;
-        border: 1px solid #e2e8f0;
-        border-radius: 10px;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 12px;
         padding: 1.2rem;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        transition: transform 0.15s ease, box-shadow 0.15s ease;
+        cursor: pointer;
+        transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
 
         &:hover {
           transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+          border-color: #93c5fd;
+        }
+
+        &.selected-trend {
+          border: 2px solid #2563eb;
+          box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
         }
 
         &.alert-border {
@@ -690,27 +661,43 @@
         }
       }
     }
-  }
 
-  // TAB 2: TRENDS
-  .trends-pane {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-
-    .trends-controls {
+    .trends-section {
       display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      background: #ffffff;
-      padding: 0.75rem 1rem;
-      border-radius: 8px;
-      border: 1px solid #e2e8f0;
+      flex-direction: column;
+      gap: 1rem;
 
-      .inline-select {
-        width: auto;
-        min-width: 260px;
-        padding: 0.4rem 0.6rem;
+      .trends-controls {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        background: #ffffff;
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+
+        @media (max-width: 640px) {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.5rem;
+
+          .inline-select {
+            width: 100%;
+            min-width: 0;
+          }
+        }
+
+        .control-label {
+          font-size: 0.85rem;
+          font-weight: 600;
+          color: #475569;
+        }
+
+        .inline-select {
+          width: auto;
+          min-width: 260px;
+          padding: 0.4rem 0.6rem;
+        }
       }
     }
   }
