@@ -1,0 +1,264 @@
+<div
+  class="star-pet-wrapper"
+  [style.left.px]="position().x"
+  [style.top.px]="position().y"
+  (mousedown)="onMouseDown($event)"
+  (touchstart)="onTouchStart($event)"
+>
+  <!-- BURBUJA DE DIÁLOGO FLOTANTE (SPEECH BUBBLE) -->
+  @if (isBubbleVisible() && !isChatOpen()) {
+    <div class="pet-speech-bubble" [class]="mood()">
+      <div class="bubble-header">
+        <span class="bubble-sender">⭐ Star Helpy:</span>
+        <button
+          class="pet-bubble-close"
+          (click)="dismissBubble($event)"
+          title="Ocultar burbuja"
+        >
+          ✕
+        </button>
+      </div>
+
+      <p class="bubble-message">{{ bubbleText() }}</p>
+
+      <div class="bubble-footer">
+        <button class="chat-open-btn" (click)="toggleChat()">
+          💬 Chatear con Helpy
+        </button>
+      </div>
+
+      <!-- Cola de la burbuja que apunta a la estrella -->
+      <div class="bubble-tail"></div>
+    </div>
+  }
+
+  <!-- MASCOTA ESTRELLA ANIMADA (SVG INTERACTIVO CON EXPRESIONES EMOCIONALES) -->
+  <div
+    class="star-mascot"
+    [class]="mood()"
+    (click)="onStarClick()"
+    [title]="'Star Helpy (' + moodTitle() + ') — Arrástrame o haz clic para chatear'"
+  >
+    <svg
+      viewBox="0 0 100 100"
+      width="78"
+      height="78"
+      class="star-svg"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <defs>
+        <!-- Gradiente Feliz (Dorado Solar) -->
+        <linearGradient id="happyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#fef08a" />
+          <stop offset="45%" stop-color="#facc15" />
+          <stop offset="100%" stop-color="#f59e0b" />
+        </linearGradient>
+
+        <!-- Gradiente Triste (Azul Melancólico) -->
+        <linearGradient id="sadGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#bfdbfe" />
+          <stop offset="50%" stop-color="#60a5fa" />
+          <stop offset="100%" stop-color="#3b82f6" />
+        </linearGradient>
+
+        <!-- Gradiente Enojado (Fuego Carmesí) -->
+        <linearGradient id="angryGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#fca5a5" />
+          <stop offset="45%" stop-color="#ef4444" />
+          <stop offset="100%" stop-color="#b91c1c" />
+        </linearGradient>
+
+        <!-- Sombra y resplandor -->
+        <filter id="starGlow" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="3" result="blur" />
+          <feComposite in="SourceGraphic" in2="blur" operator="over" />
+        </filter>
+      </defs>
+
+      <!-- Cuerpo de la Estrella (5 puntas con esquinas suaves) -->
+      <path
+        d="M 50,4
+           L 62,32
+           L 95,35
+           L 70,57
+           L 77,88
+           L 50,72
+           L 23,88
+           L 30,57
+           L 5,35
+           L 38,32
+           Z"
+        [attr.fill]="mood() === 'happy' ? 'url(#happyGrad)' : (mood() === 'sad' ? 'url(#sadGrad)' : 'url(#angryGrad)')"
+        stroke="#ffffff"
+        stroke-width="2.5"
+        stroke-linejoin="round"
+        class="star-body"
+      />
+
+      <!-- ================= EXPRESIÓN 1: FELIZ ================= -->
+      @if (mood() === 'happy') {
+        <!-- Ojos con brillo de estrella -->
+        <ellipse cx="40" cy="46" rx="4.5" ry="6" fill="#1e293b" />
+        <circle cx="38.5" cy="44" r="2" fill="#ffffff" />
+        <circle cx="41.5" cy="48" r="1" fill="#ffffff" />
+
+        <ellipse cx="60" cy="46" rx="4.5" ry="6" fill="#1e293b" />
+        <circle cx="58.5" cy="44" r="2" fill="#ffffff" />
+        <circle cx="61.5" cy="48" r="1" fill="#ffffff" />
+
+        <!-- Mejillas sonrojadas -->
+        <ellipse cx="33" cy="52" rx="3.5" ry="2" fill="#f43f5e" opacity="0.45" />
+        <ellipse cx="67" cy="52" rx="3.5" ry="2" fill="#f43f5e" opacity="0.45" />
+
+        <!-- Sonrisa amplia y alegre -->
+        <path
+          d="M 41,54 Q 50,65 59,54"
+          fill="none"
+          stroke="#1e293b"
+          stroke-width="2.5"
+          stroke-linecap="round"
+        />
+        <!-- Lengüita feliz -->
+        <path
+          d="M 46,59 Q 50,64 54,59 Z"
+          fill="#f43f5e"
+          opacity="0.8"
+        />
+      }
+
+      <!-- ================= EXPRESIÓN 2: TRISTE ================= -->
+      @if (mood() === 'sad') {
+        <!-- Cejas caídas preocupadas -->
+        <path d="M 35,39 Q 41,43 45,42" fill="none" stroke="#1e293b" stroke-width="2" stroke-linecap="round" />
+        <path d="M 65,39 Q 59,43 55,42" fill="none" stroke="#1e293b" stroke-width="2" stroke-linecap="round" />
+
+        <!-- Ojos caídos / lagrimosos -->
+        <ellipse cx="40" cy="48" rx="4" ry="5" fill="#1e293b" />
+        <circle cx="39" cy="46" r="1.5" fill="#ffffff" />
+
+        <ellipse cx="60" cy="48" rx="4" ry="5" fill="#1e293b" />
+        <circle cx="59" cy="46" r="1.5" fill="#ffffff" />
+
+        <!-- Gota de lágrima -->
+        <path
+          d="M 33,53 C 33,51 35,48 35,48 C 35,48 37,51 37,53 C 37,55 35,56 34,56 C 33,56 33,54 33,53 Z"
+          fill="#38bdf8"
+        />
+
+        <!-- Boquita triste puchero -->
+        <path
+          d="M 43,60 Q 50,54 57,60"
+          fill="none"
+          stroke="#1e293b"
+          stroke-width="2.5"
+          stroke-linecap="round"
+        />
+      }
+
+      <!-- ================= EXPRESIÓN 3: ENOJADO ================= -->
+      @if (mood() === 'angry') {
+        <!-- Cejas afiladas de enojo -->
+        <path d="M 33,40 L 46,46" fill="none" stroke="#7f1d1d" stroke-width="3" stroke-linecap="round" />
+        <path d="M 67,40 L 54,46" fill="none" stroke="#7f1d1d" stroke-width="3" stroke-linecap="round" />
+
+        <!-- Ojos feroces entrecerrados -->
+        <ellipse cx="41" cy="49" rx="3.5" ry="4" fill="#1e293b" />
+        <circle cx="40" cy="48" r="1.2" fill="#ffffff" />
+
+        <ellipse cx="59" cy="49" rx="3.5" ry="4" fill="#1e293b" />
+        <circle cx="60" cy="48" r="1.2" fill="#ffffff" />
+
+        <!-- Humito / Vena de enojo -->
+        <path
+          d="M 68,26 Q 73,28 72,33"
+          fill="none"
+          stroke="#ef4444"
+          stroke-width="2"
+          stroke-linecap="round"
+        />
+
+        <!-- Boca de regaño gruñona -->
+        <path
+          d="M 43,61 Q 50,57 57,61"
+          fill="none"
+          stroke="#7f1d1d"
+          stroke-width="3"
+          stroke-linecap="round"
+        />
+        <line x1="45" y1="58" x2="55" y2="58" stroke="#7f1d1d" stroke-width="2" />
+      }
+    </svg>
+
+    <!-- Píldora de estado de la mascota -->
+    <div class="mood-badge" [class]="mood()">
+      {{ mood() === 'happy' ? '⭐ Feliz' : (mood() === 'sad' ? '🥺 Triste' : '😡 ¡A entrenar!') }}
+    </div>
+
+    <!-- Aura de partículas -->
+    <div class="pet-glow-aura" [class]="mood()"></div>
+  </div>
+
+  <!-- PANEL DE CHAT FLOTANTE CON STAR HELPY -->
+  @if (isChatOpen()) {
+    <div class="chat-panel" (mousedown)="$event.stopPropagation()" (touchstart)="$event.stopPropagation()">
+      <!-- Header del Chat -->
+      <div class="chat-header">
+        <div class="chat-header-profile">
+          <div class="avatar-mini" [class]="mood()">⭐</div>
+          <div class="header-texts">
+            <h4>Star Helpy</h4>
+            <span class="status-indicator">
+              <span class="dot"></span> En línea · {{ moodTitle() }}
+            </span>
+          </div>
+        </div>
+        <button class="chat-close-btn" (click)="closeChat()" title="Cerrar chat">✕</button>
+      </div>
+
+      <!-- Preguntas Rápidas sugeridas -->
+      <div class="quick-prompts-bar">
+        @for (prompt of quickPrompts; track prompt) {
+          <button class="prompt-chip" (click)="sendQuickPrompt(prompt)">
+            {{ prompt }}
+          </button>
+        }
+      </div>
+
+      <!-- Mensajes del Chat -->
+      <div class="chat-messages-container">
+        @for (msg of messages(); track $index) {
+          <div class="message-row" [class.astronaut]="msg.sender === 'astronaut'" [class.helpy]="msg.sender === 'helpy'">
+            @if (msg.sender === 'helpy') {
+              <div class="helpy-msg-avatar" [class]="msg.mood || mood()">⭐</div>
+            }
+
+            <div class="message-bubble">
+              <p class="message-content">{{ msg.text }}</p>
+              <span class="message-time">{{ msg.time }}</span>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Input de envío -->
+      <div class="chat-input-bar">
+        <input
+          type="text"
+          placeholder="Escribe un mensaje a Star Helpy..."
+          [ngModel]="userInput()"
+          (ngModelChange)="userInput.set($event)"
+          (keydown.enter)="sendMessage()"
+          class="chat-input"
+        />
+        <button
+          class="chat-send-btn"
+          (click)="sendMessage()"
+          [disabled]="!userInput().trim()"
+          title="Enviar mensaje"
+        >
+          ➤
+        </button>
+      </div>
+    </div>
+  }
+</div>

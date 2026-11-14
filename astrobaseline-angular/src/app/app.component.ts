@@ -10,6 +10,7 @@ import { QualityHeatmapComponent } from './components/quality-heatmap/quality-he
 import { MissionWizardComponent } from './components/mission-wizard/mission-wizard.component';
 import { RealtimeBpmComponent } from './components/realtime-bpm/realtime-bpm.component';
 import { RewardStreakComponent } from './components/reward-streak/reward-streak.component';
+import { StarPetComponent } from './components/star-pet/star-pet.component';
 import { BodyRegionKey, IndicatorKey } from './core/models/indicator.model';
 
 @Component({
@@ -25,6 +26,7 @@ import { BodyRegionKey, IndicatorKey } from './core/models/indicator.model';
     MissionWizardComponent,
     RealtimeBpmComponent,
     RewardStreakComponent,
+    StarPetComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',

@@ -86,57 +86,9 @@ export class RewardStreakComponent {
     );
   });
 
-  // Solo 2 ejercicios principales por meta, con detalles de series y repeticiones al expandir
-  readonly exercisesList = signal<Record<string, DailyExercise[]>>({
-    'A-01': [
-      {
-        id: 'cbum-1',
-        name: 'Sentadilla con pistón neumático ARED',
-        description: 'Sobrecarga axial controlada para preservar densidad ósea lumbar y masa muscular de cuádriceps en microgravedad.',
-        target: '4 series × 8-10 repeticiones · Carga axial de 140 kg simulados',
-        icon: '🏋️',
-        completed: true,
-      },
-      {
-        id: 'cbum-2',
-        name: 'Peso muerto rumano antigravedad',
-        description: 'Tensión mecánica excéntrica continua en isquiotibiales y cadena posterior para prevenir la atrofia del tronco.',
-        target: '4 series × 10 repeticiones · Carga guiada de 120 kg simulados',
-        icon: '⚡',
-        completed: false,
-      },
-    ],
-    'A-02': [
-      {
-        id: 'spartacus-1',
-        name: 'Protocolo HIIT en Cicloergómetro CEVIS',
-        description: 'Intervalos anaeróbicos de alta exigencia para mantener el VO2 max y la fuerza contráctil del miocardio.',
-        target: '20 min · 30s sprint (95% FCM) / 30s recuperación activa',
-        icon: '🚴',
-        completed: true,
-      },
-      {
-        id: 'spartacus-2',
-        name: 'Carrera con arnés de carga en Cinta Rodante T2',
-        description: 'Simulación biomecánica de impacto gravitatorio para mantener la masa ósea y resistencia vascular periférica.',
-        target: '45 min continuos a 11.5 km/h · Carga elástica de 1.0g simulado',
-        icon: '🏃',
-        completed: false,
-      },
-    ],
-  });
-
-  // Ejercicios activos correspondientes a la meta actual
-  readonly currentExercises = computed<DailyExercise[]>(() => {
-    const gid = this.currentGoal().id;
-    const all = this.exercisesList();
-    return all[gid] || all['A-01'];
-  });
-
-  // Conteo de ejercicios completados hoy
-  readonly completedCount = computed(() => {
-    return this.currentExercises().filter((e) => e.completed).length;
-  });
+  // Ejercicios compartidos desde el estado global de la misión
+  readonly currentExercises = this.state.currentExercises;
+  readonly completedCount = this.state.completedExercisesCount;
 
   // Porcentaje de progreso de entrenamiento diario
   readonly progressPercentage = computed(() => {
@@ -153,16 +105,6 @@ export class RewardStreakComponent {
   // Alternar estado de completitud (check)
   toggleCompletion(exerciseId: string, event: Event): void {
     event.stopPropagation();
-    const gid = this.currentGoal().id;
-    this.exercisesList.update((curr) => {
-      const list = curr[gid] || curr['A-01'];
-      const updated = list.map((ex) =>
-        ex.id === exerciseId ? { ...ex, completed: !ex.completed } : ex
-      );
-      return {
-        ...curr,
-        [gid]: updated,
-      };
-    });
+    this.state.toggleExerciseCompletion(exerciseId);
   }
 }
