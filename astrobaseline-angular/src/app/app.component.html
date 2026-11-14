@@ -22,36 +22,8 @@
       <p class="tagline">{{ config.TAGLINE }}</p>
     </div>
 
-    <!-- Active Mission Card -->
-    <div class="mission-summary-card">
-      <div class="mission-card-header">
-        <span class="mission-status-dot"></span>
-        <span class="mission-card-title">Misión Activa</span>
-        <button class="edit-mission-btn" (click)="state.openWizard()" title="Modificar misión">
-          ⚙️ Ajustar
-        </button>
-      </div>
-
-      <div class="character-preview">
-        <img [src]="currentGoal().avatar" [alt]="currentGoal().name" class="avatar-thumb" />
-        <div class="character-meta">
-          <strong class="char-name">{{ currentGoal().name }}</strong>
-          <span class="char-role">{{ currentGoal().archetype }}</span>
-        </div>
-      </div>
-
-      <div class="destination-preview">
-        <img [src]="currentDestination().image" [alt]="currentDestination().name" class="dest-thumb" />
-        <div class="dest-meta">
-          <span class="dest-label">Destino:</span>
-          <strong class="dest-name">{{ currentDestination().name }}</strong>
-        </div>
-      </div>
-
-      <div class="mission-meta-row">
-        <span><strong>Rutina:</strong> {{ currentGoal().routineFocus }}</span>
-      </div>
-    </div>
+    <!-- Telemetría Card: Gráfica de LPM en Tiempo Real -->
+    <app-realtime-bpm></app-realtime-bpm>
 
     <!-- Data source radio -->
     <div class="control-group">

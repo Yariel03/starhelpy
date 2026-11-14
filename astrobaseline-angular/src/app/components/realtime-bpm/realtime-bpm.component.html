@@ -1,0 +1,74 @@
+<div class="telemetry-card">
+  <!-- Header con indicador EN VIVO -->
+  <div class="telemetry-header">
+    <div class="live-pill">
+      <span class="live-pulse" [class.paused]="!isRunning()"></span>
+      <span class="live-text">{{ isRunning() ? 'EN VIVO · TELEMETRÍA' : 'PAUSADO' }}</span>
+    </div>
+
+    <div class="telemetry-controls">
+      <button
+        class="mode-switch-btn"
+        [class.exercise]="mode() === 'exercise'"
+        (click)="toggleMode()"
+        title="Cambiar entre reposo y entrenamiento en microgravedad"
+      >
+        {{ mode() === 'exercise' ? '🏋️ Ejercicio' : '🧘 Reposo' }}
+      </button>
+
+      <button
+        class="pause-btn"
+        (click)="toggleStreaming()"
+        [title]="isRunning() ? 'Pausar transmisión' : 'Reanudar transmisión'"
+      >
+        {{ isRunning() ? '⏸' : '▶' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Valor principal de LPM con latido interactivo -->
+  <div class="bpm-main-display">
+    <div class="heart-icon-wrapper">
+      <span
+        class="heart-beat"
+        [class.paused]="!isRunning()"
+        [style.animation-duration]="heartAnimationDuration()"
+      >
+        ❤️
+      </span>
+    </div>
+
+    <div class="bpm-numbers">
+      <span class="bpm-value">{{ currentBpm() }}</span>
+      <span class="bpm-unit">LPM</span>
+    </div>
+
+    <div class="bpm-status-tag" [style.color]="statusLabel().color">
+      {{ statusLabel().text }}
+    </div>
+  </div>
+
+  <!-- Gráfica de Onda ECG en Tiempo Real -->
+  <div class="canvas-container">
+    <canvas #ecgCanvas width="270" height="95" class="ecg-canvas"></canvas>
+    <div class="canvas-overlay-grid"></div>
+  </div>
+
+  <!-- Estadísticas de la sesión -->
+  <div class="telemetry-stats">
+    <div class="stat-col">
+      <span class="stat-label">MÍN</span>
+      <span class="stat-val">{{ minBpm() }}</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-col">
+      <span class="stat-label">PROM</span>
+      <span class="stat-val highlight">{{ avgBpm() }}</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-col">
+      <span class="stat-label">MÁX</span>
+      <span class="stat-val">{{ maxBpm() }}</span>
+    </div>
+  </div>
+</div>
