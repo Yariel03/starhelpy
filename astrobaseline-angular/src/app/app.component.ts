@@ -5,7 +5,6 @@ import { MissionStateService } from './core/services/mission-state.service';
 import { ConfigService } from './core/services/config.service';
 import { BadgeComponent } from './components/badge/badge.component';
 import { BodyMapComponent } from './components/body-map/body-map.component';
-import { QualityHeatmapComponent } from './components/quality-heatmap/quality-heatmap.component';
 import { MissionWizardComponent } from './components/mission-wizard/mission-wizard.component';
 import { RealtimeBpmComponent } from './components/realtime-bpm/realtime-bpm.component';
 import { RewardStreakComponent } from './components/reward-streak/reward-streak.component';
@@ -20,7 +19,6 @@ import { BodyRegionKey, IndicatorKey } from './core/models/indicator.model';
     FormsModule,
     BadgeComponent,
     BodyMapComponent,
-    QualityHeatmapComponent,
     MissionWizardComponent,
     RealtimeBpmComponent,
     RewardStreakComponent,
