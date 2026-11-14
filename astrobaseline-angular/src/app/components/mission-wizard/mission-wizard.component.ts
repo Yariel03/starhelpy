@@ -31,6 +31,12 @@ export class MissionWizardComponent {
     this.config.TRAINING_GOALS[0]
   );
 
+  // Meses aproximados como número entero (sin decimales)
+  readonly approxMonths = computed(() => {
+    const months = Math.max(1, Math.round(this.daysInSpace() / 30));
+    return `${months} ${months === 1 ? 'mes' : 'meses'}`;
+  });
+
   setStep(step: number): void {
     if (step >= 1 && step <= this.totalSteps) {
       this.currentStep.set(step);
