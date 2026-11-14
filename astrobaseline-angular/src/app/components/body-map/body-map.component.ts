@@ -9,8 +9,6 @@ import { BodyRegionKey } from '../../core/models/indicator.model';
     <div class="body-map-container">
       <svg
         viewBox="0 0 200 410"
-        width="210"
-        height="420"
         xmlns="http://www.w3.org/2000/svg"
         class="body-svg"
       >
@@ -138,13 +136,19 @@ import { BodyRegionKey } from '../../core/models/indicator.model';
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 1rem;
-      background: #f8fafc;
+      padding: 0.75rem;
+      background: rgba(248, 250, 252, 0.85);
       border-radius: 12px;
       border: 1px solid #e2e8f0;
+      width: 100%;
+      box-sizing: border-box;
     }
     .body-svg {
-      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.05));
+      width: 100%;
+      max-width: 160px;
+      height: auto;
+      max-height: 330px;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.06));
     }
     .interactive-region {
       cursor: pointer;

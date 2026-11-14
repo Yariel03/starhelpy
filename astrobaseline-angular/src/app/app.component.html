@@ -31,108 +31,33 @@
       <!-- Telemetría Card: Gráfica de LPM en Tiempo Real -->
       <app-realtime-bpm></app-realtime-bpm>
 
-      <!-- Selector de Fuente de Datos -->
-      <div class="control-group">
-        <label class="control-label">Fuente de datos</label>
-        <div class="radio-group">
-          <label class="radio-label">
-            <input
-              type="radio"
-              name="dataSource"
-              value="demo"
-              [checked]="state.dataSource() === 'demo'"
-              (change)="state.loadDemoData()"
-            />
-            Datos sintéticos de prueba
-          </label>
-          <label class="radio-label">
-            <input
-              type="radio"
-              name="dataSource"
-              value="upload"
-              [checked]="state.dataSource() === 'upload'"
-              (change)="state.dataSource.set('upload')"
-            />
-            Subir archivo
-          </label>
-        </div>
-
-        @if (state.dataSource() === 'upload') {
-          <div class="file-upload-box">
-            <label class="file-label">Archivos CSV / XLSX / JSON</label>
-            <input
-              type="file"
-              accept=".csv,.xlsx,.xls,.json"
-              (change)="onFileSelected($event)"
-              class="file-input"
-            />
+      <!-- Mapa Anatómico Corporal en Barra Lateral -->
+      <div class="sidebar-bodymap-card">
+        <div class="sidebar-bodymap-header">
+          <div class="header-left">
+            <span class="bodymap-icon">🩺</span>
+            <span class="bodymap-title">Mapa Corporal</span>
           </div>
-        }
-      </div>
-
-      <!-- Selector de Astronauta -->
-      <div class="control-group">
-        <label class="control-label">Astronauta / Sujeto</label>
-        <select
-          [ngModel]="state.selectedAstronaut()"
-          (ngModelChange)="state.selectedAstronaut.set($event)"
-          class="form-select"
-        >
-          @for (sid of state.astronauts(); track sid) {
-            <option [value]="sid">{{ sid }}</option>
-          }
-        </select>
-      </div>
-
-      <!-- Selector de Entorno Espacial -->
-      <div class="control-group">
-        <label class="control-label">Entorno espacial</label>
-        <select
-          [ngModel]="state.selectedEnvironment()"
-          (ngModelChange)="state.selectedEnvironment.set($event)"
-          class="form-select"
-        >
-          @for (env of environmentKeys; track env) {
-            <option [value]="env">{{ env }}</option>
-          }
-        </select>
-      </div>
-
-      <!-- Slider de Ventana de Línea Base -->
-      <div class="control-group">
-        <div class="slider-header">
-          <label class="control-label">Ventana de línea base</label>
-          <span class="slider-value">{{ state.baselineDays() }} días</span>
+          <span class="active-region-pill">{{ currentRegionInfo().label }}</span>
         </div>
-        <input
-          type="range"
-          min="7"
-          max="30"
-          step="1"
-          [ngModel]="state.baselineDays()"
-          (ngModelChange)="state.baselineDays.set($event)"
-          class="form-range"
-        />
-      </div>
 
-      <!-- Slider de Fecha de Misión (Línea de Tiempo) -->
-      <div class="control-group">
-        <div class="slider-header">
-          <label class="control-label">Fecha de misión</label>
-          <span class="slider-value highlight">{{ state.currentDate() }}</span>
-        </div>
-        <input
-          type="range"
-          min="0"
-          [max]="state.astronautDates().length > 0 ? state.astronautDates().length - 1 : 0"
-          step="1"
-          [value]="getCurrentDateIndex()"
-          (input)="onDateSliderChange($event)"
-          class="form-range"
-        />
-        <div class="date-range-caption">
-          <span>Sol 1</span>
-          <span>Día {{ state.missionDay() }} de {{ state.astronautDates().length }}</span>
+        <app-body-map></app-body-map>
+
+        <div class="sidebar-region-details">
+          <p class="region-note-text">{{ currentRegionInfo().note }}</p>
+          @if (regionIndicators().length > 0) {
+            <div class="sidebar-region-indicators">
+              @for (item of regionIndicators(); track item.key) {
+                <div class="sidebar-metric-row">
+                  <span class="metric-name">{{ item.config.label }}</span>
+                  <div class="metric-val-badge">
+                    <span class="val">{{ formatValue(item.result ? item.result.recent : null, item.config.unit) }}</span>
+                    <app-badge [level]="item.result ? item.result.level : -1"></app-badge>
+                  </div>
+                </div>
+              }
+            </div>
+          }
         </div>
       </div>
     </aside>
