@@ -123,15 +123,7 @@
       </div>
     </div>
 
-    <!-- Enfoque del protocolo -->
-    <div class="routine-brief-box">
-      <span class="brief-icon">🎯</span>
-      <p class="brief-text">
-        <strong>Protocolo Específico:</strong> {{ currentGoal().routineFocus }}
-      </p>
-    </div>
-
-    <!-- Lista interactiva de los 2 ejercicios -->
+    <!-- Lista interactiva de los 2 ejercicios en 2 columnas -->
     <div class="exercises-container">
       @for (ex of currentExercises(); track ex.id) {
         <div
