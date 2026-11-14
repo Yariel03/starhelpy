@@ -123,13 +123,6 @@
         >
           Calidad de Datos
         </button>
-        <button
-          class="tab-btn"
-          [class.active]="activeTab() === 'method'"
-          (click)="setTab('method')"
-        >
-          Metodología y Límites
-        </button>
       </nav>
 
       <!-- PESTAÑA 1: PANEL GENERAL (DASHBOARD) -->
@@ -345,64 +338,6 @@
 
           <div class="heatmap-section">
             <app-quality-heatmap></app-quality-heatmap>
-          </div>
-        </div>
-      }
-
-      <!-- PESTAÑA 5: METODOLOGÍA Y LÍMITES -->
-      @if (activeTab() === 'method') {
-        <div class="tab-pane method-pane">
-          <div class="info-card">
-            <h3>Metodología de Línea Base Personal</h3>
-            <p>
-              Para cada astronauta calculamos una línea base individualizada (mediana y desviación robusta de los primeros N días mediante Desviación Absoluta Mediana MAD &times; 1.4826).
-              El estado fisiológico combina (1) rangos biológicos de referencia y (2) desviación estadística respecto a su línea base personal (z-score), promediando los últimos 3 días calendario.
-              El índice de calidad de datos pondera 60% cobertura + 40% recencia en ventanas móviles de 7 días.
-            </p>
-
-            <h3>Límites y Consideraciones de Misión</h3>
-            <p>
-              Sistema de asistencia y telemetría para apoyo en misiones espaciales.
-              El monitoreo de desmineralización ósea y fuerza muscular isométrica requiere instrumentación adicional a bordo (DXA / ultrasonido).
-            </p>
-          </div>
-
-          <div class="table-card">
-            <h3>Rangos Fisiológicos y Límites Utilizados</h3>
-            <table class="data-table">
-              <thead>
-                <tr>
-                  <th>Indicador</th>
-                  <th>Unidad</th>
-                  <th>Ref. Mínima</th>
-                  <th>Ref. Máxima</th>
-                  <th>Límite Crítico Mín.</th>
-                  <th>Límite Crítico Máx.</th>
-                </tr>
-              </thead>
-              <tbody>
-                @for (k of config.INDICATOR_KEYS; track k) {
-                  @let c = config.INDICATORS[k];
-                  <tr>
-                    <td><strong>{{ c.label }}</strong></td>
-                    <td>{{ c.unit }}</td>
-                    <td>{{ c.ref_low !== null ? c.ref_low : '-' }}</td>
-                    <td>{{ c.ref_high !== null ? c.ref_high : '-' }}</td>
-                    <td>{{ c.hard_low !== null ? c.hard_low : '-' }}</td>
-                    <td>{{ c.hard_high !== null ? c.hard_high : '-' }}</td>
-                  </tr>
-                }
-              </tbody>
-            </table>
-          </div>
-
-          <div class="log-card">
-            <h3>Bitácora de Transformación de Datos (Evidencia)</h3>
-            <ul class="log-list">
-              @for (line of state.transformationLog(); track line) {
-                <li>{{ line }}</li>
-              }
-            </ul>
           </div>
         </div>
       }

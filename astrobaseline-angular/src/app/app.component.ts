@@ -35,7 +35,7 @@ export class AppComponent {
   readonly state = inject(MissionStateService);
   readonly config = inject(ConfigService);
 
-  readonly activeTab = signal<'dashboard' | 'trends' | 'body' | 'quality' | 'method'>('dashboard');
+  readonly activeTab = signal<'dashboard' | 'trends' | 'body' | 'quality'>('dashboard');
   readonly expandedMetric = signal<string | null>(null);
 
   // Entornos disponibles
@@ -102,7 +102,7 @@ export class AppComponent {
     }));
   });
 
-  setTab(tab: 'dashboard' | 'trends' | 'body' | 'quality' | 'method') {
+  setTab(tab: 'dashboard' | 'trends' | 'body' | 'quality') {
     this.activeTab.set(tab);
   }
 
