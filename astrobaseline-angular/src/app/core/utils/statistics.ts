@@ -116,7 +116,7 @@ export function computeDataQuality(
       score: 0,
       completeness: 0,
       days_since: null,
-      flag: 'No data',
+      flag: 'Sin datos',
     };
   }
 
@@ -132,16 +132,16 @@ export function computeDataQuality(
 
   const flags: string[] = [];
   if (daysSince >= 3) {
-    flags.push('Stale');
+    flags.push('Desactualizado');
   }
   if (completeness < 0.5) {
-    flags.push('Low coverage');
+    flags.push('Baja cobertura');
   }
 
   return {
     score,
     completeness,
     days_since: daysSince,
-    flag: flags.length > 0 ? flags.join(', ') : 'OK',
+    flag: flags.length > 0 ? flags.join(', ') : 'Correcto',
   };
 }

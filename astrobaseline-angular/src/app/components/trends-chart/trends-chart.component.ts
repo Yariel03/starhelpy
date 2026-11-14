@@ -90,7 +90,7 @@ export class TrendsChartComponent {
       yref: 'y',
       x: 0.02,
       y: hi,
-      text: 'Reference range',
+      text: 'Rango de referencia',
       showarrow: false,
       font: { size: 10, color: '#2e7d32' },
       xanchor: 'left',
@@ -135,7 +135,7 @@ export class TrendsChartComponent {
         yref: 'y',
         x: 0.98,
         y: bHi,
-        text: 'Personal baseline ± 2σ',
+        text: 'Línea base personal ± 2σ',
         showarrow: false,
         font: { size: 10, color: '#2563eb' },
         xanchor: 'right',
@@ -170,7 +170,7 @@ export class TrendsChartComponent {
         x: missingDates,
         y: missingY,
         mode: 'markers',
-        name: 'Missing measurement',
+        name: 'Medición ausente',
         marker: {
           symbol: 'x',
           size: 10,
@@ -181,8 +181,8 @@ export class TrendsChartComponent {
     }
 
     const layout: any = {
-      title: `${cfg.label} (${cfg.unit}) - Timeline`,
-      xaxis: { title: 'Mission Date', showgrid: true, gridcolor: '#f1f5f9' },
+      title: `${cfg.label} (${cfg.unit}) — Evolución Temporal`,
+      xaxis: { title: 'Fecha de Misión', showgrid: true, gridcolor: '#f1f5f9' },
       yaxis: { title: `${cfg.label} (${cfg.unit})`, showgrid: true, gridcolor: '#f1f5f9' },
       shapes,
       annotations,

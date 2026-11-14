@@ -39,7 +39,7 @@ export class MissionStateService {
   readonly dataSource = signal<'demo' | 'upload'>('demo');
   readonly selectedAstronaut = signal<string>('A-01');
   readonly selectedEnvironment = signal<string>(
-    'Space station (low Earth orbit)'
+    'Estación espacial (órbita terrestre baja)'
   );
   readonly baselineDays = signal<number>(14);
   readonly currentDate = signal<string>('');
@@ -104,6 +104,7 @@ export class MissionStateService {
       const res = results[key];
       if (res && res.quality) {
         if (
+          res.quality.flag !== 'Correcto' &&
           res.quality.flag !== 'OK' &&
           (res.quality.days_since === null || res.quality.days_since >= 1)
         ) {

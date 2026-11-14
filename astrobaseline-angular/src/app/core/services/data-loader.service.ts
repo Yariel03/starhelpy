@@ -102,12 +102,12 @@ export class DataLoaderService {
   ): StandardizationResult {
     const log: string[] = [];
     if (!rawRows || rawRows.length === 0) {
-      return { records: [], log: ['Empty dataset provided.'], mapping: {}, astronauts: [], dates: [] };
+      return { records: [], log: ['Conjunto de datos vacío suministrado.'], mapping: {}, astronauts: [], dates: [] };
     }
 
     const columns = Object.keys(rawRows[0] || {});
     let mapping = customMapping ? { ...customMapping } : this.autoMap(columns);
-    log.push(`Column mapping used: ${JSON.stringify(mapping)}`);
+    log.push(`Mapeo de columnas aplicado: ${JSON.stringify(mapping)}`);
 
     // Detectar si el dataset viene en formato LARGO
     let df = [...rawRows];
@@ -122,7 +122,7 @@ export class DataLoaderService {
       );
 
       if (vcol && valcol) {
-        log.push(`Long format detected (variable='${vcol}', value='${valcol}') -> pivoting to wide.`);
+        log.push(`Formato largo detectado (variable='${vcol}', valor='${valcol}') -> dinamizando a formato ancho.`);
         const nameToKey: Record<string, IndicatorKey> = {};
         for (const key of this.config.INDICATOR_KEYS) {
           const cfg = this.config.INDICATORS[key];
@@ -210,7 +210,7 @@ export class DataLoaderService {
         fCount++;
       }
     });
-    if (fCount > 0) log.push(`temperature: ${fCount} values looked like Fahrenheit -> converted to °C.`);
+    if (fCount > 0) log.push(`temperature: ${fCount} valores detectados en Fahrenheit -> convertidos a °C.`);
 
     // 2. Glucosa: mmol/L a mg/dL
     let gCount = 0;
@@ -220,7 +220,7 @@ export class DataLoaderService {
         gCount++;
       }
     });
-    if (gCount > 0) log.push(`glucose: ${gCount} values looked like mmol/L -> converted to mg/dL.`);
+    if (gCount > 0) log.push(`glucose: ${gCount} valores detectados en mmol/L -> convertidos a mg/dL.`);
 
     // 3. Sueño: minutos a horas
     const sleepVals = records
@@ -233,7 +233,7 @@ export class DataLoaderService {
           r.sleep_hours = Number((r.sleep_hours / 60).toFixed(2));
         }
       });
-      log.push('sleep_hours: median > 24, interpreted as minutes -> converted to hours.');
+      log.push('sleep_hours: mediana > 24, interpretado como minutos -> convertido a horas.');
     }
 
     // 4. Plausibilidad biológica
@@ -249,7 +249,7 @@ export class DataLoaderService {
         }
       });
       if (badCount > 0) {
-        log.push(`${key}: ${badCount} implausible values discarded (outside ${cfg.plaus_low}-${cfg.plaus_high}).`);
+        log.push(`${key}: ${badCount} valores no biológicamente plausibles descartados (fuera de ${cfg.plaus_low}-${cfg.plaus_high}).`);
       }
     }
 
@@ -326,7 +326,7 @@ export class DataLoaderService {
 
     const allDates = Array.from(new Set(finalCleanRecords.map((r) => r.date))).sort();
     log.push(
-      `Full daily calendar built: ${finalCleanRecords.length} rows, ${astronauts.length} astronaut(s).`
+      `Calendario diario completo generado: ${finalCleanRecords.length} registros, ${astronauts.length} astronauta(s).`
     );
 
     return {

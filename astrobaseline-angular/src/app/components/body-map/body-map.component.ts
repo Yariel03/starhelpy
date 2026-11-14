@@ -26,7 +26,7 @@ import { BodyRegionKey } from '../../core/models/indicator.model';
           [class.selected]="selectedRegion() === 'head'"
           (click)="selectRegion('head')"
         >
-          <title>Head: Brain and behavior</title>
+          <title>Cabeza: Cerebro y comportamiento</title>
         </circle>
 
         <!-- Chest -->
@@ -43,7 +43,7 @@ import { BodyRegionKey } from '../../core/models/indicator.model';
           [class.selected]="selectedRegion() === 'chest'"
           (click)="selectRegion('chest')"
         >
-          <title>Chest: Cardiovascular system</title>
+          <title>Pecho: Sistema cardiovascular</title>
         </rect>
 
         <!-- Abdomen -->
@@ -60,7 +60,7 @@ import { BodyRegionKey } from '../../core/models/indicator.model';
           [class.selected]="selectedRegion() === 'abdomen'"
           (click)="selectRegion('abdomen')"
         >
-          <title>Abdomen: Metabolism (Glucose)</title>
+          <title>Abdomen: Metabolismo (Glucosa)</title>
         </rect>
 
         <!-- Left Arm -->
@@ -77,7 +77,7 @@ import { BodyRegionKey } from '../../core/models/indicator.model';
           [class.selected]="selectedRegion() === 'arms'"
           (click)="selectRegion('arms')"
         >
-          <title>Arms: Thermoregulation and immune response</title>
+          <title>Brazos: Termorregulación y respuesta inmunológica</title>
         </rect>
 
         <!-- Right Arm -->
@@ -94,7 +94,7 @@ import { BodyRegionKey } from '../../core/models/indicator.model';
           [class.selected]="selectedRegion() === 'arms'"
           (click)="selectRegion('arms')"
         >
-          <title>Arms: Thermoregulation and immune response</title>
+          <title>Brazos: Termorregulación y respuesta inmunológica</title>
         </rect>
 
         <!-- Left Leg -->
@@ -111,7 +111,7 @@ import { BodyRegionKey } from '../../core/models/indicator.model';
           [class.selected]="selectedRegion() === 'legs'"
           (click)="selectRegion('legs')"
         >
-          <title>Legs: Musculoskeletal system</title>
+          <title>Piernas: Sistema musculoesquelético</title>
         </rect>
 
         <!-- Right Leg -->
@@ -128,7 +128,7 @@ import { BodyRegionKey } from '../../core/models/indicator.model';
           [class.selected]="selectedRegion() === 'legs'"
           (click)="selectRegion('legs')"
         >
-          <title>Legs: Musculoskeletal system</title>
+          <title>Piernas: Sistema musculoesquelético</title>
         </rect>
       </svg>
     </div>

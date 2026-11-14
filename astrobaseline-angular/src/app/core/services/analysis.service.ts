@@ -34,7 +34,7 @@ export class AnalysisService {
       return {
         level: -1,
         z: null,
-        reasons: ['No recent measurement'],
+        reasons: ['Sin medición reciente'],
       };
     }
 
@@ -47,10 +47,10 @@ export class AnalysisService {
 
     if ((hlo !== null && recent < hlo) || (hhi !== null && recent > hhi)) {
       level = 2;
-      reasons.push('Beyond the hard limit');
+      reasons.push('Fuera del límite crítico');
     } else if ((lo !== null && recent < lo) || (hi !== null && recent > hi)) {
       level = 1;
-      reasons.push('Outside the reference range');
+      reasons.push('Fuera del rango de referencia');
     }
 
     let z: number | null = null;
@@ -58,13 +58,13 @@ export class AnalysisService {
       z = (recent - med) / sigma;
       if (Math.abs(z) >= 3) {
         level = Math.max(level, 2);
-        reasons.push(`${z >= 0 ? '+' : ''}${z.toFixed(1)} sigma from personal baseline`);
+        reasons.push(`${z >= 0 ? '+' : ''}${z.toFixed(1)} σ de la línea base personal`);
       } else if (Math.abs(z) >= 2) {
         level = Math.max(level, 1);
-        reasons.push(`${z >= 0 ? '+' : ''}${z.toFixed(1)} sigma from personal baseline`);
+        reasons.push(`${z >= 0 ? '+' : ''}${z.toFixed(1)} σ de la línea base personal`);
       }
     } else {
-      reasons.push('Baseline not available yet (fewer than 5 readings)');
+      reasons.push('Línea base no disponible aún (menos de 5 lecturas)');
     }
 
     return {
@@ -125,7 +125,7 @@ export class AnalysisService {
    * Texto de escalación médica según el entorno y nivel
    */
   getEscalationText(envKey: string, level: number): string {
-    const env = this.config.ENVIRONMENTS[envKey] || this.config.ENVIRONMENTS['Space station (low Earth orbit)'];
+    const env = this.config.ENVIRONMENTS[envKey] || this.config.ENVIRONMENTS['Estación espacial (órbita terrestre baja)'];
     if (level <= 0) {
       return env.routine;
     }

@@ -32,11 +32,11 @@ export class BadgeComponent {
       case 0:
         return { name: 'Normal', color: '#2e7d32' };
       case 1:
-        return { name: 'Attention', color: '#f9a825' };
+        return { name: 'Atención', color: '#f9a825' };
       case 2:
-        return { name: 'Alert', color: '#c62828' };
+        return { name: 'Alerta', color: '#c62828' };
       default:
-        return { name: 'No data', color: '#757575' };
+        return { name: 'Sin datos', color: '#757575' };
     }
   }
 }

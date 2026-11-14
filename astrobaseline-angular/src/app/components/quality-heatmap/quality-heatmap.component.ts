@@ -78,9 +78,9 @@ export class QualityHeatmapComponent {
     ];
 
     const layout: any = {
-      title: 'Measurements present (green) vs missing (red)',
-      margin: { t: 40, r: 20, l: 180, b: 60 },
-      xaxis: { title: 'Date', tickangle: -45, showgrid: false },
+      title: 'Mediciones registradas (verde) vs ausentes (rojo)',
+      margin: { t: 40, r: 20, l: 240, b: 60 },
+      xaxis: { title: 'Fecha de Misión', tickangle: -45, showgrid: false },
       yaxis: { autorange: 'reversed' },
       plot_bgcolor: '#ffffff',
       paper_bgcolor: '#ffffff',
