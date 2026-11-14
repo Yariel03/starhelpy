@@ -130,35 +130,6 @@
       <!-- PESTAÑA 1: PANEL GENERAL (DASHBOARD) -->
       @if (activeTab() === 'dashboard') {
         <div class="tab-pane dashboard-pane">
-          <!-- Resumen de Estado -->
-          <div class="status-summary-card">
-            <div class="status-col">
-              <span class="section-subtitle">Estado General</span>
-              <div class="badge-wrapper">
-                <app-badge [level]="state.overallStatus()"></app-badge>
-              </div>
-              <p class="env-metadata">
-                <strong>Entorno:</strong> {{ state.selectedEnvironment() }}<br />
-                <strong>Retraso de comunicación:</strong> {{ currentEnvInfo().delay }} |
-                <strong>Autonomía médica:</strong> {{ currentEnvInfo().autonomy }}
-              </p>
-            </div>
-
-            <div class="action-col">
-              <div class="escalation-alert">
-                <span class="info-icon">📋</span>
-                <p>{{ state.escalationText() }}</p>
-              </div>
-
-              @if (state.dueMeasurements().length > 0) {
-                <div class="due-warning">
-                  <span class="warning-icon">⚠️</span>
-                  <span><strong>Mediciones pendientes / alertas de datos:</strong> {{ state.dueMeasurements().join(', ') }}</span>
-                </div>
-              }
-            </div>
-          </div>
-
           <!-- RECOMPENSAS Y RACHA ESTILO DUOLINGO + EJERCICIO PARA LA META DEL ASTRONAUTA -->
           <app-reward-streak></app-reward-streak>
 
