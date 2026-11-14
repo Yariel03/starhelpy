@@ -13,8 +13,8 @@ import {
   providedIn: 'root',
 })
 export class ConfigService {
-  readonly APP_NAME = 'AstroBaseline';
-  readonly TAGLINE = 'Personal-baseline health monitoring for long-duration missions';
+  readonly APP_NAME = 'Start & Fit';
+  readonly TAGLINE = 'Personal-baseline health & fitness monitoring';
 
   readonly DATE_COL = 'date';
   readonly SUBJECT_COL = 'astronaut_id';

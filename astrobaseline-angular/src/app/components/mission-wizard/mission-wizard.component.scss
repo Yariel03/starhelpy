@@ -47,6 +47,19 @@
   align-items: flex-start;
   border-bottom: 1px solid #f1f5f9;
 
+  .wizard-brand-row {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin-bottom: 0.35rem;
+
+    .wizard-header-logo {
+      height: 38px;
+      width: auto;
+      object-fit: contain;
+    }
+  }
+
   .badge-tag {
     background: #eff6ff;
     color: #2563eb;

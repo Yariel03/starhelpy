@@ -15,11 +15,17 @@
     <!-- SIDEBAR -->
     <aside class="sidebar">
     <div class="sidebar-header">
-      <div class="logo-title">
-        <span class="icon">🚀</span>
-        <h2>{{ config.APP_NAME }}</h2>
+      <div class="brand-container">
+        <img
+          src="/assets/images/logo/logo-dark.png"
+          alt="Start & Fit"
+          class="brand-logo"
+        />
+        <div class="brand-meta">
+          <h2 class="brand-name">{{ config.APP_NAME }}</h2>
+          <p class="tagline">{{ config.TAGLINE }}</p>
+        </div>
       </div>
-      <p class="tagline">{{ config.TAGLINE }}</p>
     </div>
 
     <!-- Telemetría Card: Gráfica de LPM en Tiempo Real -->
