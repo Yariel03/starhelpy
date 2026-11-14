@@ -13,7 +13,7 @@ import {
   providedIn: 'root',
 })
 export class ConfigService {
-  readonly APP_NAME = 'Start & Help';
+  readonly APP_NAME = 'Start Help &';
   readonly TAGLINE = 'Monitoreo de salud y rendimiento físico de astronautas';
 
   readonly DATE_COL = 'date';
