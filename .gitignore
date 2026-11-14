@@ -1,0 +1,7 @@
+node_modules/
+.angular/
+dist/
+venv/
+*.zip
+.vscode/
+.DS_Store

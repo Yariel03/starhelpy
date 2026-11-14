@@ -1,0 +1,494 @@
+<div class="app-root-shell">
+  <!-- Dynamic Destination Background Image (Fondo Real del Destino) -->
+  <div
+    class="fixed-destination-bg"
+    [style.background-image]="'url(' + activeBgImage() + ')'"
+  ></div>
+  <div class="destination-bg-vignette"></div>
+
+  <!-- ONBOARDING MISSION SETUP WIZARD -->
+  @if (state.isWizardOpen()) {
+    <app-mission-wizard></app-mission-wizard>
+  }
+
+  <div class="app-container">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo-title">
+        <span class="icon">🚀</span>
+        <h2>{{ config.APP_NAME }}</h2>
+      </div>
+      <p class="tagline">{{ config.TAGLINE }}</p>
+    </div>
+
+    <!-- Active Mission Card -->
+    <div class="mission-summary-card">
+      <div class="mission-card-header">
+        <span class="mission-status-dot"></span>
+        <span class="mission-card-title">Misión Activa</span>
+        <button class="edit-mission-btn" (click)="state.openWizard()" title="Modificar misión">
+          ⚙️ Ajustar
+        </button>
+      </div>
+
+      <div class="character-preview">
+        <img [src]="currentGoal().avatar" [alt]="currentGoal().name" class="avatar-thumb" />
+        <div class="character-meta">
+          <strong class="char-name">{{ currentGoal().name }}</strong>
+          <span class="char-role">{{ currentGoal().archetype }}</span>
+        </div>
+      </div>
+
+      <div class="destination-preview">
+        <img [src]="currentDestination().image" [alt]="currentDestination().name" class="dest-thumb" />
+        <div class="dest-meta">
+          <span class="dest-label">Destino:</span>
+          <strong class="dest-name">{{ currentDestination().name }}</strong>
+        </div>
+      </div>
+
+      <div class="mission-meta-row">
+        <span><strong>Rutina:</strong> {{ currentGoal().routineFocus }}</span>
+      </div>
+    </div>
+
+    <!-- Data source radio -->
+    <div class="control-group">
+      <label class="control-label">Data source</label>
+      <div class="radio-group">
+        <label class="radio-label">
+          <input
+            type="radio"
+            name="dataSource"
+            value="demo"
+            [checked]="state.dataSource() === 'demo'"
+            (change)="state.loadDemoData()"
+          />
+          Synthetic demo
+        </label>
+        <label class="radio-label">
+          <input
+            type="radio"
+            name="dataSource"
+            value="upload"
+            [checked]="state.dataSource() === 'upload'"
+            (change)="state.dataSource.set('upload')"
+          />
+          Upload file
+        </label>
+      </div>
+
+      @if (state.dataSource() === 'upload') {
+        <div class="file-upload-box">
+          <label class="file-label">CSV / XLSX / JSON</label>
+          <input
+            type="file"
+            accept=".csv,.xlsx,.xls,.json"
+            (change)="onFileSelected($event)"
+            class="file-input"
+          />
+        </div>
+      }
+    </div>
+
+    <!-- Astronaut select -->
+    <div class="control-group">
+      <label class="control-label">Astronaut</label>
+      <select
+        [ngModel]="state.selectedAstronaut()"
+        (ngModelChange)="state.selectedAstronaut.set($event)"
+        class="form-select"
+      >
+        @for (sid of state.astronauts(); track sid) {
+          <option [value]="sid">{{ sid }}</option>
+        }
+      </select>
+    </div>
+
+    <!-- Environment select -->
+    <div class="control-group">
+      <label class="control-label">Environment</label>
+      <select
+        [ngModel]="state.selectedEnvironment()"
+        (ngModelChange)="state.selectedEnvironment.set($event)"
+        class="form-select"
+      >
+        @for (env of environmentKeys; track env) {
+          <option [value]="env">{{ env }}</option>
+        }
+      </select>
+    </div>
+
+    <!-- Baseline window slider -->
+    <div class="control-group">
+      <div class="slider-header">
+        <label class="control-label">Baseline window</label>
+        <span class="slider-value">{{ state.baselineDays() }} days</span>
+      </div>
+      <input
+        type="range"
+        min="7"
+        max="30"
+        step="1"
+        [ngModel]="state.baselineDays()"
+        (ngModelChange)="state.baselineDays.set($event)"
+        class="form-range"
+      />
+    </div>
+
+    <!-- Mission Date slider (Timeline) -->
+    <div class="control-group">
+      <div class="slider-header">
+        <label class="control-label">Mission date</label>
+        <span class="slider-value highlight">{{ state.currentDate() }}</span>
+      </div>
+      <input
+        type="range"
+        min="0"
+        [max]="state.astronautDates().length > 0 ? state.astronautDates().length - 1 : 0"
+        step="1"
+        [value]="getCurrentDateIndex()"
+        (input)="onDateSliderChange($event)"
+        class="form-range"
+      />
+      <div class="date-range-caption">
+        <span>Sol 1</span>
+        <span>Day {{ state.missionDay() }} of {{ state.astronautDates().length }}</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+    <!-- HEADER -->
+    <header class="content-header">
+      <div class="title-row">
+        <div class="header-astronaut-badge">
+          <img [src]="currentGoal().avatar" [alt]="currentGoal().name" class="header-avatar" />
+          <div class="header-title-meta">
+            <h1>
+              {{ config.APP_NAME }} — {{ currentGoal().name }}
+            </h1>
+            <span class="mission-subtitle">
+              {{ currentDestination().name }} · Meta: {{ currentGoal().archetype }} · Sol {{ state.missionDay() }} de {{ state.missionConfig().daysInSpace }} días
+            </span>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <button class="config-mission-pill" (click)="state.openWizard()">
+            ⚙️ Configurar Misión
+          </button>
+          <span class="date-badge">{{ state.currentDate() }}</span>
+        </div>
+      </div>
+
+      <div class="disclaimer-banner">
+        <span class="alert-icon">⚠️</span>
+        <span class="disclaimer-text">
+          Prototype with SYNTHETIC or demo data. Not a medical device, not a diagnosis, no clinical validation. Thresholds are demonstrative.
+        </span>
+      </div>
+    </header>
+
+    <!-- TABS NAVIGATION -->
+    <nav class="tabs-nav">
+      <button
+        class="tab-btn"
+        [class.active]="activeTab() === 'dashboard'"
+        (click)="setTab('dashboard')"
+      >
+        Dashboard
+      </button>
+      <button
+        class="tab-btn"
+        [class.active]="activeTab() === 'trends'"
+        (click)="setTab('trends')"
+      >
+        Trends
+      </button>
+      <button
+        class="tab-btn"
+        [class.active]="activeTab() === 'body'"
+        (click)="setTab('body')"
+      >
+        Body Map
+      </button>
+      <button
+        class="tab-btn"
+        [class.active]="activeTab() === 'quality'"
+        (click)="setTab('quality')"
+      >
+        Data Quality
+      </button>
+      <button
+        class="tab-btn"
+        [class.active]="activeTab() === 'method'"
+        (click)="setTab('method')"
+      >
+        Method and Limits
+      </button>
+    </nav>
+
+    <!-- TAB 1: DASHBOARD -->
+    @if (activeTab() === 'dashboard') {
+      <div class="tab-pane dashboard-pane">
+        <!-- Overview Banner -->
+        <div class="status-summary-card">
+          <div class="status-col">
+            <span class="section-subtitle">Overall status</span>
+            <div class="badge-wrapper">
+              <app-badge [level]="state.overallStatus()"></app-badge>
+            </div>
+            <p class="env-metadata">
+              <strong>Environment:</strong> {{ state.selectedEnvironment() }}<br />
+              <strong>Comm delay:</strong> {{ currentEnvInfo().delay }} |
+              <strong>Autonomy:</strong> {{ currentEnvInfo().autonomy }}
+            </p>
+          </div>
+
+          <div class="action-col">
+            <div class="escalation-alert">
+              <span class="info-icon">📋</span>
+              <p>{{ state.escalationText() }}</p>
+            </div>
+
+            @if (state.dueMeasurements().length > 0) {
+              <div class="due-warning">
+                <span class="warning-icon">⚠️</span>
+                <span><strong>Measurements due / data problems:</strong> {{ state.dueMeasurements().join(', ') }}</span>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Metric Cards Grid -->
+        <div class="metrics-grid">
+          @for (key of config.INDICATOR_KEYS; track key) {
+            @let cfg = config.INDICATORS[key];
+            @let res = state.evaluationResults()[key];
+            <div class="metric-card" [class.alert-border]="res && res.level === 2" [class.attention-border]="res && res.level === 1">
+              <div class="card-header">
+                <span class="metric-title">{{ cfg.label }}</span>
+                <app-badge [level]="res ? res.level : -1"></app-badge>
+              </div>
+
+              <div class="metric-body">
+                <div class="metric-value">
+                  {{ formatValue(res ? res.recent : null, cfg.unit) }}
+                </div>
+                <div class="metric-delta">
+                  @if (res && res.z !== null) {
+                    <span class="z-score" [class.negative]="res.z < 0" [class.positive]="res.z > 0">
+                      {{ res.z >= 0 ? '+' : '' }}{{ res.z }} σ vs baseline
+                    </span>
+                  } @else {
+                    <span class="no-delta">No baseline delta</span>
+                  }
+                </div>
+              </div>
+
+              <!-- Collapsible Section -->
+              <div class="card-footer">
+                <button
+                  class="expand-btn"
+                  (click)="toggleExpand(key)"
+                >
+                  {{ expandedMetric() === key ? 'Hide details ▲' : 'Why / what to do ▼' }}
+                </button>
+
+                @if (expandedMetric() === key) {
+                  <div class="expanded-content">
+                    <p><strong>Why it matters:</strong> {{ cfg.why }}</p>
+                    <p><strong>How to measure:</strong> {{ cfg.how }}</p>
+                    <p><strong>Hazard:</strong> {{ cfg.hazard }}</p>
+                    @if (res && res.reasons && res.reasons.length > 0) {
+                      <p class="flags"><strong>Flags:</strong> {{ res.reasons.join('; ') }}</p>
+                    }
+                    @if (res && res.level === 1) {
+                      <p class="action-attention"><strong>Action:</strong> {{ cfg.attention }}</p>
+                    }
+                    @if (res && res.level === 2) {
+                      <p class="action-alert"><strong>Action:</strong> {{ cfg.alert }}</p>
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- TAB 2: TRENDS -->
+    @if (activeTab() === 'trends') {
+      <div class="tab-pane trends-pane">
+        <div class="trends-controls">
+          <label class="control-label">Select Indicator:</label>
+          <select
+            [ngModel]="state.selectedIndicatorForTrends()"
+            (ngModelChange)="state.selectedIndicatorForTrends.set($event)"
+            class="form-select inline-select"
+          >
+            @for (key of config.INDICATOR_KEYS; track key) {
+              <option [value]="key">{{ config.INDICATORS[key].label }}</option>
+            }
+          </select>
+        </div>
+
+        <app-trends-chart></app-trends-chart>
+      </div>
+    }
+
+    <!-- TAB 3: BODY MAP -->
+    @if (activeTab() === 'body') {
+      <div class="tab-pane body-pane">
+        <div class="body-layout">
+          <div class="svg-column">
+            <app-body-map></app-body-map>
+          </div>
+
+          <div class="details-column">
+            <div class="region-selector-bar">
+              <span class="selector-label">Select region:</span>
+              <div class="pill-group">
+                @for (reg of ['head', 'chest', 'abdomen', 'arms', 'legs']; track reg) {
+                  <button
+                    class="pill-btn"
+                    [class.active]="state.selectedBodyRegion() === reg"
+                    (click)="state.selectedBodyRegion.set($any(reg))"
+                  >
+                    {{ reg | titlecase }}
+                  </button>
+                }
+              </div>
+            </div>
+
+            <div class="region-info-card">
+              <h3>{{ currentRegionInfo().label }}</h3>
+              <p class="region-note">{{ currentRegionInfo().note }}</p>
+
+              <div class="region-indicators-list">
+                @for (item of regionIndicators(); track item.key) {
+                  <div class="indicator-row">
+                    <div class="row-header">
+                      <strong>{{ item.config.label }}</strong>:
+                      <span>{{ formatValue(item.result ? item.result.recent : null, item.config.unit) }}</span>
+                      <app-badge [level]="item.result ? item.result.level : -1"></app-badge>
+                    </div>
+                    <p class="indicator-caption">{{ item.config.why }}</p>
+                  </div>
+                } @empty {
+                  <p class="empty-text">No active indicators monitored in this region.</p>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- TAB 4: DATA QUALITY -->
+    @if (activeTab() === 'quality') {
+      <div class="tab-pane quality-pane">
+        <div class="table-card">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Indicator</th>
+                <th>Quality Score</th>
+                <th>Coverage (7 d)</th>
+                <th>Days Since Last</th>
+                <th>Flag</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (row of qualityTableRows(); track row.key) {
+                <tr>
+                  <td><strong>{{ row.label }}</strong></td>
+                  <td>
+                    <div class="score-bar-wrapper">
+                      <div class="score-bar" [style.width.%]="row.score" [class.low]="row.score < 50" [class.med]="row.score >= 50 && row.score < 80" [class.high]="row.score >= 80"></div>
+                      <span class="score-text">{{ row.score }}/100</span>
+                    </div>
+                  </td>
+                  <td>{{ row.coverage }}</td>
+                  <td>{{ row.daysSince }}</td>
+                  <td>
+                    <span class="flag-tag" [class.ok]="row.flag === 'OK'" [class.stale]="row.flag.includes('Stale')" [class.missing]="row.flag.includes('Low')">
+                      {{ row.flag }}
+                    </span>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <div class="heatmap-section">
+          <app-quality-heatmap></app-quality-heatmap>
+        </div>
+      </div>
+    }
+
+    <!-- TAB 5: METHOD AND LIMITS -->
+    @if (activeTab() === 'method') {
+      <div class="tab-pane method-pane">
+        <div class="info-card">
+          <h3>Methodology</h3>
+          <p>
+            For each astronaut we compute a personal baseline (median and robust sigma of the first N days using Median Absolute Deviation $\times 1.4826$).
+            Status combines (1) demonstrative reference ranges and (2) deviation from the personal baseline ($z$-score), using the mean of the last 3 calendar days.
+            Data quality = 60% coverage + 40% recency over 7 days.
+          </p>
+
+          <h3>Limitations & Ethics</h3>
+          <p>
+            Synthetic/demo data; demonstrative thresholds; no clinical validation; not a medical diagnosis device.
+            Musculoskeletal evaluation (bone density loss) requires onboard imaging (DXA/ultrasound) and is not simulated here.
+          </p>
+        </div>
+
+        <div class="table-card">
+          <h3>Demonstrative Thresholds Used</h3>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Indicator</th>
+                <th>Unit</th>
+                <th>Ref Low</th>
+                <th>Ref High</th>
+                <th>Hard Low</th>
+                <th>Hard High</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (k of config.INDICATOR_KEYS; track k) {
+                @let c = config.INDICATORS[k];
+                <tr>
+                  <td><strong>{{ c.label }}</strong></td>
+                  <td>{{ c.unit }}</td>
+                  <td>{{ c.ref_low !== null ? c.ref_low : '-' }}</td>
+                  <td>{{ c.ref_high !== null ? c.ref_high : '-' }}</td>
+                  <td>{{ c.hard_low !== null ? c.hard_low : '-' }}</td>
+                  <td>{{ c.hard_high !== null ? c.hard_high : '-' }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <div class="log-card">
+          <h3>Transformation Log (Evidence)</h3>
+          <ul class="log-list">
+            @for (line of state.transformationLog(); track line) {
+              <li>{{ line }}</li>
+            }
+          </ul>
+        </div>
+      </div>
+    }
+  </main>
+</div>
+</div>

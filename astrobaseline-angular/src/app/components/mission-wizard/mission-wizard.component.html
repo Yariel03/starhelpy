@@ -1,0 +1,163 @@
+<div class="wizard-backdrop">
+  <div class="wizard-modal">
+    <!-- Header -->
+    <div class="wizard-header">
+      <div class="wizard-title-area">
+        <span class="badge-tag">NASA Space Apps 2026</span>
+        <h2>Configuración de la Misión Espacial</h2>
+        <p class="subtitle">Define la duración, el destino y el protocolo de entrenamiento físico del astronauta</p>
+      </div>
+      <button class="close-btn" (click)="skipWizard()" title="Cerrar y ver dashboard">✕</button>
+    </div>
+
+    <!-- Stepper Indicator (3 PASOS) -->
+    <div class="stepper">
+      <div class="step-item" [class.active]="currentStep() === 1" [class.completed]="currentStep() > 1">
+        <div class="step-circle">1</div>
+        <span class="step-label">Duración</span>
+      </div>
+      <div class="step-line" [class.filled]="currentStep() > 1"></div>
+      <div class="step-item" [class.active]="currentStep() === 2" [class.completed]="currentStep() > 2">
+        <div class="step-circle">2</div>
+        <span class="step-label">Destino</span>
+      </div>
+      <div class="step-line" [class.filled]="currentStep() > 2"></div>
+      <div class="step-item" [class.active]="currentStep() === 3" [class.completed]="currentStep() > 3">
+        <div class="step-circle">3</div>
+        <span class="step-label">Meta de Ejercicio</span>
+      </div>
+    </div>
+
+    <!-- Content Steps -->
+    <div class="wizard-body">
+      <!-- PASO 1: DURACIÓN DE LA MISIÓN -->
+      @if (currentStep() === 1) {
+        <div class="step-content">
+          <div class="step-intro">
+            <h3>¿Cuántos días estará en el espacio?</h3>
+            <p>Define la ventana de misión para calcular los días de línea base y monitorear la adaptación fisiológica.</p>
+          </div>
+
+          <div class="duration-display">
+            <span class="days-count">{{ daysInSpace() }}</span>
+            <span class="days-unit">días en órbita</span>
+            <span class="months-approx">(aprox. {{ (daysInSpace() / 30).toFixed(1) }} meses)</span>
+          </div>
+
+          <div class="slider-wrapper">
+            <input
+              type="range"
+              min="14"
+              max="365"
+              step="1"
+              [ngModel]="daysInSpace()"
+              (ngModelChange)="daysInSpace.set($event)"
+              class="large-range"
+            />
+            <div class="slider-ticks">
+              <span>14 días</span>
+              <span>180 días (6 meses)</span>
+              <span>365 días (1 año)</span>
+            </div>
+          </div>
+
+          <div class="presets-row">
+            <span class="presets-label">Preajustes habituales:</span>
+            <div class="preset-buttons">
+              <button class="preset-btn" [class.selected]="daysInSpace() === 30" (click)="setDaysPreset(30)">30 días (Corta)</button>
+              <button class="preset-btn" [class.selected]="daysInSpace() === 60" (click)="setDaysPreset(60)">60 días (Estándar)</button>
+              <button class="preset-btn" [class.selected]="daysInSpace() === 90" (click)="setDaysPreset(90)">90 días (Media)</button>
+              <button class="preset-btn" [class.selected]="daysInSpace() === 180" (click)="setDaysPreset(180)">180 días (ISS Semestre)</button>
+              <button class="preset-btn" [class.selected]="daysInSpace() === 365" (click)="setDaysPreset(365)">365 días (Misión Marte)</button>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- PASO 2: DESTINO ESPACIAL -->
+      @if (currentStep() === 2) {
+        <div class="step-content">
+          <div class="step-intro">
+            <h3>¿En dónde estará la tripulación?</h3>
+            <p>Selecciona la ubicación: el fondo de la aplicación cambiará automáticamente con vistas reales del destino.</p>
+          </div>
+
+          <div class="destinations-grid">
+            @for (dest of config.DESTINATIONS; track dest.id) {
+              <div
+                class="dest-card"
+                [class.selected]="selectedDestination().id === dest.id"
+                (click)="selectDestination(dest)"
+              >
+                <div class="dest-image-box">
+                  <img [src]="dest.image" [alt]="dest.name" class="dest-img" />
+                  @if (selectedDestination().id === dest.id) {
+                    <span class="check-badge">✓ Destino Activo</span>
+                  }
+                </div>
+                <div class="dest-info">
+                  <h4>{{ dest.name }}</h4>
+                  <p class="dest-desc">{{ dest.description }}</p>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- PASO 3: META DE ENTRENAMIENTO Y EJERCICIO DEL ASTRONAUTA -->
+      @if (currentStep() === 3) {
+        <div class="step-content">
+          <div class="step-intro">
+            <h3>¿Cuál es la meta del astronauta para brindar su ejercicio?</h3>
+            <p>Elige el arquetipo de acondicionamiento físico y protocolo de entrenamiento contra el deterioro en microgravedad.</p>
+          </div>
+
+          <div class="goals-grid">
+            @for (goal of config.TRAINING_GOALS; track goal.id) {
+              <div
+                class="goal-card"
+                [class.selected]="selectedGoal().id === goal.id"
+                (click)="selectGoal(goal)"
+              >
+                <div class="goal-avatar-box">
+                  <img [src]="goal.avatar" [alt]="goal.name" class="goal-avatar" />
+                  @if (selectedGoal().id === goal.id) {
+                    <span class="check-badge">✓ Meta Asignada</span>
+                  }
+                </div>
+                <div class="goal-details">
+                  <div class="goal-subject-tag">{{ goal.id }} — Arquetipo</div>
+                  <h4>{{ goal.name }}</h4>
+                  <span class="goal-archetype">{{ goal.archetype }}</span>
+                  <p class="goal-desc">{{ goal.description }}</p>
+
+                  <div class="routine-focus-box">
+                    <strong>Protocolo de Ejercicio:</strong>
+                    <span>{{ goal.routineFocus }}</span>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Footer Controls -->
+    <div class="wizard-footer">
+      <button class="btn btn-outline" (click)="skipWizard()">Omitir y ver panel</button>
+
+      <div class="nav-buttons">
+        @if (currentStep() > 1) {
+          <button class="btn btn-secondary" (click)="prevStep()">← Atrás</button>
+        }
+        @if (currentStep() < totalSteps) {
+          <button class="btn btn-primary" (click)="nextStep()">Siguiente →</button>
+        } @else {
+          <button class="btn btn-launch" (click)="finishWizard()">🚀 Aplicar Meta e Iniciar Misión</button>
+        }
+      </div>
+    </div>
+  </div>
+</div>
