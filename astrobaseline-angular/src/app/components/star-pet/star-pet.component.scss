@@ -46,10 +46,23 @@
     background: linear-gradient(180deg, #ffffff 0%, #fef2f2 100%);
   }
 
+  &.radiation-danger-bubble {
+    border-color: #ef4444 !important;
+    background: linear-gradient(180deg, #ffffff 0%, #fff1f2 100%) !important;
+    box-shadow: 0 10px 30px rgba(239, 68, 68, 0.35), 0 0 20px rgba(239, 68, 68, 0.45);
+    animation: bubbleDangerPulse 1.4s infinite alternate ease-in-out;
+  }
+
   .bubble-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    .sender-info {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
 
     .bubble-sender {
       font-size: 0.72rem;
@@ -57,6 +70,17 @@
       color: #0f172a;
       text-transform: uppercase;
       letter-spacing: 0.4px;
+    }
+
+    .danger-tag-pill {
+      font-size: 0.6rem;
+      font-weight: 800;
+      background: #ef4444;
+      color: #ffffff;
+      padding: 1px 6px;
+      border-radius: 999px;
+      animation: blinkPill 0.9s infinite alternate;
+      letter-spacing: 0.3px;
     }
 
     .pet-bubble-close {
@@ -76,10 +100,109 @@
 
   .bubble-message {
     margin: 0;
-    font-size: 0.82rem;
+    font-size: 0.8rem;
     color: #334155;
     line-height: 1.35;
     font-weight: 500;
+  }
+
+  // Tarjeta de Radiación NASA DONKI en la burbuja
+  .donki-radiation-card {
+    background: #f8fafc;
+    border-radius: 10px;
+    padding: 0.45rem 0.6rem;
+    border: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+
+    &.danger {
+      background: #fff1f2;
+      border-color: #fecdd3;
+    }
+    &.warning {
+      background: #fffbeb;
+      border-color: #fde68a;
+    }
+    &.safe {
+      background: #f0fdf4;
+      border-color: #bbf7d0;
+    }
+
+    .donki-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .donki-title {
+        font-size: 0.68rem;
+        font-weight: 800;
+        color: #334155;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+
+        .satellite-icon {
+          font-size: 0.78rem;
+        }
+      }
+
+      .donki-badge {
+        font-size: 0.62rem;
+        font-weight: 800;
+        padding: 1px 6px;
+        border-radius: 999px;
+
+        &.danger {
+          background: #ef4444;
+          color: #ffffff;
+        }
+        &.warning {
+          background: #f59e0b;
+          color: #ffffff;
+        }
+        &.safe {
+          background: #10b981;
+          color: #ffffff;
+        }
+      }
+    }
+
+    .donki-desc {
+      font-size: 0.68rem;
+      color: #475569;
+      margin: 0;
+      line-height: 1.25;
+    }
+
+    .donki-card-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.64rem;
+      color: #64748b;
+
+      .donki-timer {
+        strong {
+          color: #0f172a;
+        }
+      }
+
+      .refresh-donki-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 0.72rem;
+        padding: 0;
+        opacity: 0.7;
+        transition: transform 0.2s, opacity 0.2s;
+
+        &:hover {
+          transform: rotate(45deg);
+          opacity: 1;
+        }
+      }
+    }
   }
 
   .bubble-footer {
@@ -167,6 +290,33 @@
 
   &.angry {
     animation: angryRumble 0.35s infinite ease-in-out;
+  }
+
+  &.radiation-hazard-star {
+    animation: hazardStarRumble 0.4s infinite ease-in-out !important;
+
+    .pet-glow-aura {
+      background: #ef4444 !important;
+      opacity: 0.8 !important;
+      filter: blur(14px) !important;
+    }
+  }
+
+  .hazard-top-banner {
+    position: absolute;
+    top: -18px;
+    font-size: 0.6rem;
+    font-weight: 900;
+    background: #ef4444;
+    color: #ffffff;
+    padding: 2px 8px;
+    border-radius: 999px;
+    white-space: nowrap;
+    box-shadow: 0 0 12px rgba(239, 68, 68, 0.85);
+    animation: blinkPill 0.8s infinite alternate;
+    z-index: 10;
+    border: 1px solid #ffffff;
+    letter-spacing: 0.4px;
   }
 
   .mood-badge {
@@ -287,6 +437,12 @@
             height: 6px;
             border-radius: 50%;
             background: #10b981;
+
+            &.danger-dot {
+              background: #ef4444 !important;
+              box-shadow: 0 0 6px #ef4444;
+              animation: blinkPill 0.8s infinite alternate;
+            }
           }
         }
       }
@@ -304,6 +460,51 @@
       &:hover {
         color: #ffffff;
       }
+    }
+  }
+
+  // Barra de Estado de Radiación NASA DONKI
+  .chat-donki-bar {
+    padding: 0.4rem 0.85rem;
+    font-size: 0.68rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #e2e8f0;
+    transition: background-color 0.2s ease;
+
+    &.danger {
+      background: #fee2e2;
+      color: #991b1b;
+      font-weight: 700;
+      border-color: #fecdd3;
+    }
+    &.warning {
+      background: #fef3c7;
+      color: #92400e;
+      font-weight: 600;
+      border-color: #fde68a;
+    }
+    &.safe {
+      background: #dcfce7;
+      color: #166534;
+      font-weight: 600;
+      border-color: #bbf7d0;
+    }
+
+    .chat-donki-label {
+      display: flex;
+      align-items: center;
+      gap: 0.2rem;
+    }
+
+    .chat-donki-status {
+      font-weight: 800;
+    }
+
+    .chat-donki-cd {
+      font-size: 0.62rem;
+      opacity: 0.8;
     }
   }
 
@@ -414,6 +615,17 @@
         font-size: 0.82rem;
         line-height: 1.35;
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+
+        &.alert-bubble {
+          background: #fef2f2 !important;
+          color: #991b1b !important;
+          border: 1.5px solid #ef4444 !important;
+          box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+
+          .message-content {
+            font-weight: 600;
+          }
+        }
 
         .message-content {
           margin: 0;
@@ -529,5 +741,39 @@
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes bubbleDangerPulse {
+  0% {
+    box-shadow: 0 10px 30px rgba(239, 68, 68, 0.3), 0 0 10px rgba(239, 68, 68, 0.3);
+    border-color: #ef4444;
+  }
+  100% {
+    box-shadow: 0 12px 35px rgba(239, 68, 68, 0.6), 0 0 24px rgba(239, 68, 68, 0.7);
+    border-color: #b91c1c;
+  }
+}
+
+@keyframes hazardStarRumble {
+  0%, 100% {
+    transform: scale(1.05) rotate(0deg);
+  }
+  25% {
+    transform: scale(1.09) rotate(-3deg);
+  }
+  75% {
+    transform: scale(1.09) rotate(3deg);
+  }
+}
+
+@keyframes blinkPill {
+  0% {
+    opacity: 0.75;
+    transform: scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.04);
   }
 }

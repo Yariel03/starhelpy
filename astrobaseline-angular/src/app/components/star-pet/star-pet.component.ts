@@ -4,6 +4,7 @@ import {
   HostListener,
   OnInit,
   computed,
+  effect,
   inject,
   signal,
 } from '@angular/core';
@@ -11,12 +12,14 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MissionStateService } from '../../core/services/mission-state.service';
 import { ConfigService } from '../../core/services/config.service';
+import { NasaDonkiService } from '../../core/services/nasa-donki.service';
 
 export interface ChatMessage {
   sender: 'helpy' | 'astronaut';
   text: string;
   time: string;
   mood?: 'happy' | 'sad' | 'angry';
+  isAlert?: boolean;
 }
 
 @Component({
@@ -29,6 +32,7 @@ export interface ChatMessage {
 export class StarPetComponent implements OnInit {
   readonly state = inject(MissionStateService);
   readonly config = inject(ConfigService);
+  readonly nasa = inject(NasaDonkiService);
   private el = inject(ElementRef);
 
   // Posición flotante arrastrable
@@ -51,7 +55,7 @@ export class StarPetComponent implements OnInit {
   readonly messages = signal<ChatMessage[]>([
     {
       sender: 'helpy',
-      text: '¡Hola, astronauta! Soy Star Helpy, tu mascota y asistente orbital ⭐. Estoy aquí para cuidar tu racha y vigilar que no te saltes tu entrenamiento contra la microgravedad.',
+      text: '¡Hola, astronauta! Soy Star Helpy, tu mascota y asistente orbital ⭐. Estoy monitoreando tu racha, tus ejercicios y el clima de radiación espacial en tiempo real cada minuto con NASA DONKI 🛰️.',
       time: 'Ahora',
       mood: 'happy',
     },
@@ -59,9 +63,10 @@ export class StarPetComponent implements OnInit {
 
   // Preguntas rápidas
   readonly quickPrompts = [
+    '☢️ ¿La radiación espacial es peligrosa?',
+    '🛰️ Reporte NASA DONKI en vivo',
     '🔥 ¿Cómo va mi racha hoy?',
     '🏋️ ¿Qué ejercicios me tocan?',
-    '❤️ ¿Cómo está mi corazón?',
     '🚀 Dame ánimos para entrenar',
   ];
 
@@ -69,29 +74,68 @@ export class StarPetComponent implements OnInit {
   // Reacciona en tiempo real a los ejercicios completados en MissionStateService
   readonly mood = this.state.petMood;
 
-  // Texto contextual de la burbuja según el estado emocional
+  // Texto contextual de la burbuja según el estado emocional y radiación DONKI
   readonly bubbleText = computed(() => {
+    // Si la radiación es peligrosa según NASA DONKI, la prioridad número 1 es alertar
+    if (this.nasa.isDangerous()) {
+      return `☢️ ¡ALERTA NASA DONKI! Radiación espacial PELIGROSA detectada. Flujo crítico de partículas energéticas (>1000 pfu). ¡Protégete en zona blindada!`;
+    }
+
     const m = this.mood();
     const completed = this.state.completedExercisesCount();
     const total = this.state.currentExercises().length;
     const day = this.state.missionDay();
+    const radLevel = this.nasa.radiationLevel();
+    const radTag = radLevel === 'SAFE' ? '🛡️ Radiación DONKI: Segura' : '🟡 Radiación DONKI: Precaución';
 
     if (m === 'happy') {
-      return `¡Genial, astronauta! Has completado ${completed}/${total} ejercicios. Racha de ${day} días asegurada ⭐`;
+      return `¡Genial, astronauta! Has completado ${completed}/${total} ejercicios. Racha de ${day} días asegurada ⭐ · [${radTag}]`;
     } else if (m === 'sad') {
-      return `Llevas ${completed}/${total} ejercicios completados... ¡La atrofia muscular no espera! Vamos por el segundo 🥺`;
+      return `Llevas ${completed}/${total} ejercicios completados... ¡La atrofia muscular no espera! Vamos por el segundo 🥺 · [${radTag}]`;
     } else {
-      return `¡OYE! Tienes 0/${total} ejercicios hoy. ¿Quieres perder densidad ósea? ¡A entrenar de inmediato! 😤`;
+      return `¡OYE! Tienes 0/${total} ejercicios hoy. ¿Quieres perder densidad ósea? ¡A entrenar de inmediato! 😤 · [${radTag}]`;
     }
   });
 
-  // Título del estado emocional
+  // Título del estado emocional / radiación
   readonly moodTitle = computed(() => {
+    if (this.nasa.isDangerous()) {
+      return '☢️ ¡Alerta de Radiación Espacial Peligrosa Activa!';
+    }
     const m = this.mood();
     if (m === 'happy') return 'Feliz & Radiante (Meta Cumplida)';
     if (m === 'sad') return 'Preocupado (Entrenamiento Incompleto)';
     return 'Enojado (Cero Ejercicios Hoy)';
   });
+
+  private previousCheckCount = 0;
+
+  constructor() {
+    // Efecto reactivo para anunciar el estado de radiación de NASA DONKI cada minuto
+    effect(() => {
+      const count = this.nasa.checkCount();
+      if (count > this.previousCheckCount && count > 1) {
+        this.previousCheckCount = count;
+        // Cada minuto se reactiva la burbuja con el nuevo estado
+        this.isBubbleVisible.set(true);
+
+        const timeStr = this.nasa.lastCheckedTime().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const isDanger = this.nasa.isDangerous();
+        const headline = this.nasa.radiationHeadline();
+
+        // Notificación automática en el chat si es peligroso o para mantener al día
+        if (isDanger) {
+          this.addMessage(
+            'helpy',
+            `☢️ [${timeStr}] ¡ALERTA DE RADIACIÓN PELIGROSA NASA DONKI! ${headline}. No realizar caminatas espaciales (EVA). Permanecer en compartimentos blindados.`,
+            true
+          );
+        }
+      } else {
+        this.previousCheckCount = count;
+      }
+    });
+  }
 
   ngOnInit(): void {
     // Posición inicial en la esquina inferior derecha
@@ -102,7 +146,7 @@ export class StarPetComponent implements OnInit {
 
   // Eventos de arrastre con Ratón
   onMouseDown(event: MouseEvent): void {
-    if ((event.target as HTMLElement).closest('.pet-bubble-close') || (event.target as HTMLElement).closest('.chat-panel')) {
+    if ((event.target as HTMLElement).closest('.pet-bubble-close') || (event.target as HTMLElement).closest('.chat-panel') || (event.target as HTMLElement).closest('.chat-open-btn') || (event.target as HTMLElement).closest('.refresh-donki-btn')) {
       return;
     }
     this.startDrag(event.clientX, event.clientY);
@@ -188,6 +232,14 @@ export class StarPetComponent implements OnInit {
     this.isBubbleVisible.set(true);
   }
 
+  // Refrescar manualmente DONKI si el astronauta lo pide
+  refreshDonki(event?: Event): void {
+    if (event) {
+      event.stopPropagation();
+    }
+    this.nasa.checkRadiationStatus();
+  }
+
   // Envío de mensaje en el chat
   sendMessage(): void {
     const text = this.userInput().trim();
@@ -199,7 +251,7 @@ export class StarPetComponent implements OnInit {
     // Respuesta inteligente de Star Helpy
     setTimeout(() => {
       this.generateHelpyResponse(text);
-    }, 450);
+    }, 400);
   }
 
   sendQuickPrompt(prompt: string): void {
@@ -207,7 +259,7 @@ export class StarPetComponent implements OnInit {
     this.sendMessage();
   }
 
-  private addMessage(sender: 'helpy' | 'astronaut', text: string): void {
+  private addMessage(sender: 'helpy' | 'astronaut', text: string, isAlert = false): void {
     const now = new Date();
     const timeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
     this.messages.update((list) => [
@@ -217,11 +269,12 @@ export class StarPetComponent implements OnInit {
         text,
         time: timeStr,
         mood: sender === 'helpy' ? this.mood() : undefined,
+        isAlert,
       },
     ]);
   }
 
-  // Cerebro conversacional orbital de Star Helpy
+  // Cerebro conversacional orbital de Star Helpy con NASA DONKI integrado
   private generateHelpyResponse(userQuery: string): void {
     const q = userQuery.toLowerCase();
     const completed = this.state.completedExercisesCount();
@@ -232,7 +285,37 @@ export class StarPetComponent implements OnInit {
 
     let reply = '';
 
-    if (q.includes('racha') || q.includes('dias') || q.includes('fuego')) {
+    // Consulta de Radiación y NASA DONKI
+    if (
+      q.includes('radiacion') ||
+      q.includes('radiación') ||
+      q.includes('donki') ||
+      q.includes('peligro') ||
+      q.includes('peligros') ||
+      q.includes('particula') ||
+      q.includes('partícula') ||
+      q.includes('solar') ||
+      q.includes('rayo') ||
+      q.includes('alerta') ||
+      q.includes('rbe') ||
+      q.includes('sep') ||
+      q.includes('eva')
+    ) {
+      const isDanger = this.nasa.isDangerous();
+      const level = this.nasa.radiationLevel();
+      const headline = this.nasa.radiationHeadline();
+      const details = this.nasa.radiationDetails();
+      const time = this.nasa.lastCheckedTime().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const nextSeconds = this.nasa.secondsUntilNextCheck();
+
+      if (isDanger) {
+        reply = `☢️ ¡ESTADO: PELIGROSO! (Alerta activa de NASA DONKI a las ${time})\n\n⚠️ ${headline}\n\n🔍 Análisis de telemetría: ${details}\n\n🚨 PROTOCOLO DE SEGURIDAD:\n• Suspender de inmediato toda actividad extravehicular (EVA).\n• Protegerse en el compartimento blindado contra partículas energéticas (>1000 pfu).\n• Reanudaremos el escaneo automático en ${nextSeconds}s.`;
+      } else if (level === 'WARNING') {
+        reply = `🟡 [NASA DONKI - ${time}] ESTADO: PRECAUCIÓN (Moderado).\n\n⚠️ ${headline}\n\nDetalles: ${details}\n\nRecomendación: Se registran perturbaciones solares moderadas. Mantener comunicación constante con el control de misión. Próximo escaneo en ${nextSeconds}s.`;
+      } else {
+        reply = `🛡️ [NASA DONKI - ${time}] ESTADO: SEGURO (Nominal).\n\n✅ ${headline}\n\nDetalles: ${details}\n\nEl flujo de protones y electrones energéticos está por debajo del umbral de riesgo. ¡No es peligroso! Puedes continuar con tu rutina de entrenamiento físico con normalidad. Próximo escaneo en ${nextSeconds}s.`;
+      }
+    } else if (q.includes('racha') || q.includes('dias') || q.includes('fuego')) {
       if (completed === total) {
         reply = `¡Tu racha está en llamas 🔥! Llevas ${day} días consecutivos en el espacio manteniendo el hábito. Tus ${completed}/${total} ejercicios de hoy ya están listos.`;
       } else {
@@ -248,7 +331,7 @@ export class StarPetComponent implements OnInit {
     } else if (q.includes('hola') || q.includes('buenos') || q.includes('hey')) {
       reply = `¡Hola, comandante! Star Helpy reportándose para el servicio. ¿Listo para darlo todo en la sesión de hoy? Cuéntame qué necesitas.`;
     } else {
-      reply = `¡Entendido, astronauta! Como tu mascota y copiloto de salud, te recuerdo que tu protocolo físico de hoy lleva ${completed}/${total} ejercicios completados. Mantén la hidratación y no olvides monitorear tus signos vitales en la pestaña Telemetría.`;
+      reply = `¡Entendido, astronauta! Como tu mascota y copiloto de salud, te recuerdo que tu protocolo físico de hoy lleva ${completed}/${total} ejercicios completados. Mantén la hidratación y recuerda que monitoreo la radiación espacial con NASA DONKI cada 60s.`;
     }
 
     this.addMessage('helpy', reply);

@@ -7,9 +7,18 @@
 >
   <!-- BURBUJA DE DIÁLOGO FLOTANTE (SPEECH BUBBLE) -->
   @if (isBubbleVisible() && !isChatOpen()) {
-    <div class="pet-speech-bubble" [class]="mood()">
+    <div
+      class="pet-speech-bubble"
+      [class]="mood()"
+      [class.radiation-danger-bubble]="nasa.isDangerous()"
+    >
       <div class="bubble-header">
-        <span class="bubble-sender">⭐ Star Helpy:</span>
+        <div class="sender-info">
+          <span class="bubble-sender">⭐ Star Helpy</span>
+          @if (nasa.isDangerous()) {
+            <span class="danger-tag-pill">☢️ ¡PELIGRO!</span>
+          }
+        </div>
         <button
           class="pet-bubble-close"
           (click)="dismissBubble($event)"
@@ -19,7 +28,41 @@
         </button>
       </div>
 
+      <!-- TEXTO PRINCIPAL DE LA MASCOTA -->
       <p class="bubble-message">{{ bubbleText() }}</p>
+
+      <!-- TARJETA EN TIEMPO REAL: NASA DONKI (MONITOREO CADA 1 MINUTO) -->
+      <div class="donki-radiation-card" [class]="nasa.radiationLevel().toLowerCase()">
+        <div class="donki-card-top">
+          <span class="donki-title">
+            <span class="satellite-icon">🛰️</span> NASA DONKI
+          </span>
+          <span class="donki-badge" [class]="nasa.radiationLevel().toLowerCase()">
+            @if (nasa.isDangerous()) {
+              ☢️ PELIGROSO
+            } @else if (nasa.radiationLevel() === 'WARNING') {
+              🟡 PRECAUCIÓN
+            } @else {
+              🛡️ SEGURO
+            }
+          </span>
+        </div>
+
+        <p class="donki-desc">{{ nasa.radiationHeadline() }}</p>
+
+        <div class="donki-card-bottom">
+          <span class="donki-timer" title="Actualización automática cada 60 segundos">
+            ⏳ Próx. escaneo: <strong>{{ nasa.secondsUntilNextCheck() }}s</strong>
+          </span>
+          <button
+            class="refresh-donki-btn"
+            (click)="refreshDonki($event)"
+            title="Consultar NASA DONKI ahora"
+          >
+            🔄
+          </button>
+        </div>
+      </div>
 
       <div class="bubble-footer">
         <button class="chat-open-btn" (click)="toggleChat()">
@@ -36,9 +79,13 @@
   <div
     class="star-mascot"
     [class]="mood()"
+    [class.radiation-hazard-star]="nasa.isDangerous()"
     (click)="onStarClick()"
     [title]="'Star Helpy (' + moodTitle() + ') — Arrástrame o haz clic para chatear'"
   >
+    @if (nasa.isDangerous()) {
+      <div class="hazard-top-banner">☢️ RADIACIÓN PELIGROSA</div>
+    }
     <svg
       viewBox="0 0 100 100"
       width="78"
@@ -208,11 +255,22 @@
           <div class="header-texts">
             <h4>Star Helpy</h4>
             <span class="status-indicator">
-              <span class="dot"></span> En línea · {{ moodTitle() }}
+              <span class="dot" [class.danger-dot]="nasa.isDangerous()"></span> En línea · {{ moodTitle() }}
             </span>
           </div>
         </div>
         <button class="chat-close-btn" (click)="closeChat()" title="Cerrar chat">✕</button>
+      </div>
+
+      <!-- Barra de Estado de Radiación NASA DONKI en el Chat -->
+      <div class="chat-donki-bar" [class]="nasa.radiationLevel().toLowerCase()">
+        <span class="chat-donki-label">
+          🛰️ <strong>NASA DONKI (1 min):</strong>
+        </span>
+        <span class="chat-donki-status" [class]="nasa.radiationLevel().toLowerCase()">
+          {{ nasa.isDangerous() ? '☢️ PELIGROSO (>1000 pfu)' : (nasa.radiationLevel() === 'WARNING' ? '🟡 Precaución' : '🛡️ SEGURO') }}
+        </span>
+        <span class="chat-donki-cd">({{ nasa.secondsUntilNextCheck() }}s)</span>
       </div>
 
       <!-- Preguntas Rápidas sugeridas -->
@@ -227,12 +285,19 @@
       <!-- Mensajes del Chat -->
       <div class="chat-messages-container">
         @for (msg of messages(); track $index) {
-          <div class="message-row" [class.astronaut]="msg.sender === 'astronaut'" [class.helpy]="msg.sender === 'helpy'">
+          <div
+            class="message-row"
+            [class.astronaut]="msg.sender === 'astronaut'"
+            [class.helpy]="msg.sender === 'helpy'"
+            [class.alert-row]="msg.isAlert"
+          >
             @if (msg.sender === 'helpy') {
-              <div class="helpy-msg-avatar" [class]="msg.mood || mood()">⭐</div>
+              <div class="helpy-msg-avatar" [class]="msg.mood || mood()">
+                {{ msg.isAlert ? '☢️' : '⭐' }}
+              </div>
             }
 
-            <div class="message-bubble">
+            <div class="message-bubble" [class.alert-bubble]="msg.isAlert">
               <p class="message-content">{{ msg.text }}</p>
               <span class="message-time">{{ msg.time }}</span>
             </div>
