@@ -259,8 +259,38 @@
               </div>
 
               <div class="region-info-card">
-                <h3>{{ currentRegionInfo().label }}</h3>
+                <div class="region-card-header">
+                  <h3>{{ currentRegionInfo().label }}</h3>
+                  @if (state.selectedBodyRegion() === 'head') {
+                    <span
+                      class="sim-case-tag"
+                      [style.background-color]="neuro.activeCase().severityColor + '18'"
+                      [style.color]="neuro.activeCase().severityColor"
+                      [style.border-color]="neuro.activeCase().severityColor + '66'"
+                      title="Caso neuroconductual simulado en vivo"
+                    >
+                      {{ neuro.activeCase().icon }} {{ neuro.activeCase().shortName }} ({{ neuro.liveLpm() }} LPM)
+                    </span>
+                  }
+                </div>
                 <p class="region-note">{{ currentRegionInfo().note }}</p>
+
+                @if (state.selectedBodyRegion() === 'head') {
+                  <div class="neuro-live-summary-box" [style.border-left-color]="neuro.activeCase().severityColor">
+                    <div class="summary-item">
+                      <span class="s-label">Calidad de Sueño:</span>
+                      <strong class="s-val">{{ neuro.activeCase().sleepQuality }}</strong>
+                    </div>
+                    <div class="summary-item">
+                      <span class="s-label">Fase Dominante:</span>
+                      <strong class="s-val">{{ neuro.activeCase().dominantStage }}</strong>
+                    </div>
+                    <div class="summary-item">
+                      <span class="s-label">Activación Encefálica:</span>
+                      <strong class="s-val">{{ neuro.activeCase().zonesActivated.join(' · ') }}</strong>
+                    </div>
+                  </div>
+                }
 
                 <div class="region-indicators-list">
                   @for (item of regionIndicators(); track item.key) {

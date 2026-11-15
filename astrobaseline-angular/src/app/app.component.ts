@@ -79,7 +79,19 @@ export class AppComponent {
   // Información de la región anatómica seleccionada
   readonly currentRegionInfo = computed(() => {
     const reg = this.state.selectedBodyRegion();
-    return this.config.REGIONS[reg];
+    const info = this.config.REGIONS[reg];
+
+    // Para Cerebro y Comportamiento (head), reflejar dinámicamente la descripción del caso simulado
+    if (reg === 'head') {
+      const activeCase = this.neuro.activeCase();
+      return {
+        label: info.label,
+        indicators: info.indicators,
+        note: `${activeCase.headline}: ${activeCase.clinicalDescription}`,
+      };
+    }
+
+    return info;
   });
 
   // Lista de calidad para la tabla del Tab 4

@@ -783,16 +783,64 @@
           border-radius: 12px;
           padding: 1.5rem;
 
-          h3 {
-            margin: 0 0 0.5rem 0;
-            font-size: 1.2rem;
-            color: #0f172a;
+          .region-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+
+            h3 {
+              margin: 0;
+              font-size: 1.2rem;
+              color: #0f172a;
+            }
+
+            .sim-case-tag {
+              font-size: 0.75rem;
+              font-weight: 700;
+              padding: 3px 9px;
+              border-radius: 999px;
+              border: 1px solid;
+              letter-spacing: 0.2px;
+            }
           }
 
           .region-note {
             color: #64748b;
             font-size: 0.85rem;
             margin-bottom: 1.25rem;
+            line-height: 1.5;
+          }
+
+          .neuro-live-summary-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid #10b981;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            font-size: 0.8rem;
+
+            .summary-item {
+              display: flex;
+              align-items: center;
+              gap: 0.5rem;
+              flex-wrap: wrap;
+
+              .s-label {
+                color: #64748b;
+                font-weight: 600;
+              }
+
+              .s-val {
+                color: #0f172a;
+              }
+            }
           }
 
           .region-indicators-list {

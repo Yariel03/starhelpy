@@ -185,19 +185,65 @@ export class MissionStateService {
     }
     const results = this.analysisService.evaluateHealth(records, curr, days);
 
-    // Reflejar la telemetría cardíaca en vivo del caso neuroconductual simulado
+    // Reflejar la telemetría cardíaca y los biomarcadores cerebrales del caso neuroconductual simulado
     const stateId = this.neuro.activeStateId();
-    if (stateId && results['heart_rate']) {
+    if (stateId) {
       const liveLpm = this.neuro.liveLpm();
-      let lvl: 0 | 1 | 2 = 0;
-      if (stateId === 'ANXIETY') lvl = 1;
-      else if (stateId === 'PANIC' || stateId === 'PSYCHOSIS') lvl = 2;
+      let hrLevel: 0 | 1 | 2 = 0;
+      let sleepRecent = 8.5;
+      let sleepLevel: 0 | 1 | 2 = 0;
+      let moodRecent = 5.0;
+      let moodLevel: 0 | 1 | 2 = 0;
 
-      results['heart_rate'] = {
-        ...results['heart_rate'],
-        recent: liveLpm,
-        level: lvl,
-      };
+      if (stateId === 'REPAIR_SLEEP') {
+        hrLevel = 0;
+        sleepRecent = 8.5; // Sueño profundo reparador
+        sleepLevel = 0;
+        moodRecent = 5.0; // Bienestar óptimo
+        moodLevel = 0;
+      } else if (stateId === 'ANXIETY') {
+        hrLevel = 1;
+        sleepRecent = 5.2; // Fragmentado e insomnio leve
+        sleepLevel = 1;
+        moodRecent = 2.4; // Ansiedad y estrés elevado
+        moodLevel = 1;
+      } else if (stateId === 'PANIC') {
+        hrLevel = 2;
+        sleepRecent = 3.1; // Desvelo por crisis aguda
+        sleepLevel = 2;
+        moodRecent = 1.2; // Pánico agudo
+        moodLevel = 2;
+      } else if (stateId === 'PSYCHOSIS') {
+        hrLevel = 2;
+        sleepRecent = 1.4; // Privación crítica acumulativa de sueño (>72h)
+        sleepLevel = 2;
+        moodRecent = 1.0; // Descompensación neuroconductual
+        moodLevel = 2;
+      }
+
+      if (results['heart_rate']) {
+        results['heart_rate'] = {
+          ...results['heart_rate'],
+          recent: liveLpm,
+          level: hrLevel,
+        };
+      }
+
+      if (results['sleep_hours']) {
+        results['sleep_hours'] = {
+          ...results['sleep_hours'],
+          recent: sleepRecent,
+          level: sleepLevel,
+        };
+      }
+
+      if (results['mood']) {
+        results['mood'] = {
+          ...results['mood'],
+          recent: moodRecent,
+          level: moodLevel,
+        };
+      }
     }
 
     return results;
