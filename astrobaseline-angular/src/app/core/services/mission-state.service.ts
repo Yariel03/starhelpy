@@ -38,7 +38,7 @@ export class MissionStateService {
     trainingGoal: this.config.TRAINING_GOALS[0],
   });
 
-  // Ejercicios asignados al astronauta según la meta
+  // Ejercicios asignados al astronauta según la meta (todos inician desmarcados)
   readonly exercisesList = signal<Record<string, Array<{ id: string; name: string; description: string; target: string; icon: string; completed: boolean }>>>({
     'A-01': [
       {
@@ -47,7 +47,7 @@ export class MissionStateService {
         description: 'Sobrecarga axial controlada para preservar densidad ósea lumbar y masa muscular de cuádriceps en microgravedad.',
         target: '4 series × 8-10 repeticiones · Carga axial de 140 kg simulados',
         icon: '🏋️',
-        completed: true,
+        completed: false,
       },
       {
         id: 'cbum-2',
@@ -55,6 +55,14 @@ export class MissionStateService {
         description: 'Tensión mecánica excéntrica continua en isquiotibiales y cadena posterior para prevenir la atrofia del tronco.',
         target: '4 series × 10 repeticiones · Carga guiada de 120 kg simulados',
         icon: '⚡',
+        completed: false,
+      },
+      {
+        id: 'cbum-3',
+        name: 'Press de banca con barras axiales ARED',
+        description: 'Preservación de pectoral, deltoides anterior y tríceps para mantener la fuerza de empuje en microgravedad.',
+        target: '4 series × 10-12 repeticiones · Carga axial de 95 kg simulados',
+        icon: '💪',
         completed: false,
       },
     ],
@@ -65,7 +73,7 @@ export class MissionStateService {
         description: 'Intervalos anaeróbicos de alta exigencia para mantener el VO2 max y la fuerza contráctil del miocardio.',
         target: '20 min · 30s sprint (95% FCM) / 30s recuperación activa',
         icon: '🚴',
-        completed: true,
+        completed: false,
       },
       {
         id: 'spartacus-2',
@@ -75,8 +83,19 @@ export class MissionStateService {
         icon: '🏃',
         completed: false,
       },
+      {
+        id: 'spartacus-3',
+        name: 'Circuitos funcionales con arnés elástico reactivo',
+        description: 'Acondicionamiento pliométrico de cuerpo completo para agilidad y resistencia postural contra la gravedad cero.',
+        target: '3 rondas de 5 min · Trabajo continuo de alta intensidad',
+        icon: '🔥',
+        completed: false,
+      },
     ],
   });
+
+  // Marca de tiempo de la última interacción del usuario con los ejercicios
+  readonly lastExerciseInteraction = signal<number>(Date.now());
 
   // Ejercicios activos correspondientes a la meta actual
   readonly currentExercises = computed(() => {
@@ -92,15 +111,14 @@ export class MissionStateService {
 
   // Estado emocional de la mascota estrella Star Helpy:
   // - 'happy': si hace ejercicio (todos completados) y mantiene la racha
-  // - 'sad': si lleva 1 completado o el astronauta tiene algún indicador alterado
+  // - 'happy' / en progreso: si lleva 1 o más completados
   // - 'angry': si no hace ejercicio (0 completados)
   readonly petMood = computed<'happy' | 'sad' | 'angry'>(() => {
     const completed = this.completedExercisesCount();
     const total = this.currentExercises().length;
-    if (total === 0) return 'happy';
-    if (completed === total) return 'happy';
-    if (completed > 0) return 'sad';
-    return 'angry';
+    if (total === 0) return 'angry';
+    if (completed === 0) return 'angry';
+    return 'happy';
   });
 
   toggleExerciseCompletion(id: string): void {
@@ -115,6 +133,7 @@ export class MissionStateService {
         [gid]: updated,
       };
     });
+    this.lastExerciseInteraction.set(Date.now());
   }
 
   // Filtros y Selección

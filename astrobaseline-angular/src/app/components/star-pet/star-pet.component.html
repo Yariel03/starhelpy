@@ -135,7 +135,7 @@
            L 5,35
            L 38,32
            Z"
-        [attr.fill]="currentEmotion() === 'peaceful' ? 'url(#emeraldGrad)' : (currentEmotion() === 'anxious' ? 'url(#amberGrad)' : (currentEmotion() === 'panic' ? 'url(#orangeGrad)' : ((currentEmotion() === 'psychosis' || currentEmotion() === 'danger') ? 'url(#crimsonGrad)' : 'url(#goldGrad)')))"
+        [attr.fill]="currentEmotion() === 'peaceful' ? 'url(#emeraldGrad)' : (currentEmotion() === 'anxious' ? 'url(#amberGrad)' : (currentEmotion() === 'panic' ? 'url(#orangeGrad)' : ((currentEmotion() === 'psychosis' || currentEmotion() === 'danger' || currentEmotion() === 'angry') ? 'url(#crimsonGrad)' : 'url(#goldGrad)')))"
         stroke="#ffffff"
         stroke-width="2.5"
         stroke-linejoin="round"
@@ -297,6 +297,30 @@
         <!-- Boca de regaño -->
         <path d="M 43,61 Q 50,57 57,61" fill="none" stroke="#7f1d1d" stroke-width="3" stroke-linecap="round" />
         <line x1="45" y1="58" x2="55" y2="58" stroke="#7f1d1d" stroke-width="2" />
+      }
+
+      <!-- ================= EMOCIÓN 9: ANGRY (0 EJERCICIOS COMPLETADOS - ESTRELLA ENOJADA) ================= -->
+      @if (currentEmotion() === 'angry') {
+        <!-- Símbolo anime de vena de enojo 💢 en la frente -->
+        <path d="M 67,23 L 73,23 M 67,27 L 73,27 M 69,21 L 69,29 M 71,21 L 71,29" stroke="#ef4444" stroke-width="2" stroke-linecap="round" />
+
+        <!-- Cejas súper fruncidas y enojadas en diagonal hacia el centro \ / -->
+        <path d="M 32,38 L 47,45" fill="none" stroke="#7f1d1d" stroke-width="3.5" stroke-linecap="round" />
+        <path d="M 68,38 L 53,45" fill="none" stroke="#7f1d1d" stroke-width="3.5" stroke-linecap="round" />
+
+        <!-- Ojos enojados con mirada fulminante -->
+        <ellipse cx="40" cy="49" rx="4.5" ry="5.5" fill="#1e293b" />
+        <circle cx="41" cy="48" r="1.5" fill="#ffffff" />
+
+        <ellipse cx="60" cy="49" rx="4.5" ry="5.5" fill="#1e293b" />
+        <circle cx="59" cy="48" r="1.5" fill="#ffffff" />
+
+        <!-- Mejillas rojas inflamadas de indignación -->
+        <ellipse cx="31" cy="54" rx="4" ry="2.2" fill="#ef4444" opacity="0.6" />
+        <ellipse cx="69" cy="54" rx="4" ry="2.2" fill="#ef4444" opacity="0.6" />
+
+        <!-- Boquita enojada hacia abajo con puchero gruñón -->
+        <path d="M 42,61 Q 50,54 58,61" fill="none" stroke="#7f1d1d" stroke-width="3.2" stroke-linecap="round" />
       }
     </svg>
 

@@ -31,7 +31,8 @@ export type StarEmotion =
   | 'anxious'
   | 'panic'
   | 'psychosis'
-  | 'danger';
+  | 'danger'
+  | 'angry';
 
 export interface HelpyPriorityState {
   level: 'CRITICAL_RADIATION' | 'PSYCHOSIS' | 'PANIC' | 'ANXIETY' | 'REPAIR_SLEEP' | 'RADIATION_WARNING' | 'ROUTINE';
@@ -96,7 +97,7 @@ export class StarPetComponent implements OnInit {
     '🏋️ ¿Qué ejercicios me tocan?',
   ];
 
-  // Máquina de estados jerárquica unificada para Star Helpy con 8 emociones únicas
+  // Máquina de estados jerárquica unificada para Star Helpy con 9 emociones únicas
   readonly activeState = computed<HelpyPriorityState>(() => {
     // 1. NIVEL CRÍTICO 1: Tormenta de Radiación Espacial Solar NASA DONKI (>1000 pfu)
     if (this.nasa.isDangerous()) {
@@ -113,50 +114,70 @@ export class StarPetComponent implements OnInit {
       };
     }
 
-    const neuroCase = this.neuro.activeCase();
+    // Comprobar si el astronauta interactuó más recientemente con la simulación neuroconductual
+    const isNeuroMoreRecent = this.neuro.lastNeuroInteraction() > this.state.lastExerciseInteraction();
 
-    // 2. NIVEL DE CRISIS 2: Emergencias Neuroconductuales Agudas (Psicosis o Pánico)
-    if (neuroCase.id === 'PSYCHOSIS') {
-      return {
-        level: 'PSYCHOSIS',
-        priority: 2,
-        emotion: 'psychosis',
-        mood: 'angry',
-        badge: '🔴 Alerta Psicosis',
-        badgeColor: '#ef4444',
-        message: `¡Taquicardia severa (${this.neuro.liveLpm()} LPM) y sobrecarga por confinamiento!`,
-        actionType: 'breathe',
-        actionText: '🫁 Calmar con Respiración 4-7-8',
-      };
-    }
+    if (isNeuroMoreRecent) {
+      const neuroCase = this.neuro.activeCase();
 
-    if (neuroCase.id === 'PANIC') {
-      return {
-        level: 'PANIC',
-        priority: 2,
-        emotion: 'panic',
-        mood: 'angry',
-        badge: '🟠 Pánico Nocturno',
-        badgeColor: '#f97316',
-        message: `Despertar con taquicardia (${this.neuro.liveLpm()} LPM). Amígdala hiperactivada.`,
-        actionType: 'breathe',
-        actionText: '🫁 Iniciar Respiración 4-7-8',
-      };
-    }
+      // 2. NIVEL DE CRISIS 2: Emergencias Neuroconductuales Agudas (Psicosis o Pánico)
+      if (neuroCase.id === 'PSYCHOSIS') {
+        return {
+          level: 'PSYCHOSIS',
+          priority: 2,
+          emotion: 'psychosis',
+          mood: 'angry',
+          badge: '🔴 Alerta Psicosis',
+          badgeColor: '#ef4444',
+          message: `¡Taquicardia severa (${this.neuro.liveLpm()} LPM) y sobrecarga por confinamiento!`,
+          actionType: 'breathe',
+          actionText: '🫁 Calmar con Respiración 4-7-8',
+        };
+      }
 
-    // 3. NIVEL DE ADVERTENCIA 3: Estrés en Sueño o Radiación Moderada
-    if (neuroCase.id === 'ANXIETY') {
-      return {
-        level: 'ANXIETY',
-        priority: 3,
-        emotion: 'anxious',
-        mood: 'sad',
-        badge: '🟡 Ansiedad Detectada',
-        badgeColor: '#f59e0b',
-        message: `Detecto estrés en tu descanso (${this.neuro.liveLpm()} LPM). ¿Hacemos una pausa?`,
-        actionType: 'breathe',
-        actionText: '🫁 Respirar 4-7-8',
-      };
+      if (neuroCase.id === 'PANIC') {
+        return {
+          level: 'PANIC',
+          priority: 2,
+          emotion: 'panic',
+          mood: 'angry',
+          badge: '🟠 Pánico Nocturno',
+          badgeColor: '#f97316',
+          message: `Despertar con taquicardia (${this.neuro.liveLpm()} LPM). Amígdala hiperactivada.`,
+          actionType: 'breathe',
+          actionText: '🫁 Iniciar Respiración 4-7-8',
+        };
+      }
+
+      // 3. NIVEL DE ADVERTENCIA 3: Estrés en Sueño
+      if (neuroCase.id === 'ANXIETY') {
+        return {
+          level: 'ANXIETY',
+          priority: 3,
+          emotion: 'anxious',
+          mood: 'sad',
+          badge: '🟡 Ansiedad Detectada',
+          badgeColor: '#f59e0b',
+          message: `Detecto estrés en tu descanso (${this.neuro.liveLpm()} LPM). ¿Hacemos una pausa?`,
+          actionType: 'breathe',
+          actionText: '🫁 Respirar 4-7-8',
+        };
+      }
+
+      // Caso de Sueño Reparador explícito simulado por el astronauta
+      if (neuroCase.id === 'REPAIR_SLEEP') {
+        return {
+          level: 'REPAIR_SLEEP',
+          priority: 4,
+          emotion: 'peaceful',
+          mood: 'happy',
+          badge: '🟢 Sueño Reparador',
+          badgeColor: '#10b981',
+          message: 'Frecuencia en reposo ideal (50 LPM). Ondas delta profundas y regeneración celular.',
+          actionType: 'chat',
+          actionText: '💬 Chatear con Helpy',
+        };
+      }
     }
 
     if (this.nasa.radiationLevel() === 'WARNING') {
@@ -173,27 +194,25 @@ export class StarPetComponent implements OnInit {
       };
     }
 
-    // Caso de Sueño Reparador explícito simulado por el astronauta
-    if (this.neuro.userExplicitCase() === 'REPAIR_SLEEP') {
-      return {
-        level: 'REPAIR_SLEEP',
-        priority: 4,
-        emotion: 'peaceful',
-        mood: 'happy',
-        badge: '🟢 Sueño Reparador',
-        badgeColor: '#10b981',
-        message: 'Frecuencia en reposo ideal (50 LPM). Ondas delta profundas y regeneración celular.',
-        actionType: 'chat',
-        actionText: '💬 Chatear con Helpy',
-      };
-    }
-
-    // 4. NIVEL DE RUTINA 4: Reacción Directa e Instantánea a los Ejercicios Físicos
+    // 4. NIVEL DE RUTINA: Reacción Directa e Instantánea a los Ejercicios Físicos
     const completed = this.state.completedExercisesCount();
     const total = this.state.currentExercises().length;
     const day = this.state.missionDay();
 
-    if (completed === total && total > 0) {
+    if (completed === 0) {
+      // SI NO HAY EJERCICIO: LA ESTRELLA DEBE ESTAR ENOJADA
+      return {
+        level: 'ROUTINE',
+        priority: 4,
+        emotion: 'angry',
+        mood: 'angry',
+        badge: `😠 Sol ${day} · 0/${total} Ejercicios`,
+        badgeColor: '#ef4444',
+        message: `¡No has hecho ningún ejercicio todavía! En gravedad cero tus músculos y huesos se atrofian si no entrenas hoy. ¡A entrenar, comandante!`,
+        actionType: 'chat',
+        actionText: '🏋️ Ir al Entrenamiento',
+      };
+    } else if (completed === total && total > 0) {
       return {
         level: 'ROUTINE',
         priority: 4,
@@ -201,11 +220,11 @@ export class StarPetComponent implements OnInit {
         mood: 'happy',
         badge: `🎉 Sol ${day} · ¡Meta Cumplida!`,
         badgeColor: '#10b981',
-        message: `¡Increíble, comandante! Has completado ${completed}/${total} ejercicios. Racha asegurada ⭐.`,
+        message: `¡Increíble, comandante! Has completado ${completed}/${total} ejercicios. Racha diaria asegurada y físico protegido ⭐.`,
         actionType: 'chat',
         actionText: '🏆 Ver Recompensas',
       };
-    } else if (completed > 0) {
+    } else {
       return {
         level: 'ROUTINE',
         priority: 4,
@@ -213,21 +232,9 @@ export class StarPetComponent implements OnInit {
         mood: 'happy',
         badge: `⚡ ${completed}/${total} Completados`,
         badgeColor: '#3b82f6',
-        message: `¡Buen ritmo! Llevas ${completed}/${total} ejercicios. ¡A por el siguiente de la rutina!`,
+        message: `¡Buen ritmo! Llevas ${completed}/${total} ejercicios. ¡A por el siguiente de la rutina para completar el Sol!`,
         actionType: 'chat',
         actionText: '🏋️ Ver Rutina',
-      };
-    } else {
-      return {
-        level: 'ROUTINE',
-        priority: 4,
-        emotion: 'waiting',
-        mood: 'happy',
-        badge: `🚀 Sol ${day} · ¡A despegar!`,
-        badgeColor: '#8b5cf6',
-        message: `¡Bienvenido a bordo! Tu Sol de hoy tiene ${total} ejercicios programados. ¿Empezamos con el primero?`,
-        actionType: 'chat',
-        actionText: '🚀 Iniciar Entrenamiento',
       };
     }
   });
@@ -243,20 +250,23 @@ export class StarPetComponent implements OnInit {
   private lastNeuroState = 'REPAIR_SLEEP';
 
   constructor() {
-    // Solo reabrir la burbuja de Star Helpy ante emergencias reales (Nivel 1 o 2)
+    // Abrir automáticamente la burbuja ante cambios de ejercicio para dar feedback inmediato
+    effect(() => {
+      // Reaccionar ante cambios de conteo o interacción de ejercicios
+      const _ = this.state.completedExercisesCount();
+      const __ = this.state.lastExerciseInteraction();
+      this.isBubbleVisible.set(true);
+    });
+
+    // Reabrir la burbuja ante cambios de neuroconducta o emergencias espaciales
     effect(() => {
       const isDanger = this.nasa.isDangerous();
-      const neuroId = this.neuro.activeStateId();
+      const _ = this.neuro.lastNeuroInteraction();
 
       if (isDanger) {
         this.isBubbleVisible.set(true);
-      }
-
-      if (neuroId !== this.lastNeuroState) {
-        this.lastNeuroState = neuroId;
-        if (neuroId === 'PSYCHOSIS' || neuroId === 'PANIC' || neuroId === 'ANXIETY') {
-          this.isBubbleVisible.set(true);
-        }
+      } else if (this.neuro.lastNeuroInteraction() > 0) {
+        this.isBubbleVisible.set(true);
       }
     });
 

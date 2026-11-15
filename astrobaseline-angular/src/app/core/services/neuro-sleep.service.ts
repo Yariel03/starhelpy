@@ -47,6 +47,7 @@ export class NeuroSleepService {
   // Estado activo de la simulación
   readonly activeStateId = signal<NeuroStateId>('REPAIR_SLEEP');
   readonly userExplicitCase = signal<NeuroStateId | null>(null);
+  readonly lastNeuroInteraction = signal<number>(0);
 
   // LPM en tiempo real con leve variabilidad fisiológica (+/- 2 bpm)
   readonly liveLpm = signal<number>(50);
@@ -265,6 +266,7 @@ export class NeuroSleepService {
     this.activeStateId.set(id);
     this.userExplicitCase.set(id);
     this.liveLpm.set(this.cases[id].lpmAverage);
+    this.lastNeuroInteraction.set(Date.now());
   }
 
   // Abrir / Cerrar ejercicio de respiración 4-7-8
