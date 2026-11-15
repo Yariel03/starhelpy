@@ -15,7 +15,7 @@ type SighPhase = 'INHALE_1' | 'INHALE_2' | 'EXHALE_LONG';
         <!-- Cabecera de Alerta de Pánico -->
         <div class="modal-header">
           <div class="header-left">
-            <span class="header-icon">⚡</span>
+            <span class="header-icon">●</span>
             <div>
               <h3>{{ i18n.currentLang() === 'en' ? 'Acute Panic Rescue & Awakenings Protocol' : 'Protocolo de Rescate por Pánico & Despertar Abrupto' }}</h3>
               <p class="subtitle">{{ i18n.currentLang() === 'en' ? 'Rapid amygdala de-escalation · Physiological Sigh & Cabin Verification' : 'Desactivación rápida de amígdala · Suspiro Fisiológico & Verificación de Cabina' }}</p>
@@ -101,7 +101,7 @@ type SighPhase = 'INHALE_1' | 'INHALE_2' | 'EXHALE_LONG';
                 </div>
               </div>
               <div class="check-item sensory">
-                <span class="check-icon">👁️</span>
+                <span class="check-icon">⊙</span>
                 <div class="check-texts">
                   <strong>{{ i18n.currentLang() === 'en' ? 'Visual Grounding 3-2-1:' : 'Anclaje Visual 3-2-1:' }}</strong>
                   <span>{{ i18n.currentLang() === 'en' ? 'Fix your gaze on 3 illuminated console points. Feel the firm security of your harness.' : 'Fija la mirada en 3 puntos fijos iluminados de tu consola frontal. Siente la firmeza del arnés.' }}</span>

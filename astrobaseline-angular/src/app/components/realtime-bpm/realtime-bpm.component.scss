@@ -1,13 +1,15 @@
 .telemetry-card {
-  background: #0f172a;
-  border: 1px solid rgba(51, 65, 85, 0.9);
+  background: rgba(15, 23, 42, 0.82);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 12px;
   padding: 0.9rem;
   color: #ffffff;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
   font-family: var(--font-family-base);
 }
 
@@ -111,10 +113,20 @@
   .heart-icon-wrapper {
     font-size: 1.35rem;
     line-height: 1;
+    display: flex;
+    align-items: center;
 
     .heart-beat {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
       animation: heartThrob infinite ease-in-out;
+
+      .heart-svg {
+        width: 24px;
+        height: 24px;
+        color: #ef4444;
+        filter: drop-shadow(0 0 6px rgba(239, 68, 68, 0.5));
+      }
 
       &.paused {
         animation: none;

@@ -13,7 +13,7 @@ import { I18nService } from '../../core/services/i18n.service';
         <!-- Cabecera de Emergencia Médica Nivel 3 -->
         <div class="modal-header">
           <div class="header-left">
-            <span class="header-icon">🚨</span>
+            <span class="header-icon">!</span>
             <div>
               <h3>{{ i18n.currentLang() === 'en' ? 'Level 3 Emergency Medical Protocol (Psychosis)' : 'Protocolo Médico de Emergencia Nivel 3 (Psicosis)' }}</h3>
               <p class="subtitle">{{ i18n.currentLang() === 'en' ? 'Space Safety Directive · Flight Surgeon Alert & Safety Lockdown' : 'Directriz Médica de Seguridad ISS · Alerta a Houston & Bloqueo Cautelar' }}</p>
@@ -45,7 +45,7 @@ import { I18nService } from '../../core/services/i18n.service';
           <div class="action-card-list">
             <!-- 1. Bloqueo Cautelar -->
             <div class="action-card locked">
-              <span class="action-badge-icon">🔒</span>
+              <span class="action-badge-icon">●</span>
               <div class="action-text">
                 <strong>{{ i18n.currentLang() === 'en' ? 'Safety Lockdown of Critical Controls Active' : 'Bloqueo Cautelar de Mandos Críticos Activo' }}</strong>
                 <p>{{ i18n.currentLang() === 'en' ? 'Airlock controls (EVA) and orbital thruster manual navigation are secured under automatic ground control to safeguard crew.' : 'Las esclusas de despresurización EVA y mandos de propulsión manual quedan asegurados bajo control automático de Tierra para salvaguardar a la tripulación.' }}</p>
@@ -54,7 +54,7 @@ import { I18nService } from '../../core/services/i18n.service';
 
             <!-- 2. Telemetría a Cirujano de Vuelo -->
             <div class="action-card transmitted">
-              <span class="action-badge-icon">🛰️</span>
+              <span class="action-badge-icon">●</span>
               <div class="action-text">
                 <strong>{{ i18n.currentLang() === 'en' ? 'Brain Telemetry & Holter Transmitted to Flight Surgeon' : 'Telemetría Encefálica y Holter Transmitida al Cirujano' }}</strong>
                 <p>{{ i18n.currentLang() === 'en' ? 'Mission Psychiatry and Flight Surgeon receive full cortical hypofunction mapping and amygdala telemetry to guide medical protocol.' : 'El equipo de Psiquiatría Aeroespacial en Houston dispone del registro completo de hipocorteza y zonas de amígdala activadas para pautar el sedante oral de rescate.' }}</p>
@@ -63,7 +63,7 @@ import { I18nService } from '../../core/services/i18n.service';
 
             <!-- 3. Entorno Circadiano y Audio Familiar -->
             <div class="action-card ambient">
-              <span class="action-badge-icon">🎧</span>
+              <span class="action-badge-icon">●</span>
               <div class="action-text">
                 <strong>{{ i18n.currentLang() === 'en' ? 'Cognitive Grounding Link & Family Support Audio' : 'Reanclaje Cognitivo con Tierra & Audio Familiar' }}</strong>
                 <p>{{ i18n.currentLang() === 'en' ? 'Warm amber cabin lighting enabled (blue-spectrum cut) with private familiar audio channel to reorient the astronaut to reality.' : 'Activada iluminación ámbar suave de cabina (sin espectro azul) y canal de audio de voz familiar de apoyo para reorientar al astronauta a la realidad.' }}</p>
@@ -73,7 +73,7 @@ import { I18nService } from '../../core/services/i18n.service';
 
           <!-- Cuadro de Diálogo de Star Helpy -->
           <div class="helpy-sos-banner">
-            <span class="helpy-avatar">⭐</span>
+            <span class="helpy-avatar">AI</span>
             <div class="helpy-sos-text">
               <strong>{{ i18n.currentLang() === 'en' ? 'Star Helpy is with you:' : 'Star Helpy te acompaña:' }}</strong>
               <p>{{ i18n.currentLang() === 'en' ? '"Commander, you are safe. We have secured the ship and the Flight Surgeon has your telemetry. Now you must rest; we will manage the systems."' : '"Comandante, no estás solo. Hemos asegurado la nave y el Cirujano de Vuelo tiene tu telemetría. Ahora tú solo debes descansar; nosotros nos encargamos de los sistemas."' }}</p>

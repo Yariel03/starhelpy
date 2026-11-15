@@ -69,7 +69,7 @@ export class NeuroSleepService {
       id: 'REPAIR_SLEEP',
       name: 'Sueño Profundo Reparador',
       shortName: 'Sueño Reparador',
-      icon: '🟢',
+      icon: '',
       lpmAverage: 50,
       lpmRange: '45 - 54 LPM',
       sleepQuality: 'Excelente (94%)',
@@ -88,8 +88,8 @@ export class NeuroSleepService {
       ],
       helpyMood: 'happy',
       helpyMessage:
-        '😴 [Sueño Reparador · 50 LPM] Tu recuperación cerebral es magnífica, comandante. Ondas cerebrales lentas sincronizadas y tono vagal óptimo. ¡Sigue descansando profundamente! ⭐',
-      helpyBadge: '⭐ Sueño Óptimo',
+        '[Sueño Reparador · 50 LPM] Tu recuperación cerebral es magnífica, comandante. Ondas cerebrales lentas sincronizadas y tono vagal óptimo. Mantén el descanso.',
+      helpyBadge: 'Sueño Óptimo',
       helpyAuraColor: '#10b981',
     },
 
@@ -97,7 +97,7 @@ export class NeuroSleepService {
       id: 'ANXIETY',
       name: 'Ansiedad y Estrés Espacial',
       shortName: 'Ansiedad Nocturna',
-      icon: '🟡',
+      icon: '',
       lpmAverage: 92,
       lpmRange: '84 - 102 LPM',
       sleepQuality: 'Fragmentado (58%)',
@@ -116,8 +116,8 @@ export class NeuroSleepService {
       ],
       helpyMood: 'sad',
       helpyMessage:
-        '🥺 [Alerta de Ansiedad · 92 LPM] Detecto taquicardia nocturna persistente y tu amígdala cerebral muestra hiperactividad de alerta. Te sugiero iniciar el protocolo de respiración 4-7-8 para calmar tu ritmo cardíaco.',
-      helpyBadge: '🟡 Ansiedad Detectada',
+        '[Alerta de Ansiedad · 92 LPM] Detecto taquicardia nocturna persistente y tu amígdala cerebral muestra hiperactividad de alerta. Te sugiero iniciar el protocolo de respiración 4-7-8.',
+      helpyBadge: 'Ansiedad Detectada',
       helpyAuraColor: '#f59e0b',
     },
 
@@ -125,7 +125,7 @@ export class NeuroSleepService {
       id: 'PANIC',
       name: 'Ataque de Pánico / Pesadilla en Microgravedad',
       shortName: 'Pánico / Despertar',
-      icon: '🟠',
+      icon: '',
       lpmAverage: 122,
       lpmRange: '112 - 132 LPM',
       sleepQuality: 'Disrupción Crítica (32%)',
@@ -144,8 +144,8 @@ export class NeuroSleepService {
       ],
       helpyMood: 'sad',
       helpyMessage:
-        '⚠️ [Pico de Pánico · 122 LPM] ¡Despertar taquicárdico brusco! Tu corazón late con fuerza y hay sobrecarga límbica. Comandante, respira con el doble suspiro: la presión y el oxígeno de tu cabina son 100% seguros. Estoy contigo.',
-      helpyBadge: '⚠️ Pánico / Sobresalto',
+        '[Pico de Pánico · 122 LPM] Despertar taquicárdico brusco con sobrecarga límbica. Comandante, respira con el doble suspiro: la presión y el oxígeno de cabina son 100% seguros.',
+      helpyBadge: 'Pánico / Sobresalto',
       helpyAuraColor: '#f97316',
     },
 
@@ -153,7 +153,7 @@ export class NeuroSleepService {
       id: 'PSYCHOSIS',
       name: 'Descompensación Neuroconductual / Psicosis',
       shortName: 'Psicosis',
-      icon: '🔴',
+      icon: '',
       lpmAverage: 138,
       lpmRange: '128 - 146 LPM',
       sleepQuality: 'Insomnio Severo Continuado (<15%)',
@@ -172,8 +172,8 @@ export class NeuroSleepService {
       ],
       helpyMood: 'angry',
       helpyMessage:
-        '🚨 ¡EMERGENCIA NEUROCONDUCTUAL! [138 LPM] Desconexión de corteza prefrontal y sobrecarga límbica extrema por insomnio crítico. Descompensación conductual inminente. Bloqueando mandos sensibles y alertando al Cirujano de Vuelo en Tierra.',
-      helpyBadge: '🚨 EMERGENCIA CRÍTICA',
+        '[EMERGENCIA NEUROCONDUCTUAL · 138 LPM] Desconexión de corteza prefrontal y sobrecarga límbica extrema por insomnio crítico. Bloqueando mandos sensibles y alertando al Cirujano de Vuelo.',
+      helpyBadge: 'EMERGENCIA CRÍTICA',
       helpyAuraColor: '#ef4444',
     },
   };
@@ -184,7 +184,7 @@ export class NeuroSleepService {
       id: 'REPAIR_SLEEP',
       name: 'Deep Restorative Sleep',
       shortName: 'Restorative Sleep',
-      icon: '🟢',
+      icon: '',
       lpmAverage: 50,
       lpmRange: '45 - 54 BPM',
       sleepQuality: 'Excellent (94%)',
@@ -203,8 +203,8 @@ export class NeuroSleepService {
       ],
       helpyMood: 'happy',
       helpyMessage:
-        '😴 [Restorative Sleep · 50 BPM] Outstanding brain recovery, Commander! Synchronized slow delta waves and optimal vagal tone. Keep resting peacefully! ⭐',
-      helpyBadge: '⭐ Optimal Sleep',
+        '[Restorative Sleep · 50 BPM] Outstanding brain recovery, Commander. Synchronized slow delta waves and optimal vagal tone. Keep resting peacefully.',
+      helpyBadge: 'Optimal Sleep',
       helpyAuraColor: '#10b981',
     },
 
@@ -212,7 +212,7 @@ export class NeuroSleepService {
       id: 'ANXIETY',
       name: 'Space Anxiety & Confinement Stress',
       shortName: 'Nocturnal Anxiety',
-      icon: '🟡',
+      icon: '',
       lpmAverage: 92,
       lpmRange: '84 - 102 BPM',
       sleepQuality: 'Fragmented (58%)',
@@ -231,8 +231,8 @@ export class NeuroSleepService {
       ],
       helpyMood: 'sad',
       helpyMessage:
-        '🥺 [Anxiety Alert · 92 BPM] Persistent nighttime tachycardia detected and your amygdala indicates heightened arousal. I recommend starting the 4-7-8 breathing protocol to calm your heart rate.',
-      helpyBadge: '🟡 Anxiety Detected',
+        '[Anxiety Alert · 92 BPM] Persistent nighttime tachycardia detected and your amygdala indicates heightened arousal. I recommend starting the 4-7-8 breathing protocol.',
+      helpyBadge: 'Anxiety Detected',
       helpyAuraColor: '#f59e0b',
     },
 
@@ -240,7 +240,7 @@ export class NeuroSleepService {
       id: 'PANIC',
       name: 'Acute Panic Attack / Zero-G Nightmare',
       shortName: 'Panic / Arousal',
-      icon: '🟠',
+      icon: '',
       lpmAverage: 122,
       lpmRange: '112 - 132 BPM',
       sleepQuality: 'Critical Disruption (32%)',
@@ -259,8 +259,8 @@ export class NeuroSleepService {
       ],
       helpyMood: 'sad',
       helpyMessage:
-        '⚠️ [Panic Spike · 122 BPM] Sudden tachycardic surge! Your heart is racing and limbics are flooded. Commander, perform the double sigh: cabin pressure and O2 are 100% safe. I am right here with you.',
-      helpyBadge: '⚠️ Panic Surge',
+        '[Panic Spike · 122 BPM] Sudden tachycardic surge with limbic flood. Commander, perform the double sigh: cabin pressure and O2 are 100% safe.',
+      helpyBadge: 'Panic Surge',
       helpyAuraColor: '#f97316',
     },
 
@@ -268,7 +268,7 @@ export class NeuroSleepService {
       id: 'PSYCHOSIS',
       name: 'Neurobehavioral Decompensation / Psychosis',
       shortName: 'Psychosis',
-      icon: '🔴',
+      icon: '',
       lpmAverage: 138,
       lpmRange: '128 - 146 BPM',
       sleepQuality: 'Severe Chronic Insomnia (<15%)',
@@ -287,8 +287,8 @@ export class NeuroSleepService {
       ],
       helpyMood: 'angry',
       helpyMessage:
-        '🚨 NEUROBEHAVIORAL EMERGENCY! [138 BPM] Prefrontal disconnect and acute limbic flood from critical sleep debt. Imminent behavioral decompensation. Locking critical controls and alerting Earth Flight Surgeon.',
-      helpyBadge: '🚨 CRITICAL EMERGENCY',
+        '[NEUROBEHAVIORAL EMERGENCY · 138 BPM] Prefrontal disconnect and acute limbic flood from critical sleep debt. Locking critical controls and alerting Earth Flight Surgeon.',
+      helpyBadge: 'CRITICAL EMERGENCY',
       helpyAuraColor: '#ef4444',
     },
   };

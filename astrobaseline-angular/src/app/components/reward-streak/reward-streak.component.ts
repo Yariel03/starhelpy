@@ -51,23 +51,25 @@ export class RewardStreakComponent {
   });
 
   // Lista de días en el carrusel de racha (círculos que se encienden)
+  // Muestra solo los últimos 3 días cumplidos y 2 días futuros (+ el día actual)
   readonly streakNodes = computed(() => {
     const current = this.streakDays();
     const isEn = this.i18n.currentLang() === 'en';
-    const totalToShow = Math.max(14, current + 3);
+    const startDay = Math.max(1, current - 3);
+    const endDay = current + 2;
     const nodes = [];
 
-    for (let d = 1; d <= totalToShow; d++) {
+    for (let d = startDay; d <= endDay; d++) {
       const isCompleted = d < current;
       const isToday = d === current;
       const isFuture = d > current;
 
       let milestone: string | null = null;
-      if (d === 3) milestone = isEn ? '🎖️ Zero-G Habit' : '🎖️ Hábito Cero-G';
-      if (d === 7) milestone = isEn ? '🚀 7D Streak (+150 XP)' : '🚀 Racha 7D (+150 XP)';
-      if (d === 14) milestone = isEn ? '🛡️ Anti-Atrophy Shield' : '🛡️ Escudo Anti-Atrofia';
-      if (d === 21) milestone = isEn ? '👑 Space Strength' : '👑 Fuerza Espacial';
-      if (d === 30) milestone = isEn ? '🏆 Orbital Gold Medal' : '🏆 Medalla de Oro Orbital';
+      if (d === 3) milestone = isEn ? 'Zero-G Habit' : 'Hábito Cero-G';
+      if (d === 7) milestone = isEn ? '7D Streak (+150 XP)' : 'Racha 7D (+150 XP)';
+      if (d === 14) milestone = isEn ? 'Anti-Atrophy Shield' : 'Escudo Anti-Atrofia';
+      if (d === 21) milestone = isEn ? 'Space Strength' : 'Fuerza Espacial';
+      if (d === 30) milestone = isEn ? 'Orbital Gold Medal' : 'Medalla de Oro Orbital';
 
       nodes.push({
         day: d,
@@ -75,6 +77,7 @@ export class RewardStreakComponent {
         isToday,
         isFuture,
         milestone,
+        isFirst: d === startDay,
       });
     }
 

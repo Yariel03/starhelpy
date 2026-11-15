@@ -61,11 +61,11 @@ export class NasaDonkiService {
     const timeStr = this.lastCheckedTime().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
     if (lvl === 'DANGER') {
-      return `☢️ ¡ALERTA DE RADIACIÓN PELIGROSA NASA DONKI! [${timeStr}] Evento ${alert?.messageType || 'RBE'} activo: flujo de electrones/protones energéticos superior al umbral crítico (>1000 pfu). Peligro biológico extremo para caminatas espaciales (EVA). ¡Refugiarse en compartimento blindado!`;
+      return `[${timeStr}] ALERTA DE RADIACIÓN NASA DONKI: Evento ${alert?.messageType || 'RBE'} activo: flujo de electrones/protones energéticos superior al umbral crítico (>1000 pfu). Peligro biológico extremo para caminatas espaciales (EVA). ¡Refugiarse en compartimento blindado!`;
     } else if (lvl === 'WARNING') {
-      return `🟡 [${timeStr}] NASA DONKI: Precaución por radiación espacial moderada (${alert?.messageType || 'CME/FLR'}). Viento solar y partículas cargadas elevadas. Limitar actividades en el exterior.`;
+      return `[${timeStr}] NASA DONKI: Precaución por radiación espacial moderada (${alert?.messageType || 'CME/FLR'}). Viento solar y partículas cargadas elevadas. Limitar actividades en el exterior.`;
     } else {
-      return `🛡️ [${timeStr}] NASA DONKI: Radiación espacial dentro de límites normales y seguros. Sin tormentas de partículas energéticas solares activas. Clima espacial favorable.`;
+      return `[${timeStr}] NASA DONKI: Radiación espacial dentro de límites normales y seguros. Sin tormentas de partículas energéticas solares activas. Clima espacial favorable.`;
     }
   });
 

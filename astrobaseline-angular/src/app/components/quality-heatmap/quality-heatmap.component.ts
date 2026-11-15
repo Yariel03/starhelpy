@@ -21,10 +21,13 @@ import { ConfigService } from '../../core/services/config.service';
     .heatmap-wrapper {
       width: 100%;
       min-height: 380px;
-      background: #ffffff;
+      background: var(--card-glass-bg);
+      backdrop-filter: var(--card-glass-blur);
+      -webkit-backdrop-filter: var(--card-glass-blur);
       border-radius: 12px;
       padding: 0.5rem;
-      border: 1px solid #e2e8f0;
+      border: var(--card-glass-border);
+      box-shadow: var(--card-glass-shadow);
     }
     .heatmap-container {
       width: 100%;
@@ -78,12 +81,23 @@ export class QualityHeatmapComponent {
     ];
 
     const layout: any = {
-      title: 'Mediciones registradas (verde) vs ausentes (rojo)',
+      title: {
+        text: 'Mediciones registradas (verde) vs ausentes (rojo)',
+        font: { color: '#ffffff', size: 14 },
+      },
       margin: { t: 40, r: 20, l: 240, b: 60 },
-      xaxis: { title: 'Fecha de Misión', tickangle: -45, showgrid: false },
-      yaxis: { autorange: 'reversed' },
-      plot_bgcolor: '#ffffff',
-      paper_bgcolor: '#ffffff',
+      xaxis: {
+        title: { text: 'Fecha de Misión', font: { color: '#cbd5e1' } },
+        tickfont: { color: '#cbd5e1' },
+        tickangle: -45,
+        showgrid: false,
+      },
+      yaxis: {
+        autorange: 'reversed',
+        tickfont: { color: '#ffffff' },
+      },
+      plot_bgcolor: 'transparent',
+      paper_bgcolor: 'transparent',
     };
 
     Plotly.react(this.heatmapContainer.nativeElement, data, layout, {

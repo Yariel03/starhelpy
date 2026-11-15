@@ -1,8 +1,8 @@
-# ⭐ Start Helpy — Preservación Fisiológica & Neuroconductual para Misiones Espaciales
+# Star Helpy — Preservación Fisiológica & Neuroconductual para Misiones Espaciales
 
 <div align="center">
 
-![Start Helpy Logo](public/assets/images/logo/logo-white.png)
+![Star Helpy Logo](public/assets/images/logo/logo-white.png)
 
 **Plataforma Integral de Telemetría Biomédica, Monitoreo Neuroconductual 3D y Gamificación Física para Astronautas en Microgravedad**  
 *Desarrollado para Hackathons de Innovación Aeroespacial & NASA Space Apps Challenge*
@@ -30,7 +30,7 @@ En misiones de larga duración (Estación Espacial Internacional, Lunar Gateway 
 1. **Deterioro Fisiológico Acelerado**: Atrofia muscular severa (hasta 20% en 11 días), pérdida de densidad mineral ósea (1-1.5% mensual) y descondicionamiento cardiovascular por ausencia de resistencia hidrostática en gravedad cero.
 2. **Crisis Neuroconductual y Desincronización del Sueño**: Alteraciones del ritmo circadiano (16 amaneceres/puestas de sol cada 24 horas en LEO), estrés por confinamiento extremo, microdespertares con taquicardia y riesgo de episodios de ansiedad o psicosis aguda inducida por aislamiento y flujo de radiación cósmica.
 
-**Start Helpy** soluciona esto a través de un ecosistema reactivo impulsado por **Angular 19 Signals**, renderizado tridimensional **Three.js**, monitoreo climático espacial vía **NASA DONKI**, gamificación de hábitos estilo Duolingo y contramedidas parasimpáticas guiadas en tiempo real.
+**Star Helpy** soluciona esto a través de un ecosistema reactivo impulsado por **Angular 19 Signals**, renderizado tridimensional **Three.js**, monitoreo climático espacial vía **NASA DONKI**, gamificación de hábitos estilo Duolingo y contramedidas parasimpáticas guiadas en tiempo real.
 
 ---
 
@@ -203,7 +203,7 @@ During long-duration space missions (International Space Station, Lunar Gateway,
 1. **Accelerated Physiological Deconditioning**: Acute muscle atrophy (up to 20% loss in only 11 days), severe bone mineral density demineralization (1-1.5% per month), and cardiovascular atrophy due to zero hydrostatic pressure in microgravity.
 2. **Circadian Desynchronization & Neurobehavioral Strain**: Severe circadian disruption (16 sunrises/sunsets every 24 hours in LEO), extreme confinement stress, micro-arousals with paroxysmal tachycardia, and heightened risk of anxiety episodes or acute spaceflight-induced psychosis triggered by social isolation and cosmic ionizing radiation.
 
-**Start Helpy** addresses these critical challenges through a reactive ecosystem built with **Angular 19 Signals**, **Three.js WebGL 3D rendering**, live space weather telemetry via the **NASA DONKI API**, Duolingo-style physical training gamification, and real-time guided parasympathetic countermeasures.
+**Star Helpy** addresses these critical challenges through a reactive ecosystem built with **Angular 19 Signals**, **Three.js WebGL 3D rendering**, live space weather telemetry via the **NASA DONKI API**, Duolingo-style physical training gamification, and real-time guided parasympathetic countermeasures.
 
 ---
 
@@ -337,6 +337,6 @@ npm run build
 <div align="center">
 
 Crafted with ❤️ and science for the future of human spaceflight 🚀🌌  
-**Start Helpy Team — 2026**
+**Star Helpy Team — 2026**
 
 </div>

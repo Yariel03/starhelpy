@@ -15,7 +15,7 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
         <div class="header-main-info">
           <div class="badge-row">
             <span class="severity-pill" [style.background-color]="neuro.activeCase().severityColor">
-              {{ neuro.activeCase().icon }} {{ neuro.activeCase().severity }}
+              {{ neuro.activeCase().severity }}
             </span>
             <span class="lpm-tag">
               {{ i18n.t().cardiac_telemetry }} <strong>{{ neuro.liveLpm() }} LPM</strong> ({{ neuro.activeCase().lpmRange }})
@@ -47,7 +47,6 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
       <div class="simulator-panel-card">
         <div class="sim-header">
           <div class="sim-title-box">
-            <span class="sim-icon">⚡</span>
             <h4>{{ i18n.t().sim_header_title }}</h4>
           </div>
           <span class="sim-badge">{{ i18n.t().sim_header_sub }}</span>
@@ -61,7 +60,7 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
               [style.--case-color]="c.severityColor"
               (click)="simulate(c.id)"
             >
-              <span class="btn-icon">{{ c.icon }}</span>
+              <span class="btn-status-dot" [style.background-color]="c.severityColor"></span>
               <div class="btn-texts">
                 <span class="btn-title">{{ c.shortName }}</span>
                 <span class="btn-sub">{{ c.lpmAverage }} {{ i18n.t().bpm_avg_sub }}</span>
@@ -81,7 +80,6 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
           <div class="column-card brain-card">
             <div class="card-header">
               <div class="header-left">
-                <span class="card-icon">🧠</span>
                 <h4>{{ i18n.t().brain_map_title }}</h4>
               </div>
               <div class="header-right-actions">
@@ -115,7 +113,6 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
           <div class="column-card timeline-card">
             <div class="card-header">
               <div class="header-left">
-                <span class="card-icon">📈</span>
                 <h4>{{ i18n.t().sleep_arch_title }}</h4>
               </div>
               <span class="card-hint">{{ i18n.t().sleep_arch_hint }}</span>
@@ -152,7 +149,6 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
           <!-- Protocolo Clínico y Botones de Contramedidas -->
           <div class="column-card countermeasures-card" [style.border-top-color]="neuro.activeCase().severityColor">
             <div class="cm-header">
-              <span class="cm-icon">🛡️</span>
               <div>
                 <h4>{{ neuro.activeCase().countermeasureTitle }}</h4>
                 <p class="cm-sub">{{ i18n.t().guidelines_sub }}</p>
@@ -204,7 +200,7 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
                 (click)="openReport()"
                 [title]="i18n.t().flight_report"
               >
-                📄 {{ i18n.t().flight_report }}
+                {{ i18n.t().flight_report }}
               </button>
             </div>
           </div>
@@ -222,13 +218,14 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
 
     // Cabecera superior
     .neuro-header-banner {
-      background: rgba(255, 255, 255, 0.96);
-      backdrop-filter: blur(12px);
+      background: var(--card-glass-bg);
+      backdrop-filter: var(--card-glass-blur);
+      -webkit-backdrop-filter: var(--card-glass-blur);
       border-radius: 14px;
       padding: 1.25rem 1.75rem;
-      border: 1px solid rgba(226, 232, 240, 0.8);
+      border: var(--card-glass-border);
       border-left: 6px solid #10b981;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+      box-shadow: var(--card-glass-shadow);
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -259,9 +256,9 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
 
           .lpm-tag {
             font-size: 0.78rem;
-            color: #475569;
+            color: #cbd5e1;
             strong {
-              color: #0f172a;
+              color: #ffffff;
             }
           }
         }
@@ -270,13 +267,13 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
           margin: 0;
           font-size: 1.35rem;
           font-weight: 800;
-          color: #0f172a;
+          color: #ffffff;
         }
 
         .headline-sub {
           margin: 0.25rem 0 0;
           font-size: 0.85rem;
-          color: #64748b;
+          color: #cbd5e1;
           font-weight: 500;
         }
       }
@@ -287,8 +284,8 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
         flex-wrap: wrap;
 
         .metric-block {
-          background: #f8fafc;
-          border: 1px solid #e2e8f0;
+          background: rgba(15, 23, 42, 0.45);
+          border: 1px solid rgba(255, 255, 255, 0.15);
           padding: 0.6rem 1rem;
           border-radius: 10px;
           display: flex;
@@ -297,18 +294,18 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
 
           .metric-label {
             font-size: 0.68rem;
-            color: #64748b;
+            color: #cbd5e1;
             font-weight: 600;
           }
 
           .metric-value {
             font-size: 1rem;
             font-weight: 800;
-            color: #0f172a;
+            color: #ffffff;
             margin-top: 0.15rem;
 
             &.highlight {
-              color: #2563eb;
+              color: #60a5fa;
             }
             &.danger {
               color: #ef4444;
@@ -320,11 +317,13 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
 
     // Panel del Simulador
     .simulator-panel-card {
-      background: #ffffff;
-      border: 1.5px solid #e2e8f0;
+      background: var(--card-glass-bg);
+      backdrop-filter: var(--card-glass-blur);
+      -webkit-backdrop-filter: var(--card-glass-blur);
+      border: var(--card-glass-border);
       border-radius: 14px;
       padding: 1.1rem 1.4rem;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+      box-shadow: var(--card-glass-shadow);
       display: flex;
       flex-direction: column;
       gap: 0.85rem;
@@ -333,32 +332,37 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
         display: flex;
         justify-content: space-between;
         align-items: center;
+        flex-wrap: wrap;
+        gap: 0.5rem;
 
         .sim-title-box {
           display: flex;
           align-items: center;
-          gap: 0.45rem;
+          gap: 0.55rem;
 
           .sim-icon {
-            font-size: 1.1rem;
+            font-size: 1.25rem;
+            filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.6));
           }
 
           h4 {
             margin: 0;
-            font-size: 0.88rem;
+            font-size: 0.95rem;
             font-weight: 800;
-            color: #0f172a;
-            letter-spacing: 0.3px;
+            color: #ffffff;
+            letter-spacing: 0.4px;
           }
         }
 
         .sim-badge {
-          font-size: 0.68rem;
+          font-size: 0.7rem;
           font-weight: 700;
-          background: #eff6ff;
-          color: #2563eb;
-          padding: 2px 8px;
-          border-radius: 10px;
+          background: rgba(37, 99, 235, 0.2);
+          color: #93c5fd;
+          border: 1px solid rgba(59, 130, 246, 0.35);
+          padding: 3px 10px;
+          border-radius: 999px;
+          letter-spacing: 0.3px;
         }
       }
 
@@ -375,37 +379,49 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
         }
 
         .sim-btn {
-          background: #f8fafc;
-          border: 2px solid #e2e8f0;
-          border-radius: 10px;
-          padding: 0.75rem 0.9rem;
+          background: rgba(15, 23, 42, 0.6);
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
+          border: 1.5px solid rgba(255, 255, 255, 0.15);
+          border-radius: 12px;
+          padding: 0.85rem 1rem;
           display: flex;
           align-items: center;
-          gap: 0.75rem;
+          gap: 0.85rem;
           cursor: pointer;
-          transition: all 0.2s ease;
+          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
           position: relative;
           text-align: left;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
 
           &:hover {
             border-color: var(--case-color);
-            background: #ffffff;
+            background: rgba(30, 41, 59, 0.8);
             transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35), 0 0 12px rgba(255, 255, 255, 0.1);
           }
 
           &.active {
             border-color: var(--case-color);
-            background: #ffffff;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12), 0 4px 12px rgba(0, 0, 0, 0.06);
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(30, 41, 59, 0.9) 100%);
+            box-shadow: 0 0 0 2px var(--case-color), 0 6px 20px rgba(0, 0, 0, 0.45);
 
             .btn-title {
-              color: var(--case-color);
+              color: #ffffff;
+              text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+            }
+
+            .btn-sub {
+              color: #ffffff;
             }
           }
 
-          .btn-icon {
-            font-size: 1.5rem;
+          .btn-status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            box-shadow: 0 0 8px currentColor;
           }
 
           .btn-texts {
@@ -413,29 +429,33 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
             flex-direction: column;
 
             .btn-title {
-              font-size: 0.82rem;
+              font-size: 0.85rem;
               font-weight: 800;
-              color: #1e293b;
+              color: #ffffff;
               transition: color 0.2s;
             }
 
             .btn-sub {
-              font-size: 0.72rem;
-              color: #64748b;
-              margin-top: 0.1rem;
+              font-size: 0.74rem;
+              color: #94a3b8;
+              margin-top: 0.15rem;
+              font-weight: 600;
+              transition: color 0.2s;
             }
           }
 
           .active-badge {
             position: absolute;
-            top: 6px;
+            top: 7px;
             right: 8px;
             font-size: 0.62rem;
             font-weight: 800;
             background: var(--case-color);
             color: #ffffff;
-            padding: 1px 6px;
+            padding: 2px 7px;
             border-radius: 999px;
+            letter-spacing: 0.3px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
           }
         }
       }
@@ -452,14 +472,25 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
       }
 
       .column-card {
-        background: #ffffff;
-        border: 1px solid #e2e8f0;
+        background: var(--card-glass-bg);
+        backdrop-filter: var(--card-glass-blur);
+        -webkit-backdrop-filter: var(--card-glass-blur);
+        border: var(--card-glass-border);
         border-radius: 14px;
         padding: 1.25rem;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+        box-shadow: var(--card-glass-shadow);
         display: flex;
         flex-direction: column;
         gap: 1rem;
+
+        &:has(.fullscreen-mode) {
+          backdrop-filter: none !important;
+          -webkit-backdrop-filter: none !important;
+          transform: none !important;
+          animation: none !important;
+          contain: none !important;
+          position: static !important;
+        }
       }
 
       .card-header {
@@ -480,7 +511,7 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
             margin: 0;
             font-size: 0.95rem;
             font-weight: 800;
-            color: #0f172a;
+            color: #ffffff;
           }
         }
 
@@ -491,22 +522,22 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
 
           .card-hint {
             font-size: 0.68rem;
-            color: #94a3b8;
+            color: #cbd5e1;
             font-weight: 600;
           }
         }
 
         .card-hint {
           font-size: 0.68rem;
-          color: #94a3b8;
+          color: #cbd5e1;
           font-weight: 600;
         }
       }
 
       // Caja de diagnóstico 3D
       .brain-diagnostic-box {
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
+        background: rgba(15, 23, 42, 0.45);
+        border: 1px solid rgba(255, 255, 255, 0.15);
         border-radius: 10px;
         padding: 0.9rem 1rem;
 
@@ -514,13 +545,13 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
           margin: 0 0 0.35rem 0;
           font-size: 0.82rem;
           font-weight: 700;
-          color: #1e293b;
+          color: #ffffff;
         }
 
         .diag-desc {
           margin: 0 0 0.65rem 0;
           font-size: 0.78rem;
-          color: #475569;
+          color: #cbd5e1;
           line-height: 1.4;
         }
 
@@ -528,7 +559,7 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
           .pillbox-title {
             font-size: 0.72rem;
             font-weight: 700;
-            color: #64748b;
+            color: #cbd5e1;
             display: block;
             margin-bottom: 0.35rem;
           }
@@ -539,9 +570,9 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
             gap: 0.35rem;
 
             .zone-pill {
-              background: #ffffff;
-              border: 1px solid #cbd5e1;
-              color: #334155;
+              background: rgba(15, 23, 42, 0.6);
+              border: 1px solid rgba(255, 255, 255, 0.2);
+              color: #ffffff;
               padding: 2px 8px;
               border-radius: 8px;
               font-size: 0.7rem;
@@ -554,8 +585,10 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
       // Gráfica de Línea de Tiempo de 8 Horas
       .timeline-card {
         .timeline-chart-wrapper {
-          background: #f8fafc;
-          border: 1px solid #e2e8f0;
+          background: rgba(15, 23, 42, 0.45);
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
+          border: 1px solid rgba(255, 255, 255, 0.15);
           border-radius: 12px;
           padding: 1.25rem 0.75rem 0.75rem 0.75rem;
 
@@ -577,13 +610,14 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
               .bar-value-label {
                 font-size: 0.65rem;
                 font-weight: 700;
-                color: #0f172a;
+                color: #ffffff;
               }
 
               .bar-track {
                 width: 14px;
                 height: 100px;
-                background: #e2e8f0;
+                background: rgba(15, 23, 42, 0.5);
+                border: 1px solid rgba(255, 255, 255, 0.12);
                 border-radius: 4px;
                 overflow: hidden;
                 display: flex;
@@ -604,16 +638,16 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
                 border-radius: 4px;
                 text-transform: uppercase;
 
-                &.n3 { background: #dcfce7; color: #15803d; }
-                &.n2 { background: #e0f2fe; color: #0369a1; }
-                &.n1 { background: #fef3c7; color: #b45309; }
-                &.rem { background: #f3e8ff; color: #7e22ce; }
-                &.vigilia { background: #fee2e2; color: #b91c1c; }
+                &.n3 { background: rgba(34, 197, 94, 0.25); color: #86efac; border: 1px solid rgba(34, 197, 94, 0.4); }
+                &.n2 { background: rgba(56, 189, 248, 0.25); color: #7dd3fc; border: 1px solid rgba(56, 189, 248, 0.4); }
+                &.n1 { background: rgba(245, 158, 11, 0.25); color: #fde047; border: 1px solid rgba(245, 158, 11, 0.4); }
+                &.rem { background: rgba(168, 85, 247, 0.25); color: #d8b4fe; border: 1px solid rgba(168, 85, 247, 0.4); }
+                &.vigilia { background: rgba(239, 68, 68, 0.25); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.4); }
               }
 
               .bar-hour-label {
                 font-size: 0.62rem;
-                color: #94a3b8;
+                color: #cbd5e1;
                 font-weight: 600;
               }
             }
@@ -625,7 +659,7 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
           justify-content: center;
           gap: 1rem;
           font-size: 0.7rem;
-          color: #64748b;
+          color: #cbd5e1;
           font-weight: 600;
 
           .legend-item {
@@ -663,13 +697,13 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
             margin: 0;
             font-size: 0.95rem;
             font-weight: 800;
-            color: #0f172a;
+            color: #ffffff;
           }
 
           .cm-sub {
             margin: 0.15rem 0 0;
             font-size: 0.75rem;
-            color: #64748b;
+            color: #cbd5e1;
           }
         }
 
@@ -686,11 +720,11 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
             align-items: flex-start;
             gap: 0.45rem;
             font-size: 0.78rem;
-            color: #334155;
+            color: #e2e8f0;
             line-height: 1.35;
 
             .check-bullet {
-              color: #16a34a;
+              color: #10b981;
               font-weight: 900;
               line-height: 1.2;
             }
@@ -751,11 +785,11 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
             }
 
             &.btn-report {
-              background: #f1f5f9;
-              color: #0f172a;
-              border: 1px solid #cbd5e1;
+              background: rgba(255, 255, 255, 0.15);
+              color: #ffffff;
+              border: 1px solid rgba(255, 255, 255, 0.25);
               &:hover {
-                background: #e2e8f0;
+                background: rgba(255, 255, 255, 0.25);
                 transform: translateY(-2px);
               }
             }

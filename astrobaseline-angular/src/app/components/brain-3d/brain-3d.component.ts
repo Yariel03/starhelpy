@@ -57,7 +57,7 @@ import { I18nService } from '../../core/services/i18n.service';
               {{ i18n.currentLang() === 'en' ? 'Heart Rate:' : 'Frecuencia:' }} <strong>{{ neuroService.liveLpm() }} BPM</strong>
             </span>
           </div>
-          <span class="rot-hint">{{ i18n.currentLang() === 'en' ? '🔄 360° Rotation' : '🔄 Rotación 360°' }}</span>
+          <span class="rot-hint">{{ i18n.currentLang() === 'en' ? '360° Rotation' : 'Rotación 360°' }}</span>
         </div>
 
         <!-- Barra de Acciones Superiores Derechas -->
@@ -67,35 +67,35 @@ import { I18nService } from '../../core/services/i18n.service';
             (click)="togglePctGuide()"
             [title]="i18n.currentLang() === 'en' ? 'Learn about BOLD activation' : 'Ver qué significa el porcentaje de activación BOLD'"
           >
-            {{ i18n.currentLang() === 'en' ? 'ℹ️ What is %?' : 'ℹ️ ¿Qué es el %?' }}
+            {{ i18n.currentLang() === 'en' ? 'What is %?' : '¿Qué es el %?' }}
           </button>
           <button
             class="ctrl-btn zoom-btn"
             (click)="zoomIn()"
             [title]="i18n.currentLang() === 'en' ? 'Zoom in (+)' : 'Acercar modelo 3D (+)'"
           >
-            🔍+
+            +
           </button>
           <button
             class="ctrl-btn zoom-btn"
             (click)="zoomOut()"
             [title]="i18n.currentLang() === 'en' ? 'Zoom out (-)' : 'Alejar modelo 3D (-)'"
           >
-            🔍-
+            −
           </button>
           <button
             class="ctrl-btn reset-cam-btn"
             (click)="resetCamera()"
             [title]="i18n.currentLang() === 'en' ? 'Recenter orbital view' : 'Recentrar vista orbital'"
           >
-            {{ i18n.currentLang() === 'en' ? '🎯 Recenter' : '🎯 Recentrar' }}
+            {{ i18n.currentLang() === 'en' ? 'Recenter' : 'Recentrar' }}
           </button>
           <button
             class="ctrl-btn max-btn"
             (click)="toggleFullscreen()"
             [title]="i18n.currentLang() === 'en' ? 'Fullscreen 3D' : 'Maximizar a pantalla completa'"
           >
-            {{ i18n.currentLang() === 'en' ? '⛶ Maximize 3D' : '⛶ Maximizar 3D' }}
+            {{ i18n.currentLang() === 'en' ? 'Maximize 3D' : 'Maximizar 3D' }}
           </button>
         </div>
       }
@@ -105,12 +105,12 @@ import { I18nService } from '../../core/services/i18n.service';
         <!-- Barra Superior en Pantalla Completa (Sin superposiciones) -->
         <header class="fs-top-bar">
           <div class="fs-bar-left">
-            <span class="fs-bar-title">{{ i18n.currentLang() === 'en' ? '🧠 3D Brain Mapping' : '🧠 Mapeo Encefálico Tridimensional' }}</span>
+            <span class="fs-bar-title">{{ i18n.currentLang() === 'en' ? '3D Brain Mapping' : 'Mapeo Encefálico 3D' }}</span>
             <span class="fs-state-chip" [style.background-color]="activeColor()">
               {{ neuroService.activeCase().name }}
             </span>
             <span class="fs-lpm-chip">
-              💓 {{ neuroService.liveLpm() }} LPM
+              {{ neuroService.liveLpm() }} LPM
             </span>
           </div>
 
@@ -120,19 +120,19 @@ import { I18nService } from '../../core/services/i18n.service';
               (click)="togglePctGuide()"
               [title]="i18n.currentLang() === 'en' ? 'Learn about BOLD activation' : '¿Qué significan los porcentajes BOLD?'"
             >
-              {{ i18n.currentLang() === 'en' ? 'ℹ️ What is %?' : 'ℹ️ ¿Qué significa el %?' }}
+              {{ i18n.currentLang() === 'en' ? 'What is %?' : '¿Qué significa el %?' }}
             </button>
             <div class="fs-zoom-group">
-              <button class="fs-btn zoom-btn" (click)="zoomIn()" [title]="i18n.currentLang() === 'en' ? 'Zoom in (+)' : 'Acercar (+)'">🔍+</button>
-              <button class="fs-btn zoom-btn" (click)="zoomOut()" [title]="i18n.currentLang() === 'en' ? 'Zoom out (-)' : 'Alejar (-)'">🔍-</button>
-              <button class="fs-btn" (click)="resetCamera()" [title]="i18n.currentLang() === 'en' ? 'Recenter view' : 'Recentrar vista'">{{ i18n.currentLang() === 'en' ? '🎯 Recenter' : '🎯 Recentrar' }}</button>
+              <button class="fs-btn zoom-btn" (click)="zoomIn()" [title]="i18n.currentLang() === 'en' ? 'Zoom in (+)' : 'Acercar (+)'">+</button>
+              <button class="fs-btn zoom-btn" (click)="zoomOut()" [title]="i18n.currentLang() === 'en' ? 'Zoom out (-)' : 'Alejar (-)'">−</button>
+              <button class="fs-btn" (click)="resetCamera()" [title]="i18n.currentLang() === 'en' ? 'Recenter view' : 'Recentrar vista'">{{ i18n.currentLang() === 'en' ? 'Recenter' : 'Recentrar' }}</button>
             </div>
             <button
               class="fs-btn close-btn"
               (click)="toggleFullscreen()"
               [title]="i18n.currentLang() === 'en' ? 'Exit Fullscreen (Esc)' : 'Salir de pantalla completa (Esc)'"
             >
-              {{ i18n.currentLang() === 'en' ? '✕ Exit Fullscreen (Esc)' : '✕ Salir de Pantalla Completa (Esc)' }}
+              {{ i18n.currentLang() === 'en' ? '✕ Exit Fullscreen' : '✕ Salir de Pantalla Completa' }}
             </button>
           </div>
         </header>
@@ -197,7 +197,6 @@ import { I18nService } from '../../core/services/i18n.service';
           <div class="pct-guide-card" (click)="$event.stopPropagation()">
             <div class="guide-header">
               <div class="guide-title-row">
-                <span class="guide-badge-icon">📊</span>
                 <div>
                   <h5>Significado Clínico del % de Activación Encefálica</h5>
                   <p class="guide-sub">Telemetría Biomédica BOLD (Blood-Oxygen-Level-Dependent) & fNIRS</p>
@@ -254,6 +253,17 @@ import { I18nService } from '../../core/services/i18n.service';
     </div>
   `,
   styles: [`
+    :host {
+      display: block;
+      width: 100%;
+
+      &:fullscreen {
+        width: 100vw;
+        height: 100vh;
+        background: #020617;
+      }
+    }
+
     .brain-viewer-wrapper {
       position: relative;
       width: 100%;
@@ -269,22 +279,27 @@ import { I18nService } from '../../core/services/i18n.service';
       // MODO PANTALLA COMPLETA PROFESIONAL (TEATRO 3D)
       &.fullscreen-mode {
         position: fixed !important;
-        inset: 0 !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
         width: 100vw !important;
         height: 100vh !important;
-        z-index: 100000 !important;
+        z-index: 1000000 !important;
         border-radius: 0 !important;
         border: none !important;
         box-shadow: none !important;
         background: #020617 !important;
+        margin: 0 !important;
 
         .canvas-stage-area {
           position: absolute;
           top: 54px;
           left: 0;
-          right: 340px; // Deja exactamente 340px libres para el panel lateral
+          right: 340px;
           bottom: 0;
-          height: calc(100vh - 54px);
+          width: calc(100% - 340px) !important;
+          height: calc(100% - 54px) !important;
         }
 
         .zones-legend-bar {
@@ -418,6 +433,10 @@ import { I18nService } from '../../core/services/i18n.service';
             background: linear-gradient(135deg, #0369a1, #1d4ed8);
             box-shadow: 0 4px 12px rgba(37, 99, 235, 0.5);
           }
+
+          @media (max-width: 1024px) {
+            display: none !important;
+          }
         }
       }
     }
@@ -482,6 +501,10 @@ import { I18nService } from '../../core/services/i18n.service';
 
     // ================= ESTILOS PANTALLA COMPLETA =================
     .fs-top-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
       height: 54px;
       width: 100%;
       background: rgba(15, 23, 42, 0.95);
@@ -926,6 +949,7 @@ export class Brain3dComponent implements OnInit, OnDestroy {
 
   readonly neuroService = inject(NeuroSleepService);
   readonly i18n = inject(I18nService);
+  private hostEl = inject(ElementRef);
 
   readonly activeColor = computed(() => this.neuroService.activeCase().severityColor);
   readonly isFullscreen = signal<boolean>(false);
@@ -980,6 +1004,12 @@ export class Brain3dComponent implements OnInit, OnDestroy {
     }
     if (this.renderer) {
       this.renderer.dispose();
+    }
+    document.body.classList.remove('brain-3d-fullscreen');
+    if (document.fullscreenElement) {
+      try {
+        document.exitFullscreen().catch(() => {});
+      } catch (e) {}
     }
   }
 
@@ -1266,8 +1296,28 @@ export class Brain3dComponent implements OnInit, OnDestroy {
   }
 
   toggleFullscreen(): void {
+    if (typeof window !== 'undefined' && window.innerWidth <= 1024 && !this.isFullscreen()) {
+      return;
+    }
+
     const willBeFs = !this.isFullscreen();
     this.isFullscreen.set(willBeFs);
+
+    if (willBeFs) {
+      document.body.classList.add('brain-3d-fullscreen');
+      try {
+        if (this.hostEl?.nativeElement?.requestFullscreen && !document.fullscreenElement) {
+          this.hostEl.nativeElement.requestFullscreen().catch(() => {});
+        }
+      } catch (e) {}
+    } else {
+      document.body.classList.remove('brain-3d-fullscreen');
+      try {
+        if (document.fullscreenElement) {
+          document.exitFullscreen().catch(() => {});
+        }
+      } catch (e) {}
+    }
 
     // Resetear rotación y cámara para vista frontal óptima
     this.resetCamera();
@@ -1280,6 +1330,23 @@ export class Brain3dComponent implements OnInit, OnDestroy {
         this.resizeRendererToContainer();
       });
     });
+  }
+
+  @HostListener('document:fullscreenchange')
+  onFullscreenChange(): void {
+    const isDocFs = !!document.fullscreenElement;
+    if (!isDocFs && this.isFullscreen()) {
+      this.isFullscreen.set(false);
+      document.body.classList.remove('brain-3d-fullscreen');
+      this.resetCamera();
+      this.createBrainModelScaleReset();
+      this.updateBrainColors(this.neuroService.activeStateId());
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          this.resizeRendererToContainer();
+        });
+      });
+    }
   }
 
   togglePctGuide(): void {
@@ -1313,7 +1380,11 @@ export class Brain3dComponent implements OnInit, OnDestroy {
 
   @HostListener('window:resize')
   onWindowResize(): void {
-    this.resizeRendererToContainer();
+    if (typeof window !== 'undefined' && window.innerWidth <= 1024 && this.isFullscreen()) {
+      this.toggleFullscreen();
+    } else {
+      this.resizeRendererToContainer();
+    }
   }
 
   // Interacción de rotación por ratón, toque y rueda

@@ -14,7 +14,7 @@
     >
       <div class="bubble-header">
         <div class="sender-info">
-          <span class="bubble-sender">⭐ Star Helpy</span>
+          <span class="bubble-sender">Star Helpy</span>
           <span
             class="header-state-pill"
             [style.background]="activeState().badgeColor"
@@ -41,10 +41,10 @@
           [class]="nasa.radiationLevel().toLowerCase()"
           [title]="i18n.currentLang() === 'en' ? 'NASA DONKI Space Weather' : 'Clima espacial NASA DONKI'"
         >
-          🛰️ {{ nasa.radiationLevel() === 'SAFE' ? 'DONKI Nominal' : (nasa.radiationLevel() === 'WARNING' ? (i18n.currentLang() === 'en' ? 'DONKI Warning' : 'DONKI Alerta') : (i18n.currentLang() === 'en' ? 'DONKI Danger' : 'DONKI Peligro')) }}
+          {{ nasa.radiationLevel() === 'SAFE' ? 'DONKI Nominal' : (nasa.radiationLevel() === 'WARNING' ? (i18n.currentLang() === 'en' ? 'DONKI Warning' : 'DONKI Alerta') : (i18n.currentLang() === 'en' ? 'DONKI Danger' : 'DONKI Peligro')) }}
         </span>
         <span class="telemetry-pill neuro-pill" [title]="i18n.t().heart_resting">
-          🧠 {{ neuro.liveLpm() }} LPM
+          {{ neuro.liveLpm() }} LPM
         </span>
       </div>
 
@@ -144,7 +144,7 @@
 
       <!-- ================= EMOCIÓN 1: CELEBRATE (3/3 EJERCICIOS COMPLETADOS) ================= -->
       @if (currentEmotion() === 'celebrate') {
-        <!-- Ojos con estrellas brillantes ✨ doradas -->
+        <!-- Ojos con estrellas brillantes doradas -->
         <path d="M 40,40 L 42,46 L 48,46 L 43,50 L 45,56 L 40,52 L 35,56 L 37,50 L 32,46 L 38,46 Z" fill="#ffffff" stroke="#0f172a" stroke-width="1.2" />
         <path d="M 60,40 L 62,46 L 68,46 L 63,50 L 65,56 L 60,52 L 55,56 L 57,50 L 52,46 L 58,46 Z" fill="#ffffff" stroke="#0f172a" stroke-width="1.2" />
 
@@ -301,7 +301,7 @@
 
       <!-- ================= EMOCIÓN 9: ANGRY (0 EJERCICIOS COMPLETADOS - ESTRELLA ENOJADA) ================= -->
       @if (currentEmotion() === 'angry') {
-        <!-- Símbolo anime de vena de enojo 💢 en la frente -->
+        <!-- Símbolo anime de vena de enojo en la frente -->
         <path d="M 67,23 L 73,23 M 67,27 L 73,27 M 69,21 L 69,29 M 71,21 L 71,29" stroke="#ef4444" stroke-width="2" stroke-linecap="round" />
 
         <!-- Cejas súper fruncidas y enojadas en diagonal hacia el centro \ / -->
@@ -347,7 +347,7 @@
       <!-- Header del Chat -->
       <div class="chat-header">
         <div class="chat-header-profile">
-          <div class="avatar-mini" [class]="activeState().mood">⭐</div>
+          <div class="avatar-mini" [class]="activeState().mood">AI</div>
           <div class="header-texts">
             <h4>Star Helpy</h4>
             <span class="status-indicator">
@@ -361,10 +361,10 @@
       <!-- Barra de Estado de Radiación NASA DONKI en el Chat -->
       <div class="chat-donki-bar" [class]="nasa.radiationLevel().toLowerCase()">
         <span class="chat-donki-label">
-          🛰️ <strong>NASA DONKI (1 min):</strong>
+          <strong>NASA DONKI (1 min):</strong>
         </span>
         <span class="chat-donki-status" [class]="nasa.radiationLevel().toLowerCase()">
-          {{ nasa.isDangerous() ? '☢️ PELIGROSO (>1000 pfu)' : (nasa.radiationLevel() === 'WARNING' ? '🟡 Precaución' : '🛡️ SEGURO') }}
+          {{ nasa.isDangerous() ? 'PELIGROSO (>1000 pfu)' : (nasa.radiationLevel() === 'WARNING' ? 'Precaución' : 'SEGURO') }}
         </span>
         <span class="chat-donki-cd">({{ nasa.secondsUntilNextCheck() }}s)</span>
       </div>
@@ -389,7 +389,7 @@
           >
             @if (msg.sender === 'helpy') {
               <div class="helpy-msg-avatar" [class]="msg.mood || activeState().mood">
-                {{ msg.isAlert ? '☢️' : '⭐' }}
+                {{ msg.isAlert ? '!' : 'AI' }}
               </div>
             }
 
