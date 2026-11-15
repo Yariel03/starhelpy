@@ -29,23 +29,30 @@ export class NasaDonkiService {
   private http = inject(HttpClient);
   private readonly DONKI_URL = 'https://api.nasa.gov/DONKI/notifications?type=all&api_key=DEMO_KEY';
 
-  // Intervalo de verificación: 60 segundos (1 minuto)
-  private readonly POLL_INTERVAL_MS = 60000;
-  private pollTimer: any = null;
+  // Retardo inicial: 1.3 minutos (78 segundos) tras aplicar meta e iniciar misión
+  private readonly INITIAL_DELAY_SECONDS = 78;
+  private readonly INITIAL_DELAY_MS = 78 * 1000;
 
-  // Estados de radiación
+  // Intervalo de verificación periódico: 2 minutos (120 segundos)
+  private readonly POLL_INTERVAL_SECONDS = 120;
+  private readonly POLL_INTERVAL_MS = 120 * 1000;
+
+  private pollTimer: any = null;
+  private initialDelayTimer: any = null;
+  private countdownTimer: any = null;
+
+  // Estados de radiación (inicia nominal y seguro)
   readonly radiationLevel = signal<RadiationLevel>('SAFE');
   readonly isDangerous = computed(() => this.radiationLevel() === 'DANGER');
   readonly radiationHeadline = signal<string>('Radiación espacial en niveles seguros');
-  readonly radiationDetails = signal<string>('Flujo de partículas energéticas nominal según NASA DONKI.');
+  readonly radiationDetails = signal<string>('Monitoreo espacial activado. Primer escaneo DONKI en 1.3 min.');
   readonly latestAlert = signal<DonkiNotification | null>(null);
   readonly lastCheckedTime = signal<Date>(new Date());
-  readonly secondsUntilNextCheck = signal<number>(60);
+  readonly secondsUntilNextCheck = signal<number>(78);
   readonly checkCount = signal<number>(0);
 
   // Control de estado de monitoreo activo
   readonly isMonitoringActive = signal<boolean>(false);
-  private countdownTimer: any = null;
 
   // Mensaje amigable para la mascota Star Helpy
   readonly helpyRadiationAnnouncement = computed(() => {
@@ -66,32 +73,39 @@ export class NasaDonkiService {
     // No se inicia automáticamente: espera a que el astronauta inicie la misión
   }
 
-  // Iniciar monitoreo continuo cada minuto (solo cuando la misión inicia)
+  // Iniciar monitoreo: se ejecuta 1.3 minutos tras aplicar meta e iniciar misión, luego cada 2 minutos
   startRadiationMonitoring(): void {
-    if (this.isMonitoringActive()) {
-      return; // Ya está activo, evitar llamadas redundantes
-    }
+    // Limpiar temporizadores anteriores si los hubiera
+    this.stopRadiationMonitoring();
     this.isMonitoringActive.set(true);
 
-    // Primera consulta inmediata tras iniciar la misión
-    this.checkRadiationStatus();
+    // Estado inicial seguro y cuenta regresiva de 1.3 minutos (78s)
+    this.secondsUntilNextCheck.set(this.INITIAL_DELAY_SECONDS);
+    this.radiationLevel.set('SAFE');
+    this.radiationHeadline.set('Radiación espacial en niveles seguros');
+    this.radiationDetails.set('Monitoreo activado tras iniciar la misión. Primer escaneo DONKI en 1.3 min.');
 
-    // Contador regresivo de segundos para la UI
-    if (this.countdownTimer) clearInterval(this.countdownTimer);
+    // Contador regresivo segundo a segundo para la UI
     this.countdownTimer = setInterval(() => {
-      this.secondsUntilNextCheck.update((s) => (s <= 1 ? 60 : s - 1));
+      this.secondsUntilNextCheck.update((s) => (s > 1 ? s - 1 : 1));
     }, 1000);
 
-    // Consulta periódica a NASA DONKI cada 60 segundos (1 minuto)
-    if (this.pollTimer) clearInterval(this.pollTimer);
-    this.pollTimer = setInterval(() => {
+    // Primer escaneo retrasado a los 1.3 minutos (78 segundos)
+    this.initialDelayTimer = setTimeout(() => {
       this.checkRadiationStatus();
-      this.secondsUntilNextCheck.set(60);
-    }, this.POLL_INTERVAL_MS);
+      this.secondsUntilNextCheck.set(this.POLL_INTERVAL_SECONDS);
+
+      // Sondeo periódico continuo cada 2 minutos (120 segundos)
+      this.pollTimer = setInterval(() => {
+        this.checkRadiationStatus();
+        this.secondsUntilNextCheck.set(this.POLL_INTERVAL_SECONDS);
+      }, this.POLL_INTERVAL_MS);
+    }, this.INITIAL_DELAY_MS);
   }
 
   // Detener monitoreo
   stopRadiationMonitoring(): void {
+    if (this.initialDelayTimer) clearTimeout(this.initialDelayTimer);
     if (this.pollTimer) clearInterval(this.pollTimer);
     if (this.countdownTimer) clearInterval(this.countdownTimer);
     this.isMonitoringActive.set(false);
@@ -173,16 +187,16 @@ export class NasaDonkiService {
     this.latestAlert.set(notifications[0] || null);
   }
 
-  // Notificaciones de respaldo en caso de desconexión o límite de API DEMO_KEY
+  // Notificaciones de respaldo nominales en caso de desconexión o límite de API DEMO_KEY
   private getFallbackNotifications(): DonkiNotification[] {
     return [
       {
-        messageType: 'RBE',
-        messageID: '20261112-AL-001',
-        messageURL: 'https://ccmc.gsfc.nasa.gov/DONKI/view/Alert/49522/1',
+        messageType: 'REPORT',
+        messageID: '20261114-FLIGHT-001',
+        messageURL: 'https://ccmc.gsfc.nasa.gov/DONKI/',
         messageIssueTime: new Date().toISOString(),
         messageBody:
-          'Significantly elevated energetic electron fluxes in the Earth\'s outer radiation belt. GOES greater than 2.0 MeV integral electron flux remains elevated, crossing the threshold of 1000 pfu. NASA spacecraft and crew passing through outer radiation belt can be impacted.',
+          'Space weather conditions nominal. Solar energetic proton fluxes remain well below the 10 pfu threshold. Background galactic cosmic rays within expected operational margins for astronaut crew.',
       },
     ];
   }

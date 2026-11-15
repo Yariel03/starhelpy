@@ -158,7 +158,7 @@ export class StarPetComponent implements OnInit {
       };
     }
 
-    // 4. NIVEL DE RUTINA 4: Hábitos de Misión y Ejercicio Físico
+    // 4. NIVEL DE RUTINA 4: Hábitos de Misión y Ejercicio Físico (Amigable y Positivo)
     const completed = this.state.completedExercisesCount();
     const total = this.state.currentExercises().length;
     const day = this.state.missionDay();
@@ -168,9 +168,9 @@ export class StarPetComponent implements OnInit {
         level: 'ROUTINE',
         priority: 4,
         mood: 'happy',
-        badge: `⭐ Sol ${day} · Al Día`,
+        badge: `⭐ Sol ${day} · Meta Cumplida`,
         badgeColor: '#10b981',
-        message: `¡Excelente! Completaste tus ${completed}/${total} ejercicios. Racha asegurada.`,
+        message: `¡Excelente trabajo! Completaste tus ${completed}/${total} ejercicios de hoy. Racha asegurada.`,
         actionType: 'chat',
         actionText: '💬 Chatear con Helpy',
       };
@@ -178,10 +178,10 @@ export class StarPetComponent implements OnInit {
       return {
         level: 'ROUTINE',
         priority: 4,
-        mood: 'sad',
-        badge: `⏳ ${completed}/${total} Ejercicios`,
+        mood: 'happy',
+        badge: `⏳ ${completed}/${total} Completados`,
         badgeColor: '#3b82f6',
-        message: `Llevas ${completed}/${total} ejercicios. ¡No dejes que la gravedad cero te debilite!`,
+        message: `¡Buen ritmo! Llevas ${completed}/${total} ejercicios. Vamos por el siguiente de la rutina.`,
         actionType: 'chat',
         actionText: '🏋️ Ver Rutina',
       };
@@ -189,12 +189,12 @@ export class StarPetComponent implements OnInit {
       return {
         level: 'ROUTINE',
         priority: 4,
-        mood: 'angry',
-        badge: `⚠️ 0/${total} Hoy`,
-        badgeColor: '#f59e0b',
-        message: `Tienes 0/${total} ejercicios hoy. Recuerda que la masa muscular se pierde rápido en el espacio.`,
+        mood: 'happy',
+        badge: `🚀 Sol ${day} · ¡A despegar!`,
+        badgeColor: '#10b981',
+        message: `¡Bienvenido a bordo, comandante! Tu Sol de hoy tiene ${total} ejercicios programados. ¿Listos para entrenar?`,
         actionType: 'chat',
-        actionText: '🚀 Entrenar Ahora',
+        actionText: '🚀 Iniciar Entrenamiento',
       };
     }
   });

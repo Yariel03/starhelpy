@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { ConfigService } from './config.service';
 import { DataLoaderService } from './data-loader.service';
 import { AnalysisService } from './analysis.service';
+import { NasaDonkiService } from './nasa-donki.service';
 import {
   BodyRegionKey,
   EvaluationResults,
@@ -18,6 +19,7 @@ export class MissionStateService {
   private config = inject(ConfigService);
   private dataLoader = inject(DataLoaderService);
   private analysisService = inject(AnalysisService);
+  private nasa = inject(NasaDonkiService);
   private http = inject(HttpClient);
 
   // Estados Base
@@ -249,6 +251,8 @@ export class MissionStateService {
     this.selectedEnvironment.set(cfg.destination.environmentKey);
     this.isWizardOpen.set(false);
     this.isMissionStarted.set(true);
+    // Iniciar escaneo NASA DONKI: primer escaneo en 1.3 minutos, luego cada 2 minutos
+    this.nasa.startRadiationMonitoring();
   }
 
   /**
