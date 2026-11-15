@@ -52,8 +52,10 @@ export class NeuroSleepService {
   // LPM en tiempo real con leve variabilidad fisiológica (+/- 2 bpm)
   readonly liveLpm = signal<number>(50);
 
-  // Modo de respiración guiada activo
+  // Modales de Contramedidas Interactivas Específicas
   readonly isBreathingActive = signal<boolean>(false);
+  readonly isPanicGroundingActive = signal<boolean>(false);
+  readonly isEmergencySosActive = signal<boolean>(false);
 
   // Modal de Reporte Médico de Vuelo activo
   readonly isFlightReportOpen = signal<boolean>(false);
@@ -131,15 +133,15 @@ export class NeuroSleepService {
       clinicalDescription:
         'Despertar taquicárdico abrupto en gravedad cero con sensación de falta de aire y desorientación espacial ("space fugue state"). Pico repentino de LPM que activa el circuito de supervivencia extremo.',
       zonesActivated: ['Amígdala Bilateral Desbordada', 'Hipotálamo (Eje HPA)', 'Tronco Encefálico (Respuesta Huida)'],
-      countermeasureTitle: 'Protocolo de Emergencia por Pánico en Cabina',
+      countermeasureTitle: 'Protocolo de Rescate por Pánico & Verificación de Cabina',
       countermeasures: [
-        'Verificación inmediata de telemetría de O2 y presión en traje/cabina para descartar asfixia física.',
-        'Encender luz cálida tenue y fijar la vista en un punto de referencia visual estable.',
-        'Voz de Star Helpy guiando reorientación cognitiva: "Estás seguro en tu módulo espacial".',
+        'Suspiro Fisiológico Cíclico (doble inhalación nasal + exhalación oral lenta) para revertir la hiperventilación.',
+        'Verificación de telemetría en vivo: Presión nominal 101.3 kPa y O2 al 21.2% (sin despresurización).',
+        'Técnica de anclaje sensorial espacial 3-2-1 para reconectar con el entorno seguro de cabina.',
       ],
       helpyMood: 'sad',
       helpyMessage:
-        '⚠️ [Pico de Pánico · 122 LPM] ¡Despertar taquicárdico brusco! Tu corazón late con fuerza y hay sobrecarga límbica. Comandante, respira lento: la presión y el oxígeno de tu cabina son 100% seguros. Estoy contigo.',
+        '⚠️ [Pico de Pánico · 122 LPM] ¡Despertar taquicárdico brusco! Tu corazón late con fuerza y hay sobrecarga límbica. Comandante, respira con el doble suspiro: la presión y el oxígeno de tu cabina son 100% seguros. Estoy contigo.',
       helpyBadge: '⚠️ Pánico / Sobresalto',
       helpyAuraColor: '#f97316',
     },
@@ -159,11 +161,11 @@ export class NeuroSleepService {
       clinicalDescription:
         'Pérdida de contacto con la realidad inducida por privación crónica acumulativa de sueño (>72 horas con micro-sueños no restauradores) y confinamiento extremo. La corteza prefrontal dorsolateral pierde el control inhibitorio superior.',
       zonesActivated: ['Corteza Prefrontal Desconectada (Hipoactividad)', 'Amígdala / Cíngulo Anterior Fuera de Control', 'Red Neuronal por Defecto Caótica'],
-      countermeasureTitle: 'Protocolo Médico de Emergencia Nivel 3 (Tierra)',
+      countermeasureTitle: 'Protocolo Médico de Emergencia Nivel 3 (Houston / TsUP)',
       countermeasures: [
-        'Notificación de máxima prioridad al Cirujano de Vuelo y psicólogo de misión en Tierra.',
-        'Restricción cautelar de accesos a controles de propulsión y esclusas de aire (EVA).',
-        'Administración pautada de sedación médica de emergencia bajo protocolo estandarizado de la ISS.',
+        'Transmisión prioritaria de telemetría y alerta SOS al Cirujano de Vuelo y Psiquiatría de Misión.',
+        'Bloqueo cautelar de mandos de esclusas de despresurización (EVA) y controles de propulsión.',
+        'Reanclaje cognitivo mediante canal de audio familiar de apoyo y descanso forzado en cabina.',
       ],
       helpyMood: 'angry',
       helpyMessage:
@@ -269,7 +271,7 @@ export class NeuroSleepService {
     this.lastNeuroInteraction.set(Date.now());
   }
 
-  // Abrir / Cerrar ejercicio de respiración 4-7-8
+  // Abrir / Cerrar ejercicio de respiración 4-7-8 (Caso Ansiedad)
   openBreathingExercise(): void {
     this.isBreathingActive.set(true);
   }
@@ -281,6 +283,37 @@ export class NeuroSleepService {
   // Al completar la respiración guiada, calmar el ritmo cardíaco
   finishBreathingExercise(): void {
     this.isBreathingActive.set(false);
+    this.liveLpm.set(52);
+    this.simulateCase('REPAIR_SLEEP');
+  }
+
+  // Abrir / Cerrar Protocolo de Rescate por Pánico (Caso Pánico)
+  openPanicGrounding(): void {
+    this.isPanicGroundingActive.set(true);
+  }
+
+  closePanicGrounding(): void {
+    this.isPanicGroundingActive.set(false);
+  }
+
+  finishPanicGrounding(): void {
+    this.isPanicGroundingActive.set(false);
+    this.liveLpm.set(55);
+    this.simulateCase('REPAIR_SLEEP');
+  }
+
+  // Abrir / Cerrar Consola SOS de Cirujano de Vuelo (Caso Psicosis)
+  openEmergencySos(): void {
+    this.isEmergencySosActive.set(true);
+  }
+
+  closeEmergencySos(): void {
+    this.isEmergencySosActive.set(false);
+  }
+
+  finishEmergencySos(): void {
+    this.isEmergencySosActive.set(false);
+    this.liveLpm.set(50);
     this.simulateCase('REPAIR_SLEEP');
   }
 

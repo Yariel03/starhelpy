@@ -52,7 +52,7 @@
       <div class="bubble-footer">
         <button
           class="context-action-btn"
-          [class.breathe]="activeState().actionType === 'breathe'"
+          [class]="'context-action-btn ' + activeState().actionType"
           (click)="onActionButtonClick()"
         >
           {{ activeState().actionText }}

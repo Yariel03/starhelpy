@@ -12,6 +12,8 @@ import { RewardStreakComponent } from './components/reward-streak/reward-streak.
 import { StarPetComponent } from './components/star-pet/star-pet.component';
 import { NeuroSleepComponent } from './components/neuro-sleep/neuro-sleep.component';
 import { GuidedBreathingComponent } from './components/guided-breathing/guided-breathing.component';
+import { PanicGroundingComponent } from './components/panic-grounding/panic-grounding.component';
+import { EmergencySosComponent } from './components/emergency-sos/emergency-sos.component';
 import { FlightReportComponent } from './components/flight-report/flight-report.component';
 import { BodyRegionKey, IndicatorKey } from './core/models/indicator.model';
 
@@ -29,6 +31,8 @@ import { BodyRegionKey, IndicatorKey } from './core/models/indicator.model';
     StarPetComponent,
     NeuroSleepComponent,
     GuidedBreathingComponent,
+    PanicGroundingComponent,
+    EmergencySosComponent,
     FlightReportComponent,
   ],
   templateUrl: './app.component.html',

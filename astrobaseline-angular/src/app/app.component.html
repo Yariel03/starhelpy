@@ -330,9 +330,19 @@
     </main>
   </div>
 
-  <!-- MODAL: CONTRAMEDIDA DE RESPIRACIÓN GUIADA 4-7-8 -->
+  <!-- MODAL: CONTRAMEDIDA DE RESPIRACIÓN GUIADA 4-7-8 (ANSIEDAD) -->
   @if (neuro.isBreathingActive()) {
     <app-guided-breathing></app-guided-breathing>
+  }
+
+  <!-- MODAL: CONTRAMEDIDA DE PÁNICO: SUSPIRO FISIOLÓGICO & ANCLAJE SENSORIAL (PÁNICO) -->
+  @if (neuro.isPanicGroundingActive()) {
+    <app-panic-grounding></app-panic-grounding>
+  }
+
+  <!-- MODAL: PROTOCOLO MÉDICO DE EMERGENCIA N3 & BLOQUEO CAUTELAR (PSICOSIS) -->
+  @if (neuro.isEmergencySosActive()) {
+    <app-emergency-sos></app-emergency-sos>
   }
 
   <!-- MODAL: REPORTE MÉDICO DE VUELO (FLIGHT SURGEON BRIEFING) -->

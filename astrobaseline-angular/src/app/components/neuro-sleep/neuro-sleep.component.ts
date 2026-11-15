@@ -166,13 +166,35 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
             </ul>
 
             <div class="cm-actions-row">
-              <button
-                class="btn btn-breath"
-                (click)="openBreathing()"
-                title="Abrir cronómetro de respiración guiada"
-              >
-                🌬️ Iniciar Respiración Guiada 4-7-8
-              </button>
+              @if (neuro.activeStateId() === 'ANXIETY') {
+                <button
+                  class="btn btn-breath"
+                  (click)="openBreathing()"
+                  title="Abrir protocolo de respiración guiada 4-7-8"
+                >
+                  🌬️ Iniciar Respiración Guiada 4-7-8
+                </button>
+              }
+
+              @if (neuro.activeStateId() === 'PANIC') {
+                <button
+                  class="btn btn-panic"
+                  (click)="openPanic()"
+                  title="Activar suspiro fisiológico y anclaje sensorial"
+                >
+                  ⚡ Suspiro Fisiológico & Anclaje 5-4-3-2-1
+                </button>
+              }
+
+              @if (neuro.activeStateId() === 'PSYCHOSIS') {
+                <button
+                  class="btn btn-emergency"
+                  (click)="openEmergency()"
+                  title="Emitir alerta SOS médica y activar bloqueo cautelar de seguridad"
+                >
+                  🚨 Alerta SOS Cirujano de Vuelo (Nivel 3)
+                </button>
+              }
 
               <button
                 class="btn btn-report"
@@ -693,6 +715,26 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
               }
             }
 
+            &.btn-panic {
+              background: linear-gradient(135deg, #ea580c, #c2410c);
+              color: #ffffff;
+              box-shadow: 0 4px 12px rgba(234, 88, 12, 0.28);
+              &:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 16px rgba(234, 88, 12, 0.38);
+              }
+            }
+
+            &.btn-emergency {
+              background: linear-gradient(135deg, #ef4444, #b91c1c);
+              color: #ffffff;
+              box-shadow: 0 4px 12px rgba(239, 68, 68, 0.32);
+              &:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 16px rgba(239, 68, 68, 0.45);
+              }
+            }
+
             &.btn-report {
               background: #f1f5f9;
               color: #0f172a;
@@ -724,6 +766,14 @@ export class NeuroSleepComponent {
 
   openBreathing(): void {
     this.neuro.openBreathingExercise();
+  }
+
+  openPanic(): void {
+    this.neuro.openPanicGrounding();
+  }
+
+  openEmergency(): void {
+    this.neuro.openEmergencySos();
   }
 
   openReport(): void {

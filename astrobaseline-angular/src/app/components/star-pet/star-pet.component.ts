@@ -42,7 +42,7 @@ export interface HelpyPriorityState {
   badge: string;
   badgeColor: string;
   message: string;
-  actionType: 'breathe' | 'chat';
+  actionType: 'breathe' | 'chat' | 'panic' | 'psychosis' | 'report';
   actionText: string;
 }
 
@@ -127,11 +127,11 @@ export class StarPetComponent implements OnInit {
           priority: 2,
           emotion: 'psychosis',
           mood: 'angry',
-          badge: '🔴 Alerta Psicosis',
+          badge: '🔴 Alerta Psicosis N3',
           badgeColor: '#ef4444',
-          message: `¡Taquicardia severa (${this.neuro.liveLpm()} LPM) y sobrecarga por confinamiento!`,
-          actionType: 'breathe',
-          actionText: '🫁 Calmar con Respiración 4-7-8',
+          message: `¡Desconexión prefrontal crítica (${this.neuro.liveLpm()} LPM)! Bloqueando mandos y enlazando con Houston.`,
+          actionType: 'psychosis',
+          actionText: '🚨 SOS Cirujano de Vuelo',
         };
       }
 
@@ -143,9 +143,9 @@ export class StarPetComponent implements OnInit {
           mood: 'angry',
           badge: '🟠 Pánico Nocturno',
           badgeColor: '#f97316',
-          message: `Despertar con taquicardia (${this.neuro.liveLpm()} LPM). Amígdala hiperactivada.`,
-          actionType: 'breathe',
-          actionText: '🫁 Iniciar Respiración 4-7-8',
+          message: `Despertar confusional taquicárdico (${this.neuro.liveLpm()} LPM). ¡Cabina 100% segura, activa el rescate!`,
+          actionType: 'panic',
+          actionText: '⚡ Suspiro & Anclaje 5-4-3-2-1',
         };
       }
 
@@ -158,9 +158,9 @@ export class StarPetComponent implements OnInit {
           mood: 'sad',
           badge: '🟡 Ansiedad Detectada',
           badgeColor: '#f59e0b',
-          message: `Detecto estrés en tu descanso (${this.neuro.liveLpm()} LPM). ¿Hacemos una pausa?`,
+          message: `Detecto hiperarousal simpático (${this.neuro.liveLpm()} LPM). Regula tu tono con respiración vagal.`,
           actionType: 'breathe',
-          actionText: '🫁 Respirar 4-7-8',
+          actionText: '🫁 Respiración 4-7-8',
         };
       }
 
@@ -173,9 +173,9 @@ export class StarPetComponent implements OnInit {
           mood: 'happy',
           badge: '🟢 Sueño Reparador',
           badgeColor: '#10b981',
-          message: 'Frecuencia en reposo ideal (50 LPM). Ondas delta profundas y regeneración celular.',
-          actionType: 'chat',
-          actionText: '💬 Chatear con Helpy',
+          message: 'Frecuencia ideal (50 LPM), ondas lentas delta N3 y regeneración sinusal plena.',
+          actionType: 'report',
+          actionText: '📄 Reporte Médico de Sueño',
         };
       }
     }
@@ -379,8 +379,15 @@ export class StarPetComponent implements OnInit {
   }
 
   onActionButtonClick(): void {
-    if (this.activeState().actionType === 'breathe') {
+    const type = this.activeState().actionType;
+    if (type === 'breathe') {
       this.neuro.openBreathingExercise();
+    } else if (type === 'panic') {
+      this.neuro.openPanicGrounding();
+    } else if (type === 'psychosis') {
+      this.neuro.openEmergencySos();
+    } else if (type === 'report') {
+      this.neuro.openFlightReport();
     } else {
       this.toggleChat();
     }
@@ -464,7 +471,21 @@ export class StarPetComponent implements OnInit {
     ) {
       const nCase = this.neuro.activeCase();
       const lpm = this.neuro.liveLpm();
-      reply = `🧠 [ANÁLISIS NEUROCONDUCTUAL & SUEÑO EN TIEMPO REAL]\n\n• Estado Activo: ${nCase.name} (${lpm} LPM)\n• Fase del Hipnograma: ${nCase.dominantStage}\n• Zonas Cerebrales Estimuladas: ${nCase.zonesActivated.join(', ')}\n\n🔍 Diagnóstico Clínico:\n${nCase.clinicalDescription}\n\n💡 Contramedida Médica (${nCase.countermeasureTitle}):\n${nCase.countermeasures.join('\n')}\n\n⭐ Consejo de Helpy: Puedes probar la pestaña "🧠 Neuro-Sueño 3D" o presionar "🫁 Respiración 4-7-8" para estabilizar el ritmo cardíaco.`;
+      let advice = 'Puedes probar la pestaña "🧠 Neuro-Sueño 3D" para ver la simulación en tiempo real.';
+      if (nCase.id === 'ANXIETY') {
+        advice = 'Presiona "🫁 Respiración 4-7-8" para calmar el tono simpático y reducir el cortisol.';
+      } else if (nCase.id === 'PANIC') {
+        advice = 'Presiona "⚡ Suspiro Fisiológico & Anclaje" para verificar soporte de cabina y normalizar el pulso.';
+      } else if (nCase.id === 'PSYCHOSIS') {
+        advice = 'Presiona "🚨 SOS Cirujano de Vuelo" para asegurar la nave con bloqueo cautelar y enlace médico a Tierra.';
+      }
+      reply = `🧠 [ANÁLISIS NEUROCONDUCTUAL & SUEÑO EN TIEMPO REAL]\n\n• Estado Activo: ${nCase.name} (${lpm} LPM)\n• Fase del Hipnograma: ${nCase.dominantStage}\n• Zonas Cerebrales Estimuladas: ${nCase.zonesActivated.join(', ')}\n\n🔍 Diagnóstico Clínico:\n${nCase.clinicalDescription}\n\n💡 Contramedida Médica (${nCase.countermeasureTitle}):\n${nCase.countermeasures.join('\n')}\n\n⭐ Consejo de Helpy: ${advice}`;
+    } else if (q.includes('panico') || q.includes('pánico') || q.includes('pesadilla') || q.includes('suspiro') || q.includes('taquicardia')) {
+      this.neuro.openPanicGrounding();
+      reply = `⚡ ¡Iniciando Protocolo de Rescate por Pánico! Aplicaremos el Suspiro Fisiológico Cíclico (doble inhalación nasal + exhalación oral prolongada) y la verificación de soporte vital de cabina para desactivar la sobrecarga de la amígdala.`;
+    } else if (q.includes('psicosis') || q.includes('delirio') || q.includes('confinamiento') || q.includes('sos') || q.includes('alucinacion')) {
+      this.neuro.openEmergencySos();
+      reply = `🚨 ¡Activando Protocolo Médico de Emergencia Nivel 3! Bloqueando cautelarmente mandos de esclusas y propulsión, y transmitiendo telemetría directa al Cirujano de Vuelo en Houston.`;
     } else if (q.includes('respirar') || q.includes('respiracion') || q.includes('respiración') || q.includes('4-7-8') || q.includes('calmar')) {
       this.neuro.openBreathingExercise();
       reply = `🫁 ¡Iniciando protocolo de Respiración Guiada 4-7-8! Sigue el orbe en pantalla (Inhala 4s, Retén 7s, Exhala 8s) durante 3 ciclos para regularizar tu tono vagal y bajar tus LPM a reposo.`;
