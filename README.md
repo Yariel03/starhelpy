@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![Start Helpy Logo](astrobaseline-angular/public/assets/images/logo/logo-dark.png)
+![Start Helpy Logo](astrobaseline-angular/public/assets/images/logo/logo-white.png)
 
 **Plataforma Integral de Telemetría Biomédica, Monitoreo Neuroconductual 3D y Gamificación Física para Astronautas en Microgravedad**  
 *Desarrollado para Hackathons de Innovación Aeroespacial & NASA Space Apps Challenge*
