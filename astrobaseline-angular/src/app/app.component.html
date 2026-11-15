@@ -115,7 +115,7 @@
           [class.active]="activeTab() === 'quality'"
           (click)="setTab('quality')"
         >
-          Calidad de Datos
+          📋 Bitácora de Datos
         </button>
         <button
           class="tab-btn tab-btn-highlight"
@@ -312,10 +312,168 @@
         </div>
       }
 
-      <!-- PESTAÑA 4: CALIDAD DE DATOS -->
+      <!-- PESTAÑA 4: BITÁCORA DE DATOS & TELEMETRÍA LONGITUDINAL -->
       @if (activeTab() === 'quality') {
         <div class="tab-pane quality-pane">
-          <div class="table-card">
+          <!-- Cabecera de la Bitácora Médica -->
+          <div class="bitacora-header-card">
+            <div class="header-main">
+              <div class="title-meta">
+                <div class="title-with-badge">
+                  <h3>📋 Bitácora Médica y Registros Diarios de Misión</h3>
+                  <span class="confidential-badge">NASA Flight Surgeon Log</span>
+                </div>
+                <p class="subtitle">
+                  Historial longitudinal de signos vitales, telemetría de sueño, parámetros metabólicos y verificación de biosensores para el astronauta {{ state.selectedAstronaut() }}.
+                </p>
+              </div>
+
+              <div class="header-actions">
+                <!-- Filtro de Rango Temporal -->
+                <div class="range-pill-group">
+                  <button
+                    class="range-btn"
+                    [class.active]="tableTimeRange() === '7days'"
+                    (click)="tableTimeRange.set('7days')"
+                  >
+                    7 Días
+                  </button>
+                  <button
+                    class="range-btn"
+                    [class.active]="tableTimeRange() === '14days'"
+                    (click)="tableTimeRange.set('14days')"
+                  >
+                    14 Días
+                  </button>
+                  <button
+                    class="range-btn"
+                    [class.active]="tableTimeRange() === 'all'"
+                    (click)="tableTimeRange.set('all')"
+                  >
+                    Misión Completa
+                  </button>
+                </div>
+
+                <button class="btn-export-csv" (click)="exportCsv()" title="Descargar bitácora en formato CSV para análisis médico">
+                  📥 Exportar CSV
+                </button>
+              </div>
+            </div>
+
+            <!-- Grilla de Auditoría de Sensores Médicos -->
+            <div class="hardware-sensors-grid">
+              @for (sensor of hardwareSensors; track sensor.name) {
+                <div class="sensor-card">
+                  <div class="sensor-top">
+                    <span class="sensor-icon">{{ sensor.icon }}</span>
+                    <div class="sensor-labels">
+                      <span class="sensor-tag">{{ sensor.tag }}</span>
+                      <strong class="sensor-name">{{ sensor.name }}</strong>
+                    </div>
+                    <span class="sensor-status-chip">{{ sensor.status }}</span>
+                  </div>
+                  <p class="sensor-detail">{{ sensor.detail }}</p>
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- TABLA MAESTRA DE DATOS CLÍNICOS DÍA A DÍA -->
+          <div class="table-card bitacora-table-card">
+            <div class="table-title-bar">
+              <h4>📊 Registro Histórico Longitudinal de Salud</h4>
+              <span class="record-counter">{{ dailyClinicalLog().length }} Días Registrados</span>
+            </div>
+
+            <div class="table-responsive-wrapper">
+              <table class="data-table bitacora-table">
+                <thead>
+                  <tr>
+                    <th>Fecha & Misión</th>
+                    <th>🛌 Sueño & Descanso</th>
+                    <th>💓 Frecuencia Cardíaca</th>
+                    <th>🩸 Presión Arterial</th>
+                    <th>🍬 Glucosa</th>
+                    <th>🌡️ Temperatura</th>
+                    <th>🧠 Ánimo / Estrés</th>
+                    <th>🩺 Estado Clínico</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (row of dailyClinicalLog(); track row.date) {
+                    <tr [class.highlight-today]="row.isToday">
+                      <!-- Fecha & Día de Misión -->
+                      <td class="col-date">
+                        <div class="date-cell">
+                          <strong>{{ row.date }}</strong>
+                          <span class="mission-day-chip">Día {{ row.missionDay }}</span>
+                          @if (row.isToday) {
+                            <span class="today-badge">HOY</span>
+                          }
+                        </div>
+                      </td>
+
+                      <!-- Sueño & Descanso -->
+                      <td class="col-sleep">
+                        <div class="val-with-sub">
+                          <span class="main-val font-semibold">{{ row.sleepH }} h</span>
+                          <span class="sub-val">{{ row.sleepQual }}</span>
+                        </div>
+                      </td>
+
+                      <!-- Frecuencia Cardíaca -->
+                      <td class="col-lpm">
+                        <div class="val-with-sub">
+                          <span class="lpm-badge" [style.color]="row.statusColor">
+                            💓 {{ row.lpm }} <small>LPM</small>
+                          </span>
+                          @if (row.isSimulated) {
+                            <span class="sim-pulse-tag">{{ row.caseName }}</span>
+                          }
+                        </div>
+                      </td>
+
+                      <!-- Presión Arterial -->
+                      <td class="col-bp">
+                        <span class="bp-val">{{ row.bp }} <small>mmHg</small></span>
+                      </td>
+
+                      <!-- Glucosa -->
+                      <td class="col-glucose">
+                        <span class="glucose-val">{{ row.glucose }} <small>mg/dL</small></span>
+                      </td>
+
+                      <!-- Temperatura -->
+                      <td class="col-temp">
+                        <span class="temp-val">{{ row.temperature }} °C</span>
+                      </td>
+
+                      <!-- Ánimo / Estrés -->
+                      <td class="col-mood">
+                        <span class="mood-pill" [class.mood-high]="+row.mood >= 4" [class.mood-mid]="+row.mood >= 2.5 && +row.mood < 4" [class.mood-low]="+row.mood < 2.5">
+                          ⭐ {{ row.mood }} / 5.0
+                        </span>
+                      </td>
+
+                      <!-- Estado Clínico -->
+                      <td class="col-status">
+                        <span class="clinical-status-pill" [style.background-color]="row.statusColor + '20'" [style.color]="row.statusColor" [style.border-color]="row.statusColor + '60'">
+                          {{ row.caseIcon }} {{ row.statusText }}
+                        </span>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- AUDITORÍA TÉCNICA DE INTEGRIDAD (TABLA COMPLEMENTARIA DE CALIDAD DE COBERTURA) -->
+          <div class="table-card quality-audit-card">
+            <div class="audit-header">
+              <h4>🛡️ Cobertura Estadística y Fiabilidad de Datos (7 Días)</h4>
+              <span class="audit-sub">Ponderación matemática de completitud para telemedicina orbital</span>
+            </div>
             <table class="data-table">
               <thead>
                 <tr>
@@ -323,7 +481,7 @@
                   <th>Puntuación de Calidad</th>
                   <th>Cobertura (7 días)</th>
                   <th>Días desde Última Toma</th>
-                  <th>Estado</th>
+                  <th>Estado del Sensor</th>
                 </tr>
               </thead>
               <tbody>
