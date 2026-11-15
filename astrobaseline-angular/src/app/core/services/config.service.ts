@@ -480,38 +480,38 @@ export class ConfigService {
   private readonly TRAINING_GOALS_ES: TrainingGoal[] = [
     {
       id: 'A-01',
-      name: 'Meta CBUM — Hipertrofia & Fuerza Muscular',
-      archetype: 'Desarrollo y preservación de masa muscular magra',
+      name: 'Protocolo ARED — Preservación Musculoesquelética y Fuerza',
+      archetype: 'Contramedida de carga axial resistiva y densidad mineral ósea',
       avatar: '/assets/images/astronauts/cbum.jpeg',
-      description: 'Entrenamiento enfocado en retención de masa muscular, densidad corporal y fuerza máxima para contrarrestar la atrofia en microgravedad.',
-      routineFocus: 'Sobrecarga biomecánica en ARED (dispositivo resistivo avanzado), seguimiento estricto de glucosa y metabolismo de proteínas.',
+      description: 'Protocolo oficial de sobrecarga mecánica en cilindros de vacío para contrarrestar la atrofia muscular sarcopénica y la osteopenia inducida por microgravedad.',
+      routineFocus: 'Sobrecarga biomecánica en ARED (Advanced Resistive Exercise Device), seguimiento de glucosa y síntesis proteica.',
     },
     {
       id: 'A-02',
-      name: 'Meta Spartacus — Resistencia & Condición Espartana',
-      archetype: 'Capacidad cardiovascular y resistencia funcional extrema',
+      name: 'Protocolo SPRINT — Acondicionamiento Aeróbico y VO2 Max',
+      archetype: 'Entrenamiento intervalado de alta intensidad (HIIT) y salud cardiovascular',
       avatar: '/assets/images/astronauts/spartacus.jpeg',
-      description: 'Acondicionamiento físico de alta exigencia, capacidad de trabajo prolongado y tolerancia al estrés fisiológico en misiones hostiles.',
-      routineFocus: 'Circuitos aeróbicos continuos en cicloergómetro (CEVIS), cinta rodante (T2) y control de variabilidad de frecuencia cardíaca.',
+      description: 'Protocolo integrado de la NASA (Integrated Resistance and Aerobic Training Study) para preservar el volumen sistólico cardíaco y la capacidad aeróbica máxima.',
+      routineFocus: 'Intervalos de alta intensidad en cicloergómetro (CEVIS), carrera con arnés de carga en cinta (T2 COLBERT) y sistema MED-2.',
     },
   ];
 
   private readonly TRAINING_GOALS_EN: TrainingGoal[] = [
     {
       id: 'A-01',
-      name: 'CBUM Goal — Hypertrophy & Muscle Strength',
-      archetype: 'Lean muscle mass preservation and development',
+      name: 'ARED Protocol — Musculoskeletal & Strength Preservation',
+      archetype: 'Axial resistive load countermeasure and bone mineral density',
       avatar: '/assets/images/astronauts/cbum.jpeg',
-      description: 'Training focused on muscle retention, body density, and maximal strength to counteract microgravity atrophy.',
-      routineFocus: 'Biomechanical overload on ARED (Advanced Resistive Exercise Device), strict monitoring of glucose and protein metabolism.',
+      description: 'Official vacuum-cylinder mechanical overload protocol to counteract sarcopenic muscle atrophy and microgravity-induced osteopenia.',
+      routineFocus: 'Biomechanical overload on ARED (Advanced Resistive Exercise Device), glucose tracking, and protein synthesis.',
     },
     {
       id: 'A-02',
-      name: 'Spartacus Goal — Endurance & Spartan Conditioning',
-      archetype: 'Cardiovascular capacity and extreme functional stamina',
+      name: 'SPRINT Protocol — Aerobic Conditioning & VO2 Max',
+      archetype: 'High-intensity interval training (HIIT) and cardiovascular health',
       avatar: '/assets/images/astronauts/spartacus.jpeg',
-      description: 'High-intensity physical conditioning, prolonged work capacity, and stress tolerance for demanding exploration missions.',
-      routineFocus: 'Continuous aerobic circuits on CEVIS cycle ergometer, T2 treadmill, and heart rate variability tracking.',
+      description: 'NASA Integrated Resistance and Aerobic Training Study protocol to preserve cardiac stroke volume and peak aerobic capacity.',
+      routineFocus: 'High-intensity intervals on CEVIS cycle ergometer, loaded-harness running on T2 (COLBERT) treadmill, and MED-2 system.',
     },
   ];
 
