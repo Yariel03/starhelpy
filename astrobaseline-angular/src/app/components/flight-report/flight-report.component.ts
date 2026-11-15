@@ -24,10 +24,10 @@ import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
         <!-- Encabezado Oficial del Reporte Clínico de Misión -->
         <div class="clinical-header">
           <div class="header-branding">
-            <div class="nasa-meatball-badge">NASA</div>
+            <img src="/assets/images/logo/logo-dark.png" alt="Start Helpy" class="report-header-logo" />
             <div class="brand-text">
               <h2>START HELPY — RESUMEN CLÍNICO DE VUELO</h2>
-              <p class="agency-sub">División de Medicina Espacial y Factores Humanos · Johnson Space Center / CCMC</p>
+              <p class="agency-sub">División de Medicina Espacial y Factores Humanos · Telemetría Orbital</p>
             </div>
           </div>
           <div class="flight-meta-box">
@@ -164,12 +164,11 @@ import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
           </div>
         </section>
 
-        <!-- Firma y Validación Digital del Cirujano de Vuelo -->
+        <!-- Validación Digital del Sistema -->
         <div class="clinical-signature-footer">
-          <div class="signature-block">
-            <div class="sig-line">Dr. Marcus Vance, M.D., Ph.D.</div>
-            <div class="sig-title">Flight Surgeon Jefe de Misión Orbital · NASA JSC</div>
-            <div class="sig-hash">Firma Criptográfica SHA-256: 8f4e2b9c7a104f3d99e0... [VALIDADA]</div>
+          <div class="footer-system-info">
+            <span class="system-title">Sistema Autónomo de Telemetría y Salud de Tripulación</span>
+            <span class="system-sub">Datos validados y sincronizados en tiempo real para misión orbital</span>
           </div>
           <div class="system-stamp">
             <span class="stamp-pill">PROCESADO POR START HELPY v2.0</span>
@@ -266,16 +265,10 @@ import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
         align-items: center;
         gap: 1rem;
 
-        .nasa-meatball-badge {
-          background: #0b3d91;
-          color: #fc3d21;
-          font-weight: 900;
-          font-size: 1.25rem;
-          padding: 8px 12px;
-          border-radius: 50%;
-          border: 2px solid #ffffff;
-          box-shadow: 0 2px 8px rgba(11, 61, 145, 0.4);
-          letter-spacing: 1px;
+        .report-header-logo {
+          height: 48px;
+          max-width: 140px;
+          object-fit: contain;
         }
 
         .brand-text {
@@ -553,28 +546,25 @@ import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
     .clinical-signature-footer {
       display: flex;
       justify-content: space-between;
-      align-items: flex-end;
+      align-items: center;
       border-top: 1px solid #cbd5e1;
       padding-top: 1rem;
       margin-top: 1.5rem;
 
-      .signature-block {
-        .sig-line {
-          font-family: 'Brush Script MT', cursive, sans-serif;
-          font-size: 1.45rem;
-          color: #1e3a8a;
-          margin-bottom: 0.2rem;
-        }
-        .sig-title {
-          font-size: 0.74rem;
-          font-weight: 700;
+      .footer-system-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.15rem;
+
+        .system-title {
+          font-size: 0.76rem;
+          font-weight: 800;
           color: #0f172a;
         }
-        .sig-hash {
-          font-size: 0.65rem;
-          font-family: monospace;
-          color: #94a3b8;
-          margin-top: 0.2rem;
+
+        .system-sub {
+          font-size: 0.68rem;
+          color: #64748b;
         }
       }
 
