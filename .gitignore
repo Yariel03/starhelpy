@@ -8,3 +8,5 @@ astrobaseline.zip
 .DS_Store
 astrobaseline/
 plan.md
+config.local.js
+*.local.js

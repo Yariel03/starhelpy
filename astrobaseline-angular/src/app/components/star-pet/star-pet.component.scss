@@ -602,6 +602,56 @@
           margin-top: 0.25rem;
         }
       }
+
+      &.thinking-row {
+        .thinking-bubble {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          background: rgba(15, 23, 42, 0.75);
+          color: #94a3b8;
+          border: 1px solid rgba(56, 189, 248, 0.25);
+          padding: 0.45rem 0.75rem;
+
+          .thinking-dots {
+            display: inline-flex;
+            gap: 4px;
+            align-items: center;
+
+            .thinking-dot {
+              width: 5px;
+              height: 5px;
+              background-color: #38bdf8;
+              border-radius: 50%;
+              animation: thinkPulse 1.4s infinite ease-in-out both;
+
+              &:nth-child(1) {
+                animation-delay: -0.32s;
+              }
+              &:nth-child(2) {
+                animation-delay: -0.16s;
+              }
+            }
+          }
+
+          .thinking-text {
+            font-size: 0.75rem;
+            font-style: italic;
+            color: #94a3b8;
+          }
+        }
+      }
+    }
+  }
+
+  @keyframes thinkPulse {
+    0%, 80%, 100% {
+      transform: scale(0.6);
+      opacity: 0.3;
+    }
+    40% {
+      transform: scale(1.2);
+      opacity: 1;
     }
   }
 
@@ -624,6 +674,11 @@
 
       &:focus {
         border-color: #2563eb;
+      }
+
+      &:disabled {
+        background-color: #f1f5f9;
+        cursor: not-allowed;
       }
     }
 

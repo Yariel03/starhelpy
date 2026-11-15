@@ -15,6 +15,7 @@ import { ConfigService } from '../../core/services/config.service';
 import { NasaDonkiService } from '../../core/services/nasa-donki.service';
 import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
 import { I18nService } from '../../core/services/i18n.service';
+import { StarHelpyAiService } from '../../core/services/star-helpy-ai.service';
 
 export interface ChatMessage {
   sender: 'helpy' | 'astronaut';
@@ -60,6 +61,7 @@ export class StarPetComponent implements OnInit {
   readonly nasa = inject(NasaDonkiService);
   readonly neuro = inject(NeuroSleepService);
   readonly i18n = inject(I18nService);
+  readonly ai = inject(StarHelpyAiService);
   private el = inject(ElementRef);
 
   // Posición flotante arrastrable
@@ -76,6 +78,7 @@ export class StarPetComponent implements OnInit {
   // Estado del chat y burbuja
   readonly isChatOpen = signal<boolean>(false);
   readonly isBubbleVisible = signal<boolean>(true);
+  readonly isAiLoading = signal<boolean>(false);
   readonly userInput = signal<string>('');
 
   // Mensajes del chat
@@ -428,18 +431,24 @@ export class StarPetComponent implements OnInit {
     this.nasa.checkRadiationStatus();
   }
 
-  // Envío de mensaje en el chat
-  sendMessage(): void {
+  // Envío de mensaje en el chat con IA reactiva Gemini y telemetría de a bordo
+  async sendMessage(): Promise<void> {
     const text = this.userInput().trim();
-    if (!text) return;
+    if (!text || this.isAiLoading()) return;
 
     this.addMessage('astronaut', text);
     this.userInput.set('');
+    this.isAiLoading.set(true);
 
-    // Respuesta inteligente de Star Helpy
-    setTimeout(() => {
-      this.generateHelpyResponse(text);
-    }, 400);
+    try {
+      const reply = await this.ai.generateReply(text);
+      this.addMessage('helpy', reply);
+    } catch {
+      const fallback = this.ai.getOfflineFallback(text);
+      this.addMessage('helpy', fallback);
+    } finally {
+      this.isAiLoading.set(false);
+    }
   }
 
   sendQuickPrompt(prompt: string): void {
@@ -460,107 +469,13 @@ export class StarPetComponent implements OnInit {
         isAlert,
       },
     ]);
-  }
 
-  // Cerebro conversacional orbital de Star Helpy con NASA DONKI y Neuroconducta integrado
-  private generateHelpyResponse(userQuery: string): void {
-    const q = userQuery.toLowerCase();
-    const completed = this.state.completedExercisesCount();
-    const total = this.state.currentExercises().length;
-    const goal = this.state.missionConfig().trainingGoal;
-    const day = this.state.missionDay();
-    const env = this.state.selectedEnvironment();
-
-    let reply = '';
-
-    // Consulta de Neuro-Sueño, Cerebro 3D o Ansiedad
-    if (
-      q.includes('sueño') ||
-      q.includes('sueno') ||
-      q.includes('dormir') ||
-      q.includes('cerebro') ||
-      q.includes('ansiedad') ||
-      q.includes('psicosis') ||
-      q.includes('panico') ||
-      q.includes('pánico') ||
-      q.includes('pesadilla') ||
-      q.includes('neuro') ||
-      q.includes('3d')
-    ) {
-      const nCase = this.neuro.activeCase();
-      const lpm = this.neuro.liveLpm();
-      let advice = 'Puedes probar la pestaña "Neuro-Sueño 3D" para ver la simulación en tiempo real.';
-      if (nCase.id === 'ANXIETY') {
-        advice = 'Presiona "Respiración 4-7-8" para calmar el tono simpático y reducir el cortisol.';
-      } else if (nCase.id === 'PANIC') {
-        advice = 'Presiona "Suspiro Fisiológico & Anclaje" para verificar soporte de cabina y normalizar el pulso.';
-      } else if (nCase.id === 'PSYCHOSIS') {
-        advice = 'Presiona "SOS Cirujano de Vuelo" para asegurar la nave con bloqueo cautelar y enlace médico a Tierra.';
+    setTimeout(() => {
+      const container = this.el.nativeElement.querySelector('.chat-messages-container');
+      if (container) {
+        container.scrollTop = container.scrollHeight;
       }
-      reply = `[ANÁLISIS NEUROCONDUCTUAL & SUEÑO EN TIEMPO REAL]\n\n• Estado Activo: ${nCase.name} (${lpm} LPM)\n• Fase del Hipnograma: ${nCase.dominantStage}\n• Zonas Cerebrales Estimuladas: ${nCase.zonesActivated.join(', ')}\n\nDiagnóstico Clínico:\n${nCase.clinicalDescription}\n\nContramedida Médica (${nCase.countermeasureTitle}):\n${nCase.countermeasures.join('\n')}\n\nConsejo de Helpy: ${advice}`;
-    } else if (q.includes('panico') || q.includes('pánico') || q.includes('pesadilla') || q.includes('suspiro') || q.includes('taquicardia')) {
-      this.neuro.openPanicGrounding();
-      reply = `¡Iniciando Protocolo de Rescate por Pánico! Aplicaremos el Suspiro Fisiológico Cíclico (doble inhalación nasal + exhalación oral prolongada) y la verificación de soporte vital de cabina para desactivar la sobrecarga de la amígdala.`;
-    } else if (q.includes('psicosis') || q.includes('delirio') || q.includes('confinamiento') || q.includes('sos') || q.includes('alucinacion')) {
-      this.neuro.openEmergencySos();
-      reply = `¡Activando Protocolo Médico de Emergencia Nivel 3! Bloqueando cautelarmente mandos de esclusas y propulsión, y transmitiendo telemetría directa al Cirujano de Vuelo en Houston.`;
-    } else if (q.includes('respirar') || q.includes('respiracion') || q.includes('respiración') || q.includes('4-7-8') || q.includes('calmar')) {
-      this.neuro.openBreathingExercise();
-      reply = `¡Iniciando protocolo de Respiración Guiada 4-7-8! Sigue el orbe en pantalla (Inhala 4s, Retén 7s, Exhala 8s) durante 3 ciclos para regularizar tu tono vagal y bajar tus LPM a reposo.`;
-    } else if (q.includes('reporte') || q.includes('informe') || q.includes('medico') || q.includes('médico') || q.includes('cirujano')) {
-      this.neuro.openFlightReport();
-      reply = `Abriendo el Resumen Médico de Vuelo para el Cirujano de Vuelo (Flight Surgeon Briefing). Puedes imprimirlo o guardarlo como PDF oficial de la misión.`;
-    }
-    // Consulta de Radiación y NASA DONKI
-    else if (
-      q.includes('radiacion') ||
-      q.includes('radiación') ||
-      q.includes('donki') ||
-      q.includes('peligro') ||
-      q.includes('peligros') ||
-      q.includes('particula') ||
-      q.includes('partícula') ||
-      q.includes('solar') ||
-      q.includes('rayo') ||
-      q.includes('alerta') ||
-      q.includes('rbe') ||
-      q.includes('sep') ||
-      q.includes('eva')
-    ) {
-      const isDanger = this.nasa.isDangerous();
-      const level = this.nasa.radiationLevel();
-      const headline = this.nasa.radiationHeadline();
-      const details = this.nasa.radiationDetails();
-      const time = this.nasa.lastCheckedTime().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      const nextSeconds = this.nasa.secondsUntilNextCheck();
-
-      if (isDanger) {
-        reply = `[ALERTA NASA DONKI - ${time}] ESTADO: PELIGROSO\n\n${headline}\n\nAnálisis de telemetría: ${details}\n\nPROTOCOLO DE SEGURIDAD:\n• Suspender de inmediato toda actividad extravehicular (EVA).\n• Protegerse en el compartimento blindado contra partículas energéticas (>1000 pfu).\n• Reanudaremos el escaneo automático en ${nextSeconds}s.`;
-      } else if (level === 'WARNING') {
-        reply = `[NASA DONKI - ${time}] ESTADO: PRECAUCIÓN (Moderado).\n\n${headline}\n\nDetalles: ${details}\n\nRecomendación: Se registran perturbaciones solares moderadas. Mantener comunicación constante con el control de misión. Próximo escaneo en ${nextSeconds}s.`;
-      } else {
-        reply = `[NASA DONKI - ${time}] ESTADO: SEGURO (Nominal).\n\n${headline}\n\nDetalles: ${details}\n\nEl flujo de protones y electrones energéticos está por debajo del umbral de riesgo. No es peligroso. Puedes continuar con tu rutina de entrenamiento físico con normalidad. Próximo escaneo en ${nextSeconds}s.`;
-      }
-    } else if (q.includes('racha') || q.includes('dias') || q.includes('fuego')) {
-      if (completed === total) {
-        reply = `¡Racha cumplida! Llevas ${day} días consecutivos en el espacio manteniendo el hábito. Tus ${completed}/${total} ejercicios de hoy ya están listos.`;
-      } else {
-        reply = `¡Atención a la racha! Llevas ${day} días de misión, pero hoy tienes ${completed}/${total} ejercicios completados. ¡Termina tus ejercicios antes de finalizar el Sol para no perder tus puntos XP!`;
-      }
-    } else if (q.includes('ejercicio') || q.includes('rutina') || q.includes('toca') || q.includes('entrenar')) {
-      const exNames = this.state.currentExercises().map((e) => `• ${e.name} (${e.completed ? 'Listo' : 'Pendiente'})`).join('\n');
-      reply = `Para tu meta "${goal.name}" tienes programados:\n${exNames}\nRecuerda que cada repetición combate la atrofia muscular en ${env}.`;
-    } else if (q.includes('corazon') || q.includes('ritmo') || q.includes('frecuencia') || q.includes('pulso') || q.includes('lpm')) {
-      reply = `Tu telemetría cardiovascular en la barra lateral está registrando tus latidos por minuto en tiempo real. En microgravedad, el corazón bombea con menor resistencia hidrostática, por lo que el ejercicio resistivo en ARED y aeróbico en CEVIS es vital para evitar el descondicionamiento cardíaco.`;
-    } else if (q.includes('ánimo') || q.includes('animo') || q.includes('motivacion') || q.includes('fuerza')) {
-      reply = `¡Excelente desempeño orbital! Recuerda que estás representando a la humanidad en ${env}. No dejes que la gravedad cero te debilite. Mantén la disciplina y el entrenamiento diario.`;
-    } else if (q.includes('hola') || q.includes('buenos') || q.includes('hey')) {
-      reply = `¡Hola, comandante! Star Helpy reportándose para el servicio. ¿Listo para darlo todo en la sesión de hoy? Cuéntame qué necesitas.`;
-    } else {
-      reply = `¡Entendido, astronauta! Como tu mascota y copiloto de salud, te recuerdo que tu protocolo físico de hoy lleva ${completed}/${total} ejercicios completados. Mantén la hidratación y recuerda que monitoreo la radiación espacial con NASA DONKI cada 60s.`;
-    }
-
-    this.addMessage('helpy', reply);
+    }, 60);
   }
 
   // Reajuste de límites en redimensionamiento de pantalla

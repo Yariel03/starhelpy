@@ -18,6 +18,26 @@ export class ConfigService {
 
   readonly APP_NAME = 'Star Helpy';
 
+  // Configuración de Inteligencia Artificial (Google Gemini) para Star Helpy
+  readonly GEMINI_MODEL = 'gemini-2.5-flash';
+
+  get GEMINI_API_KEY(): string {
+    if (typeof window !== 'undefined') {
+      const winKey = (window as unknown as { __STAR_HELPY_AI_KEY__?: string }).__STAR_HELPY_AI_KEY__;
+      if (winKey && winKey.trim()) return winKey.trim();
+      const stored = localStorage.getItem('star_helpy_gemini_key');
+      if (stored && stored.trim()) return stored.trim();
+    }
+    return '';
+  }
+
+  setGeminiApiKey(key: string): void {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('star_helpy_gemini_key', key.trim());
+      (window as unknown as { __STAR_HELPY_AI_KEY__?: string }).__STAR_HELPY_AI_KEY__ = key.trim();
+    }
+  }
+
   get TAGLINE(): string {
     return this.i18n.t().tagline;
   }
