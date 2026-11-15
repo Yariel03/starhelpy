@@ -123,17 +123,17 @@ import { I18nService } from '../../core/services/i18n.service';
           </div>
         </section>
 
-        <!-- 3. Clima Espacial y Radiación Ionizante NASA DONKI -->
+        <!-- 3. Clima Espacial y Radiación Ionizante -->
         <section class="report-section">
-          <h3 class="section-title">{{ i18n.currentLang() === 'en' ? '3. Space Radiation Exposure (NASA DONKI Live)' : '3. Exposición a Radiación Espacial (NASA DONKI Live)' }}</h3>
+          <h3 class="section-title">{{ i18n.currentLang() === 'en' ? '3. Space & Solar Radiation Exposure (Live)' : '3. Exposición a Radiación Solar y Espacial (En Vivo)' }}</h3>
           <div class="radiation-report-box" [class.danger]="nasa.isDangerous()">
             <div class="rad-header">
               <div class="rad-status-pill" [class.danger]="nasa.isDangerous()">
-                {{ nasa.isDangerous() ? (i18n.currentLang() === 'en' ? 'HAZARDOUS RADIATION (>1000 pfu)' : 'RADIACIÓN PELIGROSA (>1000 pfu)') : (i18n.currentLang() === 'en' ? 'NOMINAL / SAFE RADIATION LEVELS' : 'NIVELES NOMINALES / SEGUROS') }}
+                {{ nasa.isDangerous() ? (i18n.currentLang() === 'en' ? 'HAZARDOUS RADIATION (>1000 pfu)' : 'RADIACIÓN PELIGROSA (>1000 pfu)') : (i18n.currentLang() === 'en' ? 'SAFE RADIATION LEVELS' : 'NIVELES DE RADIACIÓN SEGUROS') }}
               </div>
               <span class="rad-time">{{ i18n.currentLang() === 'en' ? 'Satellite scan:' : 'Último escaneo satelital:' }} {{ lastCheckedStr() }}</span>
             </div>
-            <p class="rad-headline"><strong>{{ i18n.currentLang() === 'en' ? 'DONKI Diagnosis:' : 'Diagnóstico DONKI:' }}</strong> {{ nasa.radiationHeadline() }}</p>
+            <p class="rad-headline"><strong>{{ i18n.currentLang() === 'en' ? 'Solar Radiation Status:' : 'Diagnóstico de Radiación Solar:' }}</strong> {{ nasa.radiationHeadline() }}</p>
             <p class="rad-details">{{ nasa.radiationDetails() }}</p>
             <div class="rad-recommendation">
               <strong>{{ i18n.currentLang() === 'en' ? 'Spacewalk (EVA) Recommendation:' : 'Recomendación para Caminatas Espaciales (EVA):' }}</strong>

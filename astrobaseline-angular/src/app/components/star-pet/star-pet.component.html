@@ -34,14 +34,14 @@
       <!-- TEXTO PRINCIPAL DE LA MASCOTA (CONCISO Y DIRECTO) -->
       <p class="bubble-message">{{ activeState().message }}</p>
 
-      <!-- MICRO-TELEMETRÍA DISCRETA DE 1 LÍNEA (DONKI + LPM) -->
+      <!-- MICRO-TELEMETRÍA DISCRETA DE 1 LÍNEA (RADIACIÓN SOLAR + LPM) -->
       <div class="bubble-telemetry-strip">
         <span
           class="telemetry-pill"
           [class]="nasa.radiationLevel().toLowerCase()"
-          [title]="i18n.currentLang() === 'en' ? 'NASA DONKI Space Weather' : 'Clima espacial NASA DONKI'"
+          [title]="i18n.currentLang() === 'en' ? 'Solar Radiation Status (NASA Live)' : 'Estado de Radiación Solar en Vivo'"
         >
-          {{ nasa.radiationLevel() === 'SAFE' ? (i18n.currentLang() === 'en' ? 'DONKI Safe' : 'DONKI Seguro') : (nasa.radiationLevel() === 'WARNING' ? (i18n.currentLang() === 'en' ? 'DONKI Warning' : 'DONKI Alerta') : (i18n.currentLang() === 'en' ? 'DONKI Danger' : 'DONKI Peligro')) }}
+          {{ nasa.radiationLevel() === 'SAFE' ? (i18n.currentLang() === 'en' ? 'Rad. Solar Segura' : 'Rad. Solar Segura') : (nasa.radiationLevel() === 'WARNING' ? (i18n.currentLang() === 'en' ? 'Rad. Solar Alerta' : 'Rad. Solar Alerta') : (i18n.currentLang() === 'en' ? 'Rad. Solar Peligro' : 'Rad. Solar Peligro')) }}
         </span>
         <span class="telemetry-pill neuro-pill" [title]="i18n.t().heart_resting">
           {{ neuro.liveLpm() }} LPM
@@ -358,13 +358,13 @@
         <button class="chat-close-btn" (click)="closeChat()" title="Cerrar chat">✕</button>
       </div>
 
-      <!-- Barra de Estado de Radiación NASA DONKI en el Chat -->
+      <!-- Barra de Estado de Radiación Solar en el Chat -->
       <div class="chat-donki-bar" [class]="nasa.radiationLevel().toLowerCase()">
         <span class="chat-donki-label">
-          <strong>NASA DONKI (1 min):</strong>
+          <strong>{{ i18n.currentLang() === 'en' ? 'Solar Radiation:' : 'Radiación Solar:' }}</strong>
         </span>
         <span class="chat-donki-status" [class]="nasa.radiationLevel().toLowerCase()">
-          {{ nasa.isDangerous() ? 'PELIGROSO (>1000 pfu)' : (nasa.radiationLevel() === 'WARNING' ? 'Precaución' : 'SEGURO') }}
+          {{ nasa.isDangerous() ? 'PELIGRO (>1000 pfu)' : (nasa.radiationLevel() === 'WARNING' ? (i18n.currentLang() === 'en' ? 'Caution' : 'Precaución') : (i18n.currentLang() === 'en' ? 'Safe' : 'Seguro')) }}
         </span>
         <span class="chat-donki-cd">({{ nasa.secondsUntilNextCheck() }}s)</span>
       </div>
