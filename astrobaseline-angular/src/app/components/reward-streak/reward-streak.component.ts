@@ -65,11 +65,11 @@ export class RewardStreakComponent {
       const isFuture = d > current;
 
       let milestone: string | null = null;
-      if (d === 3) milestone = isEn ? '🎖️ Zero-G Habit' : '🎖️ Hábito Cero-G';
-      if (d === 7) milestone = isEn ? '🚀 7D Streak (+150 XP)' : '🚀 Racha 7D (+150 XP)';
-      if (d === 14) milestone = isEn ? '🛡️ Anti-Atrophy Shield' : '🛡️ Escudo Anti-Atrofia';
-      if (d === 21) milestone = isEn ? '👑 Space Strength' : '👑 Fuerza Espacial';
-      if (d === 30) milestone = isEn ? '🏆 Orbital Gold Medal' : '🏆 Medalla de Oro Orbital';
+      if (d === 3) milestone = isEn ? 'Zero-G Habit' : 'Hábito Cero-G';
+      if (d === 7) milestone = isEn ? '7D Streak (+150 XP)' : 'Racha 7D (+150 XP)';
+      if (d === 14) milestone = isEn ? 'Anti-Atrophy Shield' : 'Escudo Anti-Atrofia';
+      if (d === 21) milestone = isEn ? 'Space Strength' : 'Fuerza Espacial';
+      if (d === 30) milestone = isEn ? 'Orbital Gold Medal' : 'Medalla de Oro Orbital';
 
       nodes.push({
         day: d,

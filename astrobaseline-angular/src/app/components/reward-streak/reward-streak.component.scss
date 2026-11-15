@@ -50,8 +50,10 @@
       border: 2px solid #fdba74;
       flex-shrink: 0;
 
-      .flame-emoji {
-        font-size: 2.2rem;
+      .flame-svg {
+        width: 30px;
+        height: 30px;
+        color: #ea580c;
         z-index: 2;
         animation: flameBounce 1.8s infinite ease-in-out;
       }
@@ -540,8 +542,16 @@
         }
 
         .exercise-icon {
-          font-size: 1.35rem;
+          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+          font-size: 0.75rem;
+          font-weight: 700;
+          color: #38bdf8;
+          background: rgba(56, 189, 248, 0.12);
+          border: 1px solid rgba(56, 189, 248, 0.3);
+          border-radius: 4px;
+          padding: 2px 6px;
           flex-shrink: 0;
+          letter-spacing: 0.05em;
         }
 
         .exercise-title {
@@ -643,26 +653,29 @@
     display: flex;
     align-items: center;
     gap: 1rem;
-    background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
-    border: 1.5px solid #a7f3d0;
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(52, 211, 153, 0.35);
     border-radius: 12px;
     padding: 0.9rem 1.25rem;
     box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
 
-    .trophy-icon {
-      font-size: 2rem;
+    .done-svg {
+      width: 32px;
+      height: 32px;
+      color: #34d399;
+      flex-shrink: 0;
     }
 
     .banner-texts {
       strong {
         font-size: 0.92rem;
-        color: #065f46;
+        color: #6ee7b7;
         display: block;
       }
       p {
         margin: 0.2rem 0 0 0;
         font-size: 0.78rem;
-        color: #047857;
+        color: #a7f3d0;
       }
     }
   }

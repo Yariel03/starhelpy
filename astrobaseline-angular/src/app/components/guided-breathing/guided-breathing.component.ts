@@ -15,7 +15,7 @@ type BreathPhase = 'INSPECT' | 'HOLD' | 'EXHALE';
         <!-- Cabecera -->
         <div class="modal-header">
           <div class="header-left">
-            <span class="header-icon">🌬️</span>
+            <span class="header-icon">◎</span>
             <div>
               <h3>{{ i18n.currentLang() === 'en' ? '4-7-8 Guided Breathing Protocol' : 'Protocolo de Respiración Guiada 4-7-8' }}</h3>
               <p class="subtitle">{{ i18n.currentLang() === 'en' ? 'Neurobehavioral countermeasure to decompress sympathetic arousal' : 'Contramedida neuroconductual para despresurizar el sistema simpático' }}</p>

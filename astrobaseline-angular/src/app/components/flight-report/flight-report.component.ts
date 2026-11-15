@@ -112,7 +112,7 @@ import { I18nService } from '../../core/services/i18n.service';
             </div>
             <div class="summary-card">
               <span class="card-label">{{ i18n.currentLang() === 'en' ? 'Consecutive Streak:' : 'Racha Consecutiva:' }}</span>
-              <strong class="card-val flame">🔥 {{ state.missionDay() }} {{ i18n.currentLang() === 'en' ? 'Days Active' : 'Días Activos' }}</strong>
+              <strong class="card-val flame">{{ state.missionDay() }} {{ i18n.currentLang() === 'en' ? 'Days Active' : 'Días Activos' }}</strong>
               <p class="card-desc">{{ state.completedExercisesCount() }} / {{ state.currentExercises().length }} {{ i18n.currentLang() === 'en' ? 'exercises completed today' : 'ejercicios completados en el Sol actual' }}</p>
             </div>
             <div class="summary-card">
@@ -129,7 +129,7 @@ import { I18nService } from '../../core/services/i18n.service';
           <div class="radiation-report-box" [class.danger]="nasa.isDangerous()">
             <div class="rad-header">
               <div class="rad-status-pill" [class.danger]="nasa.isDangerous()">
-                {{ nasa.isDangerous() ? (i18n.currentLang() === 'en' ? '☢️ HAZARDOUS RADIATION (>1000 pfu)' : '☢️ RADIACIÓN PELIGROSA (>1000 pfu)') : (i18n.currentLang() === 'en' ? '🛡️ NOMINAL / SAFE RADIATION LEVELS' : '🛡️ NIVELES NOMINALES / SEGUROS') }}
+                {{ nasa.isDangerous() ? (i18n.currentLang() === 'en' ? 'HAZARDOUS RADIATION (>1000 pfu)' : 'RADIACIÓN PELIGROSA (>1000 pfu)') : (i18n.currentLang() === 'en' ? 'NOMINAL / SAFE RADIATION LEVELS' : 'NIVELES NOMINALES / SEGUROS') }}
               </div>
               <span class="rad-time">{{ i18n.currentLang() === 'en' ? 'Satellite scan:' : 'Último escaneo satelital:' }} {{ lastCheckedStr() }}</span>
             </div>

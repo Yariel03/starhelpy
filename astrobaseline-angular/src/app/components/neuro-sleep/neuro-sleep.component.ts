@@ -15,7 +15,7 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
         <div class="header-main-info">
           <div class="badge-row">
             <span class="severity-pill" [style.background-color]="neuro.activeCase().severityColor">
-              {{ neuro.activeCase().icon }} {{ neuro.activeCase().severity }}
+              {{ neuro.activeCase().severity }}
             </span>
             <span class="lpm-tag">
               {{ i18n.t().cardiac_telemetry }} <strong>{{ neuro.liveLpm() }} LPM</strong> ({{ neuro.activeCase().lpmRange }})
@@ -47,7 +47,6 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
       <div class="simulator-panel-card">
         <div class="sim-header">
           <div class="sim-title-box">
-            <span class="sim-icon">⚡</span>
             <h4>{{ i18n.t().sim_header_title }}</h4>
           </div>
           <span class="sim-badge">{{ i18n.t().sim_header_sub }}</span>
@@ -61,7 +60,7 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
               [style.--case-color]="c.severityColor"
               (click)="simulate(c.id)"
             >
-              <span class="btn-icon">{{ c.icon }}</span>
+              <span class="btn-status-dot" [style.background-color]="c.severityColor"></span>
               <div class="btn-texts">
                 <span class="btn-title">{{ c.shortName }}</span>
                 <span class="btn-sub">{{ c.lpmAverage }} {{ i18n.t().bpm_avg_sub }}</span>
@@ -81,7 +80,6 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
           <div class="column-card brain-card">
             <div class="card-header">
               <div class="header-left">
-                <span class="card-icon">🧠</span>
                 <h4>{{ i18n.t().brain_map_title }}</h4>
               </div>
               <div class="header-right-actions">
@@ -115,7 +113,6 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
           <div class="column-card timeline-card">
             <div class="card-header">
               <div class="header-left">
-                <span class="card-icon">📈</span>
                 <h4>{{ i18n.t().sleep_arch_title }}</h4>
               </div>
               <span class="card-hint">{{ i18n.t().sleep_arch_hint }}</span>
@@ -152,7 +149,6 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
           <!-- Protocolo Clínico y Botones de Contramedidas -->
           <div class="column-card countermeasures-card" [style.border-top-color]="neuro.activeCase().severityColor">
             <div class="cm-header">
-              <span class="cm-icon">🛡️</span>
               <div>
                 <h4>{{ neuro.activeCase().countermeasureTitle }}</h4>
                 <p class="cm-sub">{{ i18n.t().guidelines_sub }}</p>
@@ -204,7 +200,7 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
                 (click)="openReport()"
                 [title]="i18n.t().flight_report"
               >
-                📄 {{ i18n.t().flight_report }}
+                {{ i18n.t().flight_report }}
               </button>
             </div>
           </div>
@@ -420,9 +416,12 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
             }
           }
 
-          .btn-icon {
-            font-size: 1.6rem;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+          .btn-status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            box-shadow: 0 0 8px currentColor;
           }
 
           .btn-texts {

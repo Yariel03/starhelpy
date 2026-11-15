@@ -51,7 +51,7 @@ export class MissionStateService {
         name: 'Sentadilla con pistón neumático ARED',
         description: 'Sobrecarga axial controlada para preservar densidad ósea lumbar y masa muscular de cuádriceps en microgravedad.',
         target: '4 series × 8-10 repeticiones · Carga axial de 140 kg simulados',
-        icon: '🏋️',
+        icon: '01',
         completed: false,
       },
       {
@@ -59,7 +59,7 @@ export class MissionStateService {
         name: 'Peso muerto rumano antigravedad',
         description: 'Tensión mecánica excéntrica continua en isquiotibiales y cadena posterior para prevenir la atrofia del tronco.',
         target: '4 series × 10 repeticiones · Carga guiada de 120 kg simulados',
-        icon: '⚡',
+        icon: '02',
         completed: false,
       },
       {
@@ -67,7 +67,7 @@ export class MissionStateService {
         name: 'Press de banca con barras axiales ARED',
         description: 'Preservación de pectoral, deltoides anterior y tríceps para mantener la fuerza de empuje en microgravedad.',
         target: '4 series × 10-12 repeticiones · Carga axial de 95 kg simulados',
-        icon: '💪',
+        icon: '03',
         completed: false,
       },
     ],
@@ -77,7 +77,7 @@ export class MissionStateService {
         name: 'Protocolo HIIT en Cicloergómetro CEVIS',
         description: 'Intervalos anaeróbicos de alta exigencia para mantener el VO2 max y la fuerza contráctil del miocardio.',
         target: '20 min · 30s sprint (95% FCM) / 30s recuperación activa',
-        icon: '🚴',
+        icon: '01',
         completed: false,
       },
       {
@@ -85,7 +85,7 @@ export class MissionStateService {
         name: 'Carrera con arnés de carga en Cinta Rodante T2',
         description: 'Simulación biomecánica de impacto gravitatorio para mantener la masa ósea y resistencia vascular periférica.',
         target: '45 min continuos a 11.5 km/h · Carga elástica de 1.0g simulado',
-        icon: '🏃',
+        icon: '02',
         completed: false,
       },
       {
@@ -93,7 +93,7 @@ export class MissionStateService {
         name: 'Circuitos funcionales con arnés elástico reactivo',
         description: 'Acondicionamiento pliométrico de cuerpo completo para agilidad y resistencia postural contra la gravedad cero.',
         target: '3 rondas de 5 min · Trabajo continuo de alta intensidad',
-        icon: '🔥',
+        icon: '03',
         completed: false,
       },
     ],

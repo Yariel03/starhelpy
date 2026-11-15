@@ -113,10 +113,20 @@
   .heart-icon-wrapper {
     font-size: 1.35rem;
     line-height: 1;
+    display: flex;
+    align-items: center;
 
     .heart-beat {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
       animation: heartThrob infinite ease-in-out;
+
+      .heart-svg {
+        width: 24px;
+        height: 24px;
+        color: #ef4444;
+        filter: drop-shadow(0 0 6px rgba(239, 68, 68, 0.5));
+      }
 
       &.paused {
         animation: none;

@@ -57,7 +57,7 @@ import { I18nService } from '../../core/services/i18n.service';
               {{ i18n.currentLang() === 'en' ? 'Heart Rate:' : 'Frecuencia:' }} <strong>{{ neuroService.liveLpm() }} BPM</strong>
             </span>
           </div>
-          <span class="rot-hint">{{ i18n.currentLang() === 'en' ? '🔄 360° Rotation' : '🔄 Rotación 360°' }}</span>
+          <span class="rot-hint">{{ i18n.currentLang() === 'en' ? '360° Rotation' : 'Rotación 360°' }}</span>
         </div>
 
         <!-- Barra de Acciones Superiores Derechas -->
@@ -67,35 +67,35 @@ import { I18nService } from '../../core/services/i18n.service';
             (click)="togglePctGuide()"
             [title]="i18n.currentLang() === 'en' ? 'Learn about BOLD activation' : 'Ver qué significa el porcentaje de activación BOLD'"
           >
-            {{ i18n.currentLang() === 'en' ? 'ℹ️ What is %?' : 'ℹ️ ¿Qué es el %?' }}
+            {{ i18n.currentLang() === 'en' ? 'What is %?' : '¿Qué es el %?' }}
           </button>
           <button
             class="ctrl-btn zoom-btn"
             (click)="zoomIn()"
             [title]="i18n.currentLang() === 'en' ? 'Zoom in (+)' : 'Acercar modelo 3D (+)'"
           >
-            🔍+
+            +
           </button>
           <button
             class="ctrl-btn zoom-btn"
             (click)="zoomOut()"
             [title]="i18n.currentLang() === 'en' ? 'Zoom out (-)' : 'Alejar modelo 3D (-)'"
           >
-            🔍-
+            −
           </button>
           <button
             class="ctrl-btn reset-cam-btn"
             (click)="resetCamera()"
             [title]="i18n.currentLang() === 'en' ? 'Recenter orbital view' : 'Recentrar vista orbital'"
           >
-            {{ i18n.currentLang() === 'en' ? '🎯 Recenter' : '🎯 Recentrar' }}
+            {{ i18n.currentLang() === 'en' ? 'Recenter' : 'Recentrar' }}
           </button>
           <button
             class="ctrl-btn max-btn"
             (click)="toggleFullscreen()"
             [title]="i18n.currentLang() === 'en' ? 'Fullscreen 3D' : 'Maximizar a pantalla completa'"
           >
-            {{ i18n.currentLang() === 'en' ? '⛶ Maximize 3D' : '⛶ Maximizar 3D' }}
+            {{ i18n.currentLang() === 'en' ? 'Maximize 3D' : 'Maximizar 3D' }}
           </button>
         </div>
       }
@@ -105,12 +105,12 @@ import { I18nService } from '../../core/services/i18n.service';
         <!-- Barra Superior en Pantalla Completa (Sin superposiciones) -->
         <header class="fs-top-bar">
           <div class="fs-bar-left">
-            <span class="fs-bar-title">{{ i18n.currentLang() === 'en' ? '🧠 3D Brain Mapping' : '🧠 Mapeo Encefálico Tridimensional' }}</span>
+            <span class="fs-bar-title">{{ i18n.currentLang() === 'en' ? '3D Brain Mapping' : 'Mapeo Encefálico 3D' }}</span>
             <span class="fs-state-chip" [style.background-color]="activeColor()">
               {{ neuroService.activeCase().name }}
             </span>
             <span class="fs-lpm-chip">
-              💓 {{ neuroService.liveLpm() }} LPM
+              {{ neuroService.liveLpm() }} LPM
             </span>
           </div>
 
@@ -120,19 +120,19 @@ import { I18nService } from '../../core/services/i18n.service';
               (click)="togglePctGuide()"
               [title]="i18n.currentLang() === 'en' ? 'Learn about BOLD activation' : '¿Qué significan los porcentajes BOLD?'"
             >
-              {{ i18n.currentLang() === 'en' ? 'ℹ️ What is %?' : 'ℹ️ ¿Qué significa el %?' }}
+              {{ i18n.currentLang() === 'en' ? 'What is %?' : '¿Qué significa el %?' }}
             </button>
             <div class="fs-zoom-group">
-              <button class="fs-btn zoom-btn" (click)="zoomIn()" [title]="i18n.currentLang() === 'en' ? 'Zoom in (+)' : 'Acercar (+)'">🔍+</button>
-              <button class="fs-btn zoom-btn" (click)="zoomOut()" [title]="i18n.currentLang() === 'en' ? 'Zoom out (-)' : 'Alejar (-)'">🔍-</button>
-              <button class="fs-btn" (click)="resetCamera()" [title]="i18n.currentLang() === 'en' ? 'Recenter view' : 'Recentrar vista'">{{ i18n.currentLang() === 'en' ? '🎯 Recenter' : '🎯 Recentrar' }}</button>
+              <button class="fs-btn zoom-btn" (click)="zoomIn()" [title]="i18n.currentLang() === 'en' ? 'Zoom in (+)' : 'Acercar (+)'">+</button>
+              <button class="fs-btn zoom-btn" (click)="zoomOut()" [title]="i18n.currentLang() === 'en' ? 'Zoom out (-)' : 'Alejar (-)'">−</button>
+              <button class="fs-btn" (click)="resetCamera()" [title]="i18n.currentLang() === 'en' ? 'Recenter view' : 'Recentrar vista'">{{ i18n.currentLang() === 'en' ? 'Recenter' : 'Recentrar' }}</button>
             </div>
             <button
               class="fs-btn close-btn"
               (click)="toggleFullscreen()"
               [title]="i18n.currentLang() === 'en' ? 'Exit Fullscreen (Esc)' : 'Salir de pantalla completa (Esc)'"
             >
-              {{ i18n.currentLang() === 'en' ? '✕ Exit Fullscreen (Esc)' : '✕ Salir de Pantalla Completa (Esc)' }}
+              {{ i18n.currentLang() === 'en' ? '✕ Exit Fullscreen' : '✕ Salir de Pantalla Completa' }}
             </button>
           </div>
         </header>
@@ -197,7 +197,6 @@ import { I18nService } from '../../core/services/i18n.service';
           <div class="pct-guide-card" (click)="$event.stopPropagation()">
             <div class="guide-header">
               <div class="guide-title-row">
-                <span class="guide-badge-icon">📊</span>
                 <div>
                   <h5>Significado Clínico del % de Activación Encefálica</h5>
                   <p class="guide-sub">Telemetría Biomédica BOLD (Blood-Oxygen-Level-Dependent) & fNIRS</p>

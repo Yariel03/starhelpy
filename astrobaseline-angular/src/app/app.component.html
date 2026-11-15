@@ -44,7 +44,7 @@
       >
         <div class="sidebar-bodymap-header">
           <div class="header-left">
-            <span class="bodymap-icon">🩺</span>
+            <span class="bodymap-dot"></span>
             <span class="bodymap-title">{{ i18n.t().sidebar_bodymap }}</span>
           </div>
           <span class="goto-tab-pill">{{ i18n.t().sidebar_view_map }}</span>
@@ -77,10 +77,10 @@
               (click)="neuro.openFlightReport()"
               title="Generar Reporte Médico de Vuelo"
             >
-              📄 {{ i18n.t().flight_report }}
+              {{ i18n.t().flight_report }}
             </button>
             <button class="config-mission-pill" (click)="state.openWizard()">
-              ⚙️ {{ i18n.t().config_mission }}
+              {{ i18n.t().config_mission }}
             </button>
 
             <!-- SELECTOR DE IDIOMA (ESPAÑOL / INGLÉS) -->
@@ -92,7 +92,7 @@
                 (click)="i18n.setLanguage('es')"
                 title="Español"
               >
-                🇪🇸 ES
+                ES
               </button>
               <button
                 type="button"
@@ -101,7 +101,7 @@
                 (click)="i18n.setLanguage('en')"
                 title="English"
               >
-                🇺🇸 EN
+                EN
               </button>
             </div>
 
@@ -349,14 +349,13 @@
 
             <!-- Botón de Descarga -->
             <button class="btn-export-csv" (click)="exportCsv()" [title]="i18n.t().export_csv_btn">
-              📥 {{ i18n.t().export_csv_btn }}
+              {{ i18n.t().export_csv_btn }}
             </button>
           </div>
 
           <!-- 3 Tarjetas de Resumen Sencillo (Fácil de entender) -->
           <div class="simple-summary-kpis">
             <div class="kpi-card">
-              <span class="kpi-icon">🛌</span>
               <div class="kpi-body">
                 <span class="kpi-label">{{ i18n.t().avg_sleep_title }}</span>
                 <strong class="kpi-val">{{ clinicalSummaryKpis().avgSleep }} h <small>/ {{ i18n.t().avg_sleep_unit }}</small></strong>
@@ -364,7 +363,6 @@
             </div>
 
             <div class="kpi-card">
-              <span class="kpi-icon">💓</span>
               <div class="kpi-body">
                 <span class="kpi-label">{{ i18n.t().avg_hr_title }}</span>
                 <strong class="kpi-val">{{ clinicalSummaryKpis().avgLpm }} <small>{{ i18n.t().avg_hr_unit }}</small></strong>
@@ -372,7 +370,6 @@
             </div>
 
             <div class="kpi-card">
-              <span class="kpi-icon">📅</span>
               <div class="kpi-body">
                 <span class="kpi-label">{{ i18n.t().days_viewed_title }}</span>
                 <strong class="kpi-val">{{ clinicalSummaryKpis().totalDays }} <small>{{ i18n.t().days_unit }}</small></strong>
@@ -463,7 +460,7 @@
                       <!-- Frecuencia Cardíaca -->
                       <td class="col-lpm">
                         <span class="lpm-number" [style.color]="row.statusColor">
-                          💓 {{ row.lpm }} LPM
+                          {{ row.lpm }} LPM
                         </span>
                         @if (row.isSimulated) {
                           <span class="sim-label">{{ row.caseName }}</span>
@@ -488,7 +485,7 @@
                       <!-- Ánimo -->
                       <td class="col-mood">
                         <span class="mood-badge" [class.mood-good]="+row.mood >= 4" [class.mood-mid]="+row.mood >= 2.5 && +row.mood < 4" [class.mood-bad]="+row.mood < 2.5">
-                          ⭐ {{ row.mood }} / 5
+                          {{ row.mood }} / 5
                         </span>
                       </td>
 
