@@ -1,4 +1,4 @@
-# ⭐ Start Helpy — Preservación Fisiológica & Neuroconductual para Misiones Espaciales
+# ⭐ Star Helpy — Preservación Fisiológica & Neuroconductual para Misiones Espaciales
 
 <div align="center">
 
