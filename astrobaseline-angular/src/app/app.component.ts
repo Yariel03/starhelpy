@@ -94,62 +94,39 @@ export class AppComponent {
     return info;
   });
 
-  // Rango de tiempo seleccionado para la bitácora
-  readonly tableTimeRange = signal<'7days' | '14days' | 'all'>('all');
+  // Rango de tiempo seleccionado para el historial de datos
+  readonly tableTimeRange = signal<'7days' | '14days' | 'all'>('7days');
 
-  // Estado de los biosensores médicos de a bordo
-  readonly hardwareSensors = [
-    {
-      name: 'Holter ECG BioZ',
-      tag: 'Cardiovascular',
-      status: 'Nominal',
-      detail: '99.8% recepción · VFC activa · Batería 88%',
-      icon: '💓',
-      color: '#10b981',
-    },
-    {
-      name: 'Actígrafo de Cabina',
-      tag: 'Sueño & Vigilia',
-      status: 'Sincronizado',
-      detail: 'Detección N1-N3/REM nominal · 0 pérdidas',
-      icon: '🛌',
-      color: '#10b981',
-    },
-    {
-      name: 'Mapeo Óptico fNIRS',
-      tag: 'Corteza Límbica',
-      status: 'Calibrado',
-      detail: 'Acoplamiento BOLD al 98% nominal',
-      icon: '🧠',
-      color: '#10b981',
-    },
-    {
-      name: 'Monitor Metabólico',
-      tag: 'Glucosa & Termo',
-      status: 'Certificado',
-      detail: 'Calibración válida para Cirujano de Vuelo',
-      icon: '🩸',
-      color: '#10b981',
-    },
-  ];
+  setTimeRange(range: '7days' | '14days' | 'all'): void {
+    this.tableTimeRange.set(range);
+  }
 
-  // Historial longitudinal diario de telemetría y signos vitales (Bitácora de Datos)
+  // Historial longitudinal diario de signos vitales (Sencillo y comprensible)
   readonly dailyClinicalLog = computed(() => {
-    const raw = this.state.recordsUpToCurrent();
+    // Usar los registros del astronauta seleccionado
+    const raw = this.state.currentAstronautRecords();
     const currDate = this.state.currentDate();
     const stateId = this.neuro.activeStateId();
     const activeCase = this.neuro.activeCase();
     const liveLpm = this.neuro.liveLpm();
     const range = this.tableTimeRange();
 
-    // Ordenar de más reciente a más antiguo
+    // Ordenar de fecha más reciente a más antigua
     const sorted = [...raw].sort((a, b) => b.date.localeCompare(a.date));
 
-    const mapped = sorted.map((r, idx) => {
+    // Aplicar el filtro de rango seleccionado
+    let filtered = sorted;
+    if (range === '7days') {
+      filtered = sorted.slice(0, 7);
+    } else if (range === '14days') {
+      filtered = sorted.slice(0, 14);
+    }
+
+    return filtered.map((r) => {
       const isToday = r.date === currDate;
       const isSimulated = isToday && !!stateId;
 
-      let lpm = r.heart_rate ?? 70;
+      let lpm = r.heart_rate ? Math.round(r.heart_rate) : 70;
       let sleepH = r.sleep_hours ?? 7.5;
       let sleepQual =
         sleepH >= 7.5
@@ -158,11 +135,11 @@ export class AppComponent {
           ? 'Moderado (72%)'
           : 'Insuficiente (48%)';
       let moodScore = r.mood ?? 4.0;
-      let sysBp = r.systolic_bp ?? 118;
-      let diaBp = r.diastolic_bp ?? 76;
-      let gluc = r.glucose ?? 95;
+      let sysBp = r.systolic_bp ? Math.round(r.systolic_bp) : 118;
+      let diaBp = r.diastolic_bp ? Math.round(r.diastolic_bp) : 76;
+      let gluc = r.glucose ? Math.round(r.glucose) : 95;
       let temp = r.temperature ?? 36.6;
-      let statusText = 'Nominal';
+      let statusText = 'Normal';
       let statusColor = '#10b981';
 
       if (isSimulated) {
@@ -173,19 +150,19 @@ export class AppComponent {
         if (stateId === 'REPAIR_SLEEP') {
           sleepH = 8.5;
           moodScore = 5.0;
-          statusText = 'Sueño Reparador';
+          statusText = 'Sueño Óptimo';
         } else if (stateId === 'ANXIETY') {
           sleepH = 5.2;
           moodScore = 2.4;
-          statusText = 'Alerta Ansiedad';
+          statusText = 'Ansiedad';
         } else if (stateId === 'PANIC') {
           sleepH = 3.1;
           moodScore = 1.2;
-          statusText = 'Crisis Pánico';
+          statusText = 'Pánico';
         } else if (stateId === 'PSYCHOSIS') {
           sleepH = 1.4;
           moodScore = 1.0;
-          statusText = 'Crisis Psicosis';
+          statusText = 'Psicosis';
         }
       } else {
         if (lpm > 100 || sleepH < 5 || moodScore < 2) {
@@ -199,7 +176,6 @@ export class AppComponent {
 
       return {
         date: r.date,
-        missionDay: sorted.length - idx,
         isToday,
         isSimulated,
         lpm,
@@ -211,23 +187,35 @@ export class AppComponent {
         mood: Number(moodScore).toFixed(1),
         statusText,
         statusColor,
-        caseIcon: isSimulated ? activeCase.icon : '',
         caseName: isSimulated ? activeCase.shortName : '',
       };
     });
-
-    if (range === '7days') return mapped.slice(0, 7);
-    if (range === '14days') return mapped.slice(0, 14);
-    return mapped;
   });
 
-  // Exportar bitácora médica estructurada a formato CSV
+  // Promedios sencillos e intuitivos para las tarjetas de resumen
+  readonly clinicalSummaryKpis = computed(() => {
+    const list = this.dailyClinicalLog();
+    if (list.length === 0) {
+      return { avgSleep: '0.0', avgLpm: 0, totalDays: 0 };
+    }
+    const totalSleep = list.reduce(
+      (acc, cur) => acc + parseFloat(cur.sleepH || '0'),
+      0
+    );
+    const totalLpm = list.reduce((acc, cur) => acc + (cur.lpm || 0), 0);
+    return {
+      avgSleep: (totalSleep / list.length).toFixed(1),
+      avgLpm: Math.round(totalLpm / list.length),
+      totalDays: list.length,
+    };
+  });
+
+  // Exportar datos a formato CSV
   exportCsv(): void {
     const data = this.dailyClinicalLog();
     const sid = this.state.selectedAstronaut();
     const headers = [
       'Fecha',
-      'Dia_Mision',
       'Astronauta',
       'Horas_Sueno',
       'Calidad_Sueno',
@@ -241,7 +229,6 @@ export class AppComponent {
 
     const rows = data.map((d) => [
       d.date,
-      `Dia ${d.missionDay}`,
       sid,
       d.sleepH,
       `"${d.sleepQual}"`,

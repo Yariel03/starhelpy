@@ -312,153 +312,159 @@
         </div>
       }
 
-      <!-- PESTAÑA 4: HISTORIAL DE DATOS & REGISTROS DIARIOS -->
+      <!-- PESTAÑA 4: HISTORIAL DE DATOS -->
       @if (activeTab() === 'quality') {
         <div class="tab-pane quality-pane">
-          <!-- Cabecera del Historial de Datos -->
-          <div class="bitacora-header-card">
-            <div class="header-main">
-              <div class="title-meta">
-                <div class="title-with-badge">
-                  <h3>Historial de Datos y Registros Diarios</h3>
-                  <span class="confidential-badge">Registros Médicos</span>
-                </div>
-                <p class="subtitle">
-                  Monitoreo diario de sueño, frecuencia cardíaca, presión arterial, parámetros metabólicos y estado de biosensores para el astronauta {{ state.selectedAstronaut() }}.
-                </p>
+          <!-- Cabecera simple y directa -->
+          <div class="simple-history-header">
+            <div class="header-text-block">
+              <h3>Historial de Datos de Salud</h3>
+              <p>
+                Valores diarios registrados de sueño, ritmo cardíaco, presión arterial y biomarcadores del astronauta {{ state.selectedAstronaut() }}.
+              </p>
+            </div>
+
+            <!-- Botón de Descarga -->
+            <button class="btn-export-csv" (click)="exportCsv()" title="Descargar datos en archivo Excel / CSV">
+              📥 Descargar en Excel / CSV
+            </button>
+          </div>
+
+          <!-- 3 Tarjetas de Resumen Sencillo (Fácil de entender) -->
+          <div class="simple-summary-kpis">
+            <div class="kpi-card">
+              <span class="kpi-icon">🛌</span>
+              <div class="kpi-body">
+                <span class="kpi-label">Sueño Promedio</span>
+                <strong class="kpi-val">{{ clinicalSummaryKpis().avgSleep }} h <small>/ noche</small></strong>
               </div>
+            </div>
 
-              <div class="header-actions">
-                <!-- Filtro de Rango Temporal -->
-                <div class="range-pill-group">
-                  <button
-                    class="range-btn"
-                    [class.active]="tableTimeRange() === '7days'"
-                    (click)="tableTimeRange.set('7days')"
-                  >
-                    7 Días
-                  </button>
-                  <button
-                    class="range-btn"
-                    [class.active]="tableTimeRange() === '14days'"
-                    (click)="tableTimeRange.set('14days')"
-                  >
-                    14 Días
-                  </button>
-                  <button
-                    class="range-btn"
-                    [class.active]="tableTimeRange() === 'all'"
-                    (click)="tableTimeRange.set('all')"
-                  >
-                    Misión Completa
-                  </button>
-                </div>
+            <div class="kpi-card">
+              <span class="kpi-icon">💓</span>
+              <div class="kpi-body">
+                <span class="kpi-label">Frecuencia Cardíaca</span>
+                <strong class="kpi-val">{{ clinicalSummaryKpis().avgLpm }} <small>LPM promedio</small></strong>
+              </div>
+            </div>
 
-                <button class="btn-export-csv" (click)="exportCsv()" title="Descargar datos en formato CSV para análisis">
-                  Exportar CSV
+            <div class="kpi-card">
+              <span class="kpi-icon">📅</span>
+              <div class="kpi-body">
+                <span class="kpi-label">Días Visualizados</span>
+                <strong class="kpi-val">{{ clinicalSummaryKpis().totalDays }} <small>días</small></strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- Barra de Filtros de Días (Prominente y con respuesta inmediata) -->
+          <div class="filter-controls-bar">
+            <div class="filter-left">
+              <span class="filter-title">Seleccionar período:</span>
+              <div class="filter-buttons-group">
+                <button
+                  type="button"
+                  class="filter-pill-btn"
+                  [class.active]="tableTimeRange() === '7days'"
+                  (click)="setTimeRange('7days')"
+                >
+                  Últimos 7 Días
+                </button>
+                <button
+                  type="button"
+                  class="filter-pill-btn"
+                  [class.active]="tableTimeRange() === '14days'"
+                  (click)="setTimeRange('14days')"
+                >
+                  Últimos 14 Días
+                </button>
+                <button
+                  type="button"
+                  class="filter-pill-btn"
+                  [class.active]="tableTimeRange() === 'all'"
+                  (click)="setTimeRange('all')"
+                >
+                  Todos los Días ({{ state.currentAstronautRecords().length }})
                 </button>
               </div>
             </div>
 
-            <!-- Grilla de Auditoría de Sensores Médicos -->
-            <div class="hardware-sensors-grid">
-              @for (sensor of hardwareSensors; track sensor.name) {
-                <div class="sensor-card">
-                  <div class="sensor-top">
-                    <span class="sensor-icon">{{ sensor.icon }}</span>
-                    <div class="sensor-labels">
-                      <span class="sensor-tag">{{ sensor.tag }}</span>
-                      <strong class="sensor-name">{{ sensor.name }}</strong>
-                    </div>
-                    <span class="sensor-status-chip">{{ sensor.status }}</span>
-                  </div>
-                  <p class="sensor-detail">{{ sensor.detail }}</p>
-                </div>
-              }
-            </div>
+            <span class="filter-counter-tag">
+              Mostrando {{ dailyClinicalLog().length }} de {{ state.currentAstronautRecords().length }} días registrados
+            </span>
           </div>
 
-          <!-- TABLA MAESTRA DE DATOS CLÍNICOS DÍA A DÍA -->
-          <div class="table-card bitacora-table-card">
-            <div class="table-title-bar">
-              <h4>Registro Histórico de Salud (Día a Día)</h4>
-              <span class="record-counter">{{ dailyClinicalLog().length }} Días Registrados</span>
-            </div>
-
+          <!-- TABLA PRINCIPAL DE DATOS REALES DÍA A DÍA -->
+          <div class="table-card simple-table-card">
             <div class="table-responsive-wrapper">
-              <table class="data-table bitacora-table">
+              <table class="data-table simple-data-table">
                 <thead>
                   <tr>
-                    <th>Fecha & Misión</th>
-                    <th>🛌 Sueño & Descanso</th>
-                    <th>💓 Frecuencia Cardíaca</th>
-                    <th>🩸 Presión Arterial</th>
-                    <th>🍬 Glucosa</th>
-                    <th>🌡️ Temperatura</th>
-                    <th>🧠 Ánimo / Estrés</th>
-                    <th>🩺 Estado Clínico</th>
+                    <th>Fecha</th>
+                    <th>Sueño</th>
+                    <th>Frecuencia Cardíaca</th>
+                    <th>Presión Arterial</th>
+                    <th>Glucosa</th>
+                    <th>Temperatura</th>
+                    <th>Ánimo</th>
+                    <th>Estado</th>
                   </tr>
                 </thead>
                 <tbody>
                   @for (row of dailyClinicalLog(); track row.date) {
                     <tr [class.highlight-today]="row.isToday">
-                      <!-- Fecha & Día de Misión -->
+                      <!-- Fecha -->
                       <td class="col-date">
-                        <div class="date-cell">
-                          <strong>{{ row.date }}</strong>
-                          <span class="mission-day-chip">Día {{ row.missionDay }}</span>
+                        <div class="date-flex">
+                          <strong class="date-text">{{ row.date }}</strong>
                           @if (row.isToday) {
-                            <span class="today-badge">HOY</span>
+                            <span class="today-chip">HOY</span>
                           }
                         </div>
                       </td>
 
-                      <!-- Sueño & Descanso -->
+                      <!-- Sueño -->
                       <td class="col-sleep">
-                        <div class="val-with-sub">
-                          <span class="main-val font-semibold">{{ row.sleepH }} h</span>
-                          <span class="sub-val">{{ row.sleepQual }}</span>
-                        </div>
+                        <span class="main-number">{{ row.sleepH }} h</span>
+                        <span class="sub-text">{{ row.sleepQual }}</span>
                       </td>
 
                       <!-- Frecuencia Cardíaca -->
                       <td class="col-lpm">
-                        <div class="val-with-sub">
-                          <span class="lpm-badge" [style.color]="row.statusColor">
-                            💓 {{ row.lpm }} <small>LPM</small>
-                          </span>
-                          @if (row.isSimulated) {
-                            <span class="sim-pulse-tag">{{ row.caseName }}</span>
-                          }
-                        </div>
+                        <span class="lpm-number" [style.color]="row.statusColor">
+                          💓 {{ row.lpm }} LPM
+                        </span>
+                        @if (row.isSimulated) {
+                          <span class="sim-label">{{ row.caseName }}</span>
+                        }
                       </td>
 
                       <!-- Presión Arterial -->
                       <td class="col-bp">
-                        <span class="bp-val">{{ row.bp }} <small>mmHg</small></span>
+                        <span>{{ row.bp }} mmHg</span>
                       </td>
 
                       <!-- Glucosa -->
                       <td class="col-glucose">
-                        <span class="glucose-val">{{ row.glucose }} <small>mg/dL</small></span>
+                        <span>{{ row.glucose }} mg/dL</span>
                       </td>
 
                       <!-- Temperatura -->
                       <td class="col-temp">
-                        <span class="temp-val">{{ row.temperature }} °C</span>
+                        <span>{{ row.temperature }} °C</span>
                       </td>
 
-                      <!-- Ánimo / Estrés -->
+                      <!-- Ánimo -->
                       <td class="col-mood">
-                        <span class="mood-pill" [class.mood-high]="+row.mood >= 4" [class.mood-mid]="+row.mood >= 2.5 && +row.mood < 4" [class.mood-low]="+row.mood < 2.5">
-                          ⭐ {{ row.mood }} / 5.0
+                        <span class="mood-badge" [class.mood-good]="+row.mood >= 4" [class.mood-mid]="+row.mood >= 2.5 && +row.mood < 4" [class.mood-bad]="+row.mood < 2.5">
+                          ⭐ {{ row.mood }} / 5
                         </span>
                       </td>
 
-                      <!-- Estado Clínico -->
+                      <!-- Estado -->
                       <td class="col-status">
-                        <span class="clinical-status-pill" [style.background-color]="row.statusColor + '20'" [style.color]="row.statusColor" [style.border-color]="row.statusColor + '60'">
-                          {{ row.caseIcon }} {{ row.statusText }}
+                        <span class="status-badge" [style.background-color]="row.statusColor + '20'" [style.color]="row.statusColor" [style.border-color]="row.statusColor + '50'">
+                          {{ row.statusText }}
                         </span>
                       </td>
                     </tr>
@@ -466,45 +472,6 @@
                 </tbody>
               </table>
             </div>
-          </div>
-
-          <!-- AUDITORÍA TÉCNICA DE INTEGRIDAD (TABLA COMPLEMENTARIA DE CALIDAD DE COBERTURA) -->
-          <div class="table-card quality-audit-card">
-            <div class="audit-header">
-              <h4>🛡️ Cobertura Estadística y Fiabilidad de Datos (7 Días)</h4>
-              <span class="audit-sub">Ponderación matemática de completitud para telemedicina orbital</span>
-            </div>
-            <table class="data-table">
-              <thead>
-                <tr>
-                  <th>Indicador</th>
-                  <th>Puntuación de Calidad</th>
-                  <th>Cobertura (7 días)</th>
-                  <th>Días desde Última Toma</th>
-                  <th>Estado del Sensor</th>
-                </tr>
-              </thead>
-              <tbody>
-                @for (row of qualityTableRows(); track row.key) {
-                  <tr>
-                    <td><strong>{{ row.label }}</strong></td>
-                    <td>
-                      <div class="score-bar-wrapper">
-                        <div class="score-bar" [style.width.%]="row.score" [class.low]="row.score < 50" [class.med]="row.score >= 50 && row.score < 80" [class.high]="row.score >= 80"></div>
-                        <span class="score-text">{{ row.score }}/100</span>
-                      </div>
-                    </td>
-                    <td>{{ row.coverage }}</td>
-                    <td>{{ row.daysSince }}</td>
-                    <td>
-                      <span class="flag-tag" [class.ok]="row.flag === 'Correcto' || row.flag === 'OK'" [class.stale]="row.flag.includes('Desactualizado') || row.flag.includes('Stale')" [class.missing]="row.flag.includes('Baja') || row.flag.includes('Low')">
-                        {{ row.flag }}
-                      </span>
-                    </td>
-                  </tr>
-                }
-              </tbody>
-            </table>
           </div>
         </div>
       }
