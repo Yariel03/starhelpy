@@ -19,11 +19,14 @@ import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="brain-viewer-wrapper">
+    <div
+      class="brain-viewer-wrapper"
+      [class.fullscreen-mode]="isFullscreen()"
+    >
       <!-- Canvas 3D de WebGL con Three.js -->
       <div #canvasContainer class="canvas-container"></div>
 
-      <!-- Superposición de Telemetría Neuronal en Tiempo Real -->
+      <!-- Superposición Superior Izquierda: Telemetría Neuronal en Tiempo Real -->
       <div class="viewer-overlay-card">
         <div class="pulse-indicator">
           <span class="pulse-dot" [style.background-color]="activeColor()"></span>
@@ -31,10 +34,156 @@ import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
             Frecuencia Sináptica: <strong>{{ neuroService.liveLpm() }} BPM</strong>
           </span>
         </div>
-        <span class="rot-hint">🔄 Arrastra para rotar en 3D</span>
+        <span class="rot-hint">🔄 Rotación 360° orbital</span>
       </div>
 
-      <!-- Leyenda de Zonas Cerebrales Iluminadas -->
+      <!-- Barra de Acciones Superiores Derechas: ¿Qué es el %?, Zoom y Maximizar -->
+      <div class="viewer-top-actions">
+        <button
+          class="ctrl-btn info-btn"
+          (click)="togglePctGuide()"
+          title="Ver qué significa el porcentaje de activación"
+        >
+          ℹ️ ¿Qué es el %?
+        </button>
+        <button
+          class="ctrl-btn zoom-btn"
+          (click)="zoomIn()"
+          title="Acercar modelo 3D (+)"
+        >
+          🔍+
+        </button>
+        <button
+          class="ctrl-btn zoom-btn"
+          (click)="zoomOut()"
+          title="Alejar modelo 3D (-)"
+        >
+          🔍-
+        </button>
+        <button
+          class="ctrl-btn reset-cam-btn"
+          (click)="resetCamera()"
+          title="Recentrar vista orbital"
+        >
+          🎯 Recentrar
+        </button>
+        <button
+          class="ctrl-btn max-btn"
+          (click)="toggleFullscreen()"
+          [title]="isFullscreen() ? 'Minimizar a vista normal (Esc)' : 'Maximizar a pantalla completa'"
+        >
+          {{ isFullscreen() ? '✕ Minimizar' : '⛶ Maximizar 3D' }}
+        </button>
+      </div>
+
+      <!-- GUÍA CLÍNICA EMERGENTE: ¿QUÉ SIGNIFICA EL %? -->
+      @if (showPctGuide()) {
+        <div class="pct-guide-overlay" (click)="togglePctGuide()">
+          <div class="pct-guide-card" (click)="$event.stopPropagation()">
+            <div class="guide-header">
+              <div class="guide-title-row">
+                <span class="guide-badge-icon">📊</span>
+                <div>
+                  <h5>Significado Clínico del % de Activación Encefálica</h5>
+                  <p class="guide-sub">Telemetría Biomédica BOLD (Blood-Oxygen-Level-Dependent) & fNIRS</p>
+                </div>
+              </div>
+              <button class="close-guide-btn" (click)="togglePctGuide()">✕</button>
+            </div>
+
+            <p class="guide-main-desc">
+              El porcentaje mide el <strong>consumo de oxígeno y tasa metabólica de glucosa</strong> de cada estructura cerebral <strong>en relación a la Línea Base Terrestre en Reposo (1g pre-vuelo)</strong>:
+            </p>
+
+            <div class="scale-tiers-grid">
+              <div class="tier-card tier-green">
+                <div class="tier-top">
+                  <span class="tier-pct">0% — 30%</span>
+                  <span class="tier-name">Reposo / Tono Parasimpático</span>
+                </div>
+                <p>Nivel basal atenuado. Típico durante sueño profundo N3 (ondas lentas delta) y regeneración celular.</p>
+              </div>
+
+              <div class="tier-card tier-blue">
+                <div class="tier-top">
+                  <span class="tier-pct">31% — 60%</span>
+                  <span class="tier-name">Actividad Cognitiva Nominal</span>
+                </div>
+                <p>Procesamiento sensorial, memoria de trabajo y resolución de problemas habituales de la misión.</p>
+              </div>
+
+              <div class="tier-card tier-amber">
+                <div class="tier-top">
+                  <span class="tier-pct">61% — 85%</span>
+                  <span class="tier-name">Hiperarousal / Estrés Espacial</span>
+                </div>
+                <p>Amígdala e ínsula sobrecargadas por cortisol nocturno, ruidos de ventilación o estrés de cabina.</p>
+              </div>
+
+              <div class="tier-card tier-red">
+                <div class="tier-top">
+                  <span class="tier-pct">86% — 100%</span>
+                  <span class="tier-name">Alarma Crítica / Desbordamiento</span>
+                </div>
+                <p>Tormenta adrenérgica masiva (ataque de pánico) o pérdida de control inhibitorio prefrontal (psicosis).</p>
+              </div>
+            </div>
+
+            <div class="guide-footer">
+              <span class="norm-ref">Normativa: NASA Human Research Program (HRP) · Behavioral Health Standard</span>
+              <button class="btn-understand" (click)="togglePctGuide()">Entendido</button>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- PANEL LATERAL EN MODO PANTALLA COMPLETA -->
+      @if (isFullscreen()) {
+        <div class="fullscreen-panel">
+          <div class="fs-header">
+            <h4>Telemetría Neurofuncional 3D</h4>
+            <span class="fs-badge" [style.background-color]="activeColor()">
+              {{ neuroService.activeCase().name }}
+            </span>
+          </div>
+
+          <div class="fs-lpm-card">
+            <span class="fs-label">Frecuencia en Reposo / Vigilia</span>
+            <span class="fs-lpm-val">{{ neuroService.liveLpm() }} LPM</span>
+            <span class="fs-desc">{{ neuroService.activeCase().headline }}</span>
+          </div>
+
+          <div class="fs-zones-scroll">
+            <span class="fs-zones-title">Nivel de Activación por Estructura (% vs. Reposo):</span>
+            @for (zone of neuroService.brainZones(); track zone.id) {
+              <div
+                class="fs-zone-item"
+                [style.--zone-color]="zone.colorHex"
+                (mouseenter)="highlightZone(zone.id)"
+                (mouseleave)="unhighlightZone()"
+              >
+                <div class="fs-item-header">
+                  <span class="fs-zone-name">{{ zone.name }}</span>
+                  <span class="fs-zone-pct" [style.color]="zone.colorHex">{{ zone.activationLevel }}%</span>
+                </div>
+                <div class="fs-bar-bg">
+                  <div
+                    class="fs-bar-fill"
+                    [style.width.%]="zone.activationLevel"
+                    [style.background-color]="zone.colorHex"
+                  ></div>
+                </div>
+                <div class="fs-item-footer">
+                  <span class="subsystem-txt">{{ zone.subsystem }}</span>
+                  <span class="status-txt">{{ zone.statusText }}</span>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- Leyenda Inferior de Zonas Cerebrales -->
       <div class="zones-legend-bar">
         @for (zone of neuroService.brainZones(); track zone.id) {
           <div
@@ -43,6 +192,7 @@ import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
             [style.--zone-color]="zone.colorHex"
             (mouseenter)="highlightZone(zone.id)"
             (mouseleave)="unhighlightZone()"
+            [title]="zone.name + ' (' + zone.subsystem + '): ' + zone.activationLevel + '% de consumo O2 vs reposo terrestre — ' + zone.statusText"
           >
             <span class="zone-dot" [style.background-color]="zone.colorHex"></span>
             <span class="zone-name">{{ zone.name }}</span>
@@ -50,24 +200,32 @@ import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
           </div>
         }
       </div>
-
-      <!-- Botón para recentrar la cámara -->
-      <button class="reset-cam-btn" (click)="resetCamera()" title="Recentrar vista">
-        🎯 Recentrar
-      </button>
     </div>
   `,
   styles: [`
     .brain-viewer-wrapper {
       position: relative;
       width: 100%;
-      height: 380px;
+      height: 420px;
       background: radial-gradient(circle at center, #0f172a 0%, #020617 100%);
       border-radius: 16px;
       overflow: hidden;
       border: 1px solid rgba(51, 65, 85, 0.6);
       box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
       user-select: none;
+      transition: all 0.3s ease;
+
+      &.fullscreen-mode {
+        position: fixed !important;
+        inset: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        z-index: 100000 !important;
+        border-radius: 0 !important;
+        border: none !important;
+        box-shadow: none !important;
+        background: radial-gradient(circle at center, #0b132b 0%, #020617 100%) !important;
+      }
     }
 
     .canvas-container {
@@ -93,6 +251,7 @@ import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
       align-items: center;
       gap: 12px;
       pointer-events: none;
+      z-index: 5;
 
       .pulse-indicator {
         display: flex;
@@ -126,6 +285,388 @@ import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
       }
     }
 
+    .viewer-top-actions {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      z-index: 15;
+
+      .ctrl-btn {
+        background: rgba(15, 23, 42, 0.85);
+        border: 1px solid rgba(148, 163, 184, 0.25);
+        color: #e2e8f0;
+        font-size: 0.72rem;
+        font-weight: 700;
+        padding: 5px 10px;
+        border-radius: 8px;
+        cursor: pointer;
+        backdrop-filter: blur(8px);
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:hover {
+          background: rgba(30, 41, 59, 0.95);
+          color: #ffffff;
+          border-color: #38bdf8;
+          transform: translateY(-1px);
+        }
+
+        &.info-btn {
+          background: rgba(14, 116, 144, 0.4);
+          border-color: #06b6d4;
+          color: #e0f2fe;
+
+          &:hover {
+            background: rgba(14, 116, 144, 0.7);
+          }
+        }
+
+        &.zoom-btn {
+          padding: 5px 8px;
+          font-size: 0.75rem;
+        }
+
+        &.max-btn {
+          background: linear-gradient(135deg, #0284c7, #2563eb);
+          border-color: #60a5fa;
+          color: #ffffff;
+          box-shadow: 0 2px 8px rgba(37, 99, 235, 0.35);
+
+          &:hover {
+            background: linear-gradient(135deg, #0369a1, #1d4ed8);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.5);
+          }
+        }
+      }
+    }
+
+    // Modal Explicativo de los Porcentajes
+    .pct-guide-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(6px);
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .pct-guide-card {
+      background: #ffffff;
+      color: #0f172a;
+      border-radius: 14px;
+      max-width: 540px;
+      width: 100%;
+      padding: 1.25rem 1.5rem;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      border: 1px solid #cbd5e1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+
+      .guide-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+
+        .guide-title-row {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+
+          .guide-badge-icon {
+            font-size: 1.5rem;
+          }
+
+          h5 {
+            margin: 0;
+            font-size: 0.98rem;
+            font-weight: 800;
+            color: #0f172a;
+          }
+
+          .guide-sub {
+            margin: 0.15rem 0 0;
+            font-size: 0.7rem;
+            color: #64748b;
+          }
+        }
+
+        .close-guide-btn {
+          background: transparent;
+          border: none;
+          font-size: 1.1rem;
+          cursor: pointer;
+          color: #64748b;
+          &:hover {
+            color: #0f172a;
+          }
+        }
+      }
+
+      .guide-main-desc {
+        margin: 0;
+        font-size: 0.8rem;
+        line-height: 1.4;
+        color: #334155;
+      }
+
+      .scale-tiers-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+
+        .tier-card {
+          padding: 0.55rem 0.85rem;
+          border-radius: 8px;
+          border-left: 4px solid transparent;
+          display: flex;
+          flex-direction: column;
+          gap: 0.15rem;
+
+          .tier-top {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+
+            .tier-pct {
+              font-weight: 900;
+              font-size: 0.78rem;
+            }
+
+            .tier-name {
+              font-weight: 700;
+              font-size: 0.76rem;
+            }
+          }
+
+          p {
+            margin: 0;
+            font-size: 0.72rem;
+            line-height: 1.3;
+          }
+
+          &.tier-green {
+            background: #f0fdf4;
+            border-left-color: #22c55e;
+            .tier-pct, .tier-name { color: #15803d; }
+            p { color: #166534; }
+          }
+
+          &.tier-blue {
+            background: #eff6ff;
+            border-left-color: #3b82f6;
+            .tier-pct, .tier-name { color: #1d4ed8; }
+            p { color: #1e40af; }
+          }
+
+          &.tier-amber {
+            background: #fffbeb;
+            border-left-color: #f59e0b;
+            .tier-pct, .tier-name { color: #b45309; }
+            p { color: #92400e; }
+          }
+
+          &.tier-red {
+            background: #fef2f2;
+            border-left-color: #ef4444;
+            .tier-pct, .tier-name { color: #b91c1c; }
+            p { color: #991b1b; }
+          }
+        }
+      }
+
+      .guide-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid #e2e8f0;
+        padding-top: 0.75rem;
+
+        .norm-ref {
+          font-size: 0.66rem;
+          color: #94a3b8;
+          font-style: italic;
+        }
+
+        .btn-understand {
+          background: #0f172a;
+          color: #ffffff;
+          border: none;
+          padding: 4px 12px;
+          border-radius: 6px;
+          font-size: 0.74rem;
+          font-weight: 700;
+          cursor: pointer;
+          &:hover {
+            background: #1e293b;
+          }
+        }
+      }
+    }
+
+    // Panel Lateral en Modo Pantalla Completa
+    .fullscreen-panel {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      bottom: 16px;
+      width: 320px;
+      background: rgba(15, 23, 42, 0.88);
+      backdrop-filter: blur(14px);
+      border-radius: 14px;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      z-index: 20;
+      box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+
+      .fs-header {
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+
+        h4 {
+          margin: 0;
+          font-size: 0.95rem;
+          font-weight: 800;
+          color: #ffffff;
+        }
+
+        .fs-badge {
+          font-size: 0.7rem;
+          font-weight: 800;
+          padding: 3px 10px;
+          border-radius: 999px;
+          color: #ffffff;
+          align-self: flex-start;
+        }
+      }
+
+      .fs-lpm-card {
+        background: rgba(30, 41, 59, 0.7);
+        border: 1px solid rgba(148, 163, 184, 0.2);
+        padding: 0.75rem 1rem;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 0.2rem;
+
+        .fs-label {
+          font-size: 0.68rem;
+          color: #94a3b8;
+          text-transform: uppercase;
+        }
+
+        .fs-lpm-val {
+          font-size: 1.4rem;
+          font-weight: 900;
+          color: #ffffff;
+        }
+
+        .fs-desc {
+          font-size: 0.72rem;
+          color: #cbd5e1;
+          line-height: 1.3;
+        }
+      }
+
+      .fs-zones-scroll {
+        flex: 1;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 0.65rem;
+        padding-right: 4px;
+
+        &::-webkit-scrollbar {
+          width: 4px;
+        }
+        &::-webkit-scrollbar-thumb {
+          background: rgba(148, 163, 184, 0.4);
+          border-radius: 4px;
+        }
+
+        .fs-zones-title {
+          font-size: 0.72rem;
+          font-weight: 700;
+          color: #94a3b8;
+          text-transform: uppercase;
+          margin-bottom: 0.2rem;
+        }
+
+        .fs-zone-item {
+          background: rgba(30, 41, 59, 0.55);
+          border: 1px solid rgba(148, 163, 184, 0.15);
+          border-radius: 8px;
+          padding: 0.6rem 0.75rem;
+          display: flex;
+          flex-direction: column;
+          gap: 0.35rem;
+          cursor: pointer;
+          transition: all 0.2s ease;
+
+          &:hover {
+            border-color: var(--zone-color);
+            background: rgba(30, 41, 59, 0.9);
+            transform: translateX(-2px);
+          }
+
+          .fs-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            .fs-zone-name {
+              font-size: 0.78rem;
+              font-weight: 700;
+              color: #f1f5f9;
+            }
+
+            .fs-zone-pct {
+              font-size: 0.85rem;
+              font-weight: 900;
+            }
+          }
+
+          .fs-bar-bg {
+            height: 5px;
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 999px;
+            overflow: hidden;
+
+            .fs-bar-fill {
+              height: 100%;
+              border-radius: 999px;
+              transition: width 0.3s ease;
+            }
+          }
+
+          .fs-item-footer {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.68rem;
+            color: #94a3b8;
+
+            .status-txt {
+              color: #cbd5e1;
+              font-style: italic;
+            }
+          }
+        }
+      }
+    }
+
     .zones-legend-bar {
       position: absolute;
       bottom: 12px;
@@ -136,31 +677,32 @@ import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
       gap: 6px;
       justify-content: center;
       pointer-events: auto;
+      z-index: 10;
 
       .zone-tag {
         background: rgba(15, 23, 42, 0.78);
         backdrop-filter: blur(6px);
         border: 1px solid rgba(148, 163, 184, 0.2);
-        padding: 3px 8px;
+        padding: 4px 10px;
         border-radius: 12px;
         display: flex;
         align-items: center;
-        gap: 5px;
-        font-size: 0.68rem;
+        gap: 6px;
+        font-size: 0.7rem;
         color: #cbd5e1;
         cursor: pointer;
         transition: all 0.2s ease;
 
         &:hover, &.active {
           border-color: var(--zone-color);
-          background: rgba(30, 41, 59, 0.9);
+          background: rgba(30, 41, 59, 0.95);
           transform: translateY(-1px);
           box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
         }
 
         .zone-dot {
-          width: 6px;
-          height: 6px;
+          width: 7px;
+          height: 7px;
           border-radius: 50%;
         }
 
@@ -171,29 +713,15 @@ import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
         .zone-pct {
           font-weight: 800;
           color: var(--zone-color);
+          background: rgba(0, 0, 0, 0.25);
+          padding: 1px 5px;
+          border-radius: 4px;
+
+          &.alert-pct {
+            background: rgba(239, 68, 68, 0.25);
+            color: #f87171;
+          }
         }
-      }
-    }
-
-    .reset-cam-btn {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      background: rgba(15, 23, 42, 0.8);
-      border: 1px solid rgba(148, 163, 184, 0.25);
-      color: #94a3b8;
-      font-size: 0.7rem;
-      font-weight: 600;
-      padding: 4px 10px;
-      border-radius: 14px;
-      cursor: pointer;
-      backdrop-filter: blur(8px);
-      transition: all 0.2s ease;
-
-      &:hover {
-        background: rgba(30, 41, 59, 0.95);
-        color: #ffffff;
-        border-color: #38bdf8;
       }
     }
 
@@ -207,6 +735,11 @@ import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
         opacity: 1;
       }
     }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.96); }
+      to { opacity: 1; transform: scale(1); }
+    }
   `],
 })
 export class Brain3dComponent implements OnInit, OnDestroy {
@@ -215,6 +748,8 @@ export class Brain3dComponent implements OnInit, OnDestroy {
   readonly neuroService = inject(NeuroSleepService);
 
   readonly activeColor = computed(() => this.neuroService.activeCase().severityColor);
+  readonly isFullscreen = signal<boolean>(false);
+  readonly showPctGuide = signal<boolean>(false);
 
   private scene!: THREE.Scene;
   private camera!: THREE.PerspectiveCamera;
@@ -232,6 +767,36 @@ export class Brain3dComponent implements OnInit, OnDestroy {
   private previousMousePosition = { x: 0, y: 0 };
   private targetRotation = { x: 0.2, y: 0.4 };
   private currentRotation = { x: 0.2, y: 0.4 };
+
+  @HostListener('document:keydown.escape')
+  onEscapePress(): void {
+    if (this.showPctGuide()) {
+      this.showPctGuide.set(false);
+    } else if (this.isFullscreen()) {
+      this.toggleFullscreen();
+    }
+  }
+
+  toggleFullscreen(): void {
+    this.isFullscreen.update((v) => !v);
+    setTimeout(() => {
+      this.onWindowResize();
+    }, 60);
+  }
+
+  togglePctGuide(): void {
+    this.showPctGuide.update((v) => !v);
+  }
+
+  zoomIn(): void {
+    if (!this.camera) return;
+    this.camera.position.z = Math.max(3.6, this.camera.position.z - 0.75);
+  }
+
+  zoomOut(): void {
+    if (!this.camera) return;
+    this.camera.position.z = Math.min(13.0, this.camera.position.z + 0.75);
+  }
 
   constructor() {
     // Reaccionar a cambios de estado para actualizar colores y destellos
@@ -559,6 +1124,20 @@ export class Brain3dComponent implements OnInit, OnDestroy {
   // Interacción de rotación por ratón y toque
   private setupEventListeners(): void {
     const el = this.containerRef.nativeElement;
+
+    // Zoom con rueda del ratón
+    el.addEventListener(
+      'wheel',
+      (e: WheelEvent) => {
+        e.preventDefault();
+        if (e.deltaY < 0) {
+          this.zoomIn();
+        } else {
+          this.zoomOut();
+        }
+      },
+      { passive: false }
+    );
 
     el.addEventListener('mousedown', (e: MouseEvent) => {
       this.isDragging = true;
