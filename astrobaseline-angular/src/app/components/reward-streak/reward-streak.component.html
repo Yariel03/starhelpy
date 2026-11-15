@@ -64,7 +64,7 @@
             [title]="node.isCompleted ? (i18n.currentLang() === 'en' ? 'Day ' + node.day + ' completed' : 'Día ' + node.day + ' completado') : (node.isToday ? (i18n.currentLang() === 'en' ? 'Day ' + node.day + ' (TODAY)' : 'Día ' + node.day + ' (HOY)') : (i18n.currentLang() === 'en' ? 'Day ' + node.day + ' upcoming' : 'Día ' + node.day + ' próximo'))"
           >
             <!-- Conector entre círculos -->
-            @if (node.day > 1) {
+            @if (!node.isFirst) {
               <div class="node-connector" [class.active]="node.isCompleted || node.isToday"></div>
             }
 
