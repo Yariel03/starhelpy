@@ -202,7 +202,7 @@ import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
       padding: 2.5rem;
       border-radius: 12px;
       box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      font-family: var(--font-family-base);
       margin: auto;
       border: 1px solid #cbd5e1;
     }
