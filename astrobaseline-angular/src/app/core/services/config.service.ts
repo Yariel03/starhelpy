@@ -424,7 +424,7 @@ export class ConfigService {
       id: 'mars',
       name: 'Marte (Tránsito & Superficie)',
       environmentKey: 'Tránsito / superficie de Marte',
-      image: '/assets/images/destinations/marte.jpeg',
+      image: '/assets/images/destinations/marte4.webp',
       description: 'Gravedad 0.38 g, alta autonomía requerida, retraso de 3 a 22 minutos.',
     },
   ];
@@ -448,7 +448,7 @@ export class ConfigService {
       id: 'mars',
       name: 'Mars (Transit & Surface)',
       environmentKey: 'Tránsito / superficie de Marte',
-      image: '/assets/images/destinations/marte.jpeg',
+      image: '/assets/images/destinations/marte4.webp',
       description: '0.38 g gravity, high autonomy required, 3 to 22 minutes one-way delay.',
     },
   ];
