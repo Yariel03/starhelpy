@@ -23,60 +23,174 @@ import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
       class="brain-viewer-wrapper"
       [class.fullscreen-mode]="isFullscreen()"
     >
-      <!-- Canvas 3D de WebGL con Three.js -->
-      <div #canvasContainer class="canvas-container"></div>
+      <!-- CONTENEDOR 3D (PERMANENTEMENTE MONTADO EN EL DOM PARA NO DESTRUIR THREE.JS) -->
+      <div class="canvas-stage-area">
+        <div #canvasContainer class="canvas-container"></div>
 
-      <!-- Superposición Superior Izquierda: Telemetría Neuronal en Tiempo Real -->
-      <div class="viewer-overlay-card">
-        <div class="pulse-indicator">
-          <span class="pulse-dot" [style.background-color]="activeColor()"></span>
-          <span class="pulse-text">
-            Frecuencia Sináptica: <strong>{{ neuroService.liveLpm() }} BPM</strong>
-          </span>
+        <!-- Leyenda Flotante en la Base del Canvas 3D -->
+        <div class="zones-legend-bar">
+          @for (zone of neuroService.brainZones(); track zone.id) {
+            <div
+              class="zone-tag"
+              [class.active]="zone.activationLevel > 50"
+              [style.--zone-color]="zone.colorHex"
+              (mouseenter)="highlightZone(zone.id)"
+              (mouseleave)="unhighlightZone()"
+              [title]="zone.name + ' (' + zone.subsystem + '): ' + zone.activationLevel + '% BOLD vs reposo — ' + zone.statusText"
+            >
+              <span class="zone-dot" [style.background-color]="zone.colorHex"></span>
+              <span class="zone-name">{{ zone.name }}</span>
+              <span class="zone-pct" [class.alert-pct]="zone.activationLevel > 75">{{ zone.activationLevel }}%</span>
+            </div>
+          }
         </div>
-        <span class="rot-hint">🔄 Rotación 360° orbital</span>
       </div>
 
-      <!-- Barra de Acciones Superiores Derechas: ¿Qué es el %?, Zoom y Maximizar -->
-      <div class="viewer-top-actions">
-        <button
-          class="ctrl-btn info-btn"
-          (click)="togglePctGuide()"
-          title="Ver qué significa el porcentaje de activación"
-        >
-          ℹ️ ¿Qué es el %?
-        </button>
-        <button
-          class="ctrl-btn zoom-btn"
-          (click)="zoomIn()"
-          title="Acercar modelo 3D (+)"
-        >
-          🔍+
-        </button>
-        <button
-          class="ctrl-btn zoom-btn"
-          (click)="zoomOut()"
-          title="Alejar modelo 3D (-)"
-        >
-          🔍-
-        </button>
-        <button
-          class="ctrl-btn reset-cam-btn"
-          (click)="resetCamera()"
-          title="Recentrar vista orbital"
-        >
-          🎯 Recentrar
-        </button>
-        <button
-          class="ctrl-btn max-btn"
-          (click)="toggleFullscreen()"
-          [title]="isFullscreen() ? 'Minimizar a vista normal (Esc)' : 'Maximizar a pantalla completa'"
-        >
-          {{ isFullscreen() ? '✕ Minimizar' : '⛶ Maximizar 3D' }}
-        </button>
-      </div>
+      <!-- ================= CONTROLES DEL MODO NORMAL (DASHBOARD) ================= -->
+      @if (!isFullscreen()) {
+        <!-- Superposición Superior Izquierda: Telemetría Rápida -->
+        <div class="viewer-overlay-card">
+          <div class="pulse-indicator">
+            <span class="pulse-dot" [style.background-color]="activeColor()"></span>
+            <span class="pulse-text">
+              Frecuencia: <strong>{{ neuroService.liveLpm() }} BPM</strong>
+            </span>
+          </div>
+          <span class="rot-hint">🔄 Rotación 360°</span>
+        </div>
 
-      <!-- GUÍA CLÍNICA EMERGENTE: ¿QUÉ SIGNIFICA EL %? -->
+        <!-- Barra de Acciones Superiores Derechas -->
+        <div class="viewer-top-actions">
+          <button
+            class="ctrl-btn info-btn"
+            (click)="togglePctGuide()"
+            title="Ver qué significa el porcentaje de activación BOLD"
+          >
+            ℹ️ ¿Qué es el %?
+          </button>
+          <button
+            class="ctrl-btn zoom-btn"
+            (click)="zoomIn()"
+            title="Acercar modelo 3D (+)"
+          >
+            🔍+
+          </button>
+          <button
+            class="ctrl-btn zoom-btn"
+            (click)="zoomOut()"
+            title="Alejar modelo 3D (-)"
+          >
+            🔍-
+          </button>
+          <button
+            class="ctrl-btn reset-cam-btn"
+            (click)="resetCamera()"
+            title="Recentrar vista orbital"
+          >
+            🎯 Recentrar
+          </button>
+          <button
+            class="ctrl-btn max-btn"
+            (click)="toggleFullscreen()"
+            title="Maximizar a pantalla completa"
+          >
+            ⛶ Maximizar 3D
+          </button>
+        </div>
+      }
+
+      <!-- ================= INTERFAZ TEATRO EN PANTALLA COMPLETA ================= -->
+      @if (isFullscreen()) {
+        <!-- Barra Superior en Pantalla Completa (Sin superposiciones) -->
+        <header class="fs-top-bar">
+          <div class="fs-bar-left">
+            <span class="fs-bar-title">🧠 Mapeo Encefálico Tridimensional</span>
+            <span class="fs-state-chip" [style.background-color]="activeColor()">
+              {{ neuroService.activeCase().name }}
+            </span>
+            <span class="fs-lpm-chip">
+              💓 {{ neuroService.liveLpm() }} LPM
+            </span>
+          </div>
+
+          <div class="fs-bar-right">
+            <button
+              class="fs-btn info-btn"
+              (click)="togglePctGuide()"
+              title="¿Qué significan los porcentajes BOLD?"
+            >
+              ℹ️ ¿Qué significa el %?
+            </button>
+            <div class="fs-zoom-group">
+              <button class="fs-btn zoom-btn" (click)="zoomIn()" title="Acercar (+)">🔍+</button>
+              <button class="fs-btn zoom-btn" (click)="zoomOut()" title="Alejar (-)">🔍-</button>
+              <button class="fs-btn" (click)="resetCamera()" title="Recentrar vista">🎯 Recentrar</button>
+            </div>
+            <button
+              class="fs-btn close-btn"
+              (click)="toggleFullscreen()"
+              title="Salir de pantalla completa (Esc)"
+            >
+              ✕ Salir de Pantalla Completa (Esc)
+            </button>
+          </div>
+        </header>
+
+        <!-- Panel Lateral HUD Derecho (Fijado a 340px, sin tapar el canvas) -->
+        <aside class="fs-sidebar-panel">
+          <div class="fs-panel-header">
+            <h5>Telemetría Regional Encefálica</h5>
+            <p class="fs-panel-sub">Señal BOLD vs. Línea Base Terrestre (1g)</p>
+          </div>
+
+          <div class="fs-vitals-card">
+            <span class="lbl">Diagnóstico Activo:</span>
+            <strong class="headline-txt">{{ neuroService.activeCase().headline }}</strong>
+            <span class="fase-txt">Fase: {{ neuroService.activeCase().dominantStage }} · Tasa: {{ neuroService.liveLpm() }} LPM</span>
+          </div>
+
+          <div class="fs-zones-scroll">
+            <div class="list-heading">
+              <span>ESTRUCTURA CEREBRAL</span>
+              <span>ACTIVACIÓN BOLD</span>
+            </div>
+
+            @for (zone of neuroService.brainZones(); track zone.id) {
+              <div
+                class="fs-zone-card"
+                [style.--zone-color]="zone.colorHex"
+                (mouseenter)="highlightZone(zone.id)"
+                (mouseleave)="unhighlightZone()"
+              >
+                <div class="card-top">
+                  <div class="name-box">
+                    <span class="dot" [style.background-color]="zone.colorHex"></span>
+                    <span class="name">{{ zone.name }}</span>
+                  </div>
+                  <span class="pct-badge" [class.alert]="zone.activationLevel > 75">
+                    {{ zone.activationLevel }}%
+                  </span>
+                </div>
+
+                <div class="meter-bar">
+                  <div
+                    class="meter-fill"
+                    [style.width.%]="zone.activationLevel"
+                    [style.background-color]="zone.colorHex"
+                  ></div>
+                </div>
+
+                <div class="card-bottom">
+                  <span class="subsys">{{ zone.subsystem }}</span>
+                  <span class="stat">{{ zone.statusText }}</span>
+                </div>
+              </div>
+            }
+          </div>
+        </aside>
+      }
+
+      <!-- MODAL GUÍA CLÍNICA: ¿QUÉ SIGNIFICA EL %? (DISPONIBLE EN AMBOS MODOS) -->
       @if (showPctGuide()) {
         <div class="pct-guide-overlay" (click)="togglePctGuide()">
           <div class="pct-guide-card" (click)="$event.stopPropagation()">
@@ -109,7 +223,7 @@ import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
                   <span class="tier-pct">31% — 60%</span>
                   <span class="tier-name">Actividad Cognitiva Nominal</span>
                 </div>
-                <p>Procesamiento sensorial, memoria de trabajo y resolución de problemas habituales de la misión.</p>
+                <p>Procesamiento sensorial, memoria de trabajo y operaciones de cabina habituales sin fatiga.</p>
               </div>
 
               <div class="tier-card tier-amber">
@@ -136,85 +250,22 @@ import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
           </div>
         </div>
       }
-
-      <!-- PANEL LATERAL EN MODO PANTALLA COMPLETA -->
-      @if (isFullscreen()) {
-        <div class="fullscreen-panel">
-          <div class="fs-header">
-            <h4>Telemetría Neurofuncional 3D</h4>
-            <span class="fs-badge" [style.background-color]="activeColor()">
-              {{ neuroService.activeCase().name }}
-            </span>
-          </div>
-
-          <div class="fs-lpm-card">
-            <span class="fs-label">Frecuencia en Reposo / Vigilia</span>
-            <span class="fs-lpm-val">{{ neuroService.liveLpm() }} LPM</span>
-            <span class="fs-desc">{{ neuroService.activeCase().headline }}</span>
-          </div>
-
-          <div class="fs-zones-scroll">
-            <span class="fs-zones-title">Nivel de Activación por Estructura (% vs. Reposo):</span>
-            @for (zone of neuroService.brainZones(); track zone.id) {
-              <div
-                class="fs-zone-item"
-                [style.--zone-color]="zone.colorHex"
-                (mouseenter)="highlightZone(zone.id)"
-                (mouseleave)="unhighlightZone()"
-              >
-                <div class="fs-item-header">
-                  <span class="fs-zone-name">{{ zone.name }}</span>
-                  <span class="fs-zone-pct" [style.color]="zone.colorHex">{{ zone.activationLevel }}%</span>
-                </div>
-                <div class="fs-bar-bg">
-                  <div
-                    class="fs-bar-fill"
-                    [style.width.%]="zone.activationLevel"
-                    [style.background-color]="zone.colorHex"
-                  ></div>
-                </div>
-                <div class="fs-item-footer">
-                  <span class="subsystem-txt">{{ zone.subsystem }}</span>
-                  <span class="status-txt">{{ zone.statusText }}</span>
-                </div>
-              </div>
-            }
-          </div>
-        </div>
-      }
-
-      <!-- Leyenda Inferior de Zonas Cerebrales -->
-      <div class="zones-legend-bar">
-        @for (zone of neuroService.brainZones(); track zone.id) {
-          <div
-            class="zone-tag"
-            [class.active]="zone.activationLevel > 50"
-            [style.--zone-color]="zone.colorHex"
-            (mouseenter)="highlightZone(zone.id)"
-            (mouseleave)="unhighlightZone()"
-            [title]="zone.name + ' (' + zone.subsystem + '): ' + zone.activationLevel + '% de consumo O2 vs reposo terrestre — ' + zone.statusText"
-          >
-            <span class="zone-dot" [style.background-color]="zone.colorHex"></span>
-            <span class="zone-name">{{ zone.name }}</span>
-            <span class="zone-pct">{{ zone.activationLevel }}%</span>
-          </div>
-        }
-      </div>
     </div>
   `,
   styles: [`
     .brain-viewer-wrapper {
       position: relative;
       width: 100%;
-      height: 420px;
+      height: 400px;
       background: radial-gradient(circle at center, #0f172a 0%, #020617 100%);
       border-radius: 16px;
       overflow: hidden;
       border: 1px solid rgba(51, 65, 85, 0.6);
       box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
       user-select: none;
-      transition: all 0.3s ease;
+      box-sizing: border-box;
 
+      // MODO PANTALLA COMPLETA PROFESIONAL (TEATRO 3D)
       &.fullscreen-mode {
         position: fixed !important;
         inset: 0 !important;
@@ -224,8 +275,32 @@ import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
         border-radius: 0 !important;
         border: none !important;
         box-shadow: none !important;
-        background: radial-gradient(circle at center, #0b132b 0%, #020617 100%) !important;
+        background: #020617 !important;
+
+        .canvas-stage-area {
+          position: absolute;
+          top: 54px;
+          left: 0;
+          right: 340px; // Deja exactamente 340px libres para el panel lateral
+          bottom: 0;
+          height: calc(100vh - 54px);
+        }
+
+        .zones-legend-bar {
+          bottom: 18px;
+          left: 20px;
+          right: 20px;
+        }
       }
+    }
+
+    // Contenedor del Canvas y Leyenda
+    .canvas-stage-area {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
     }
 
     .canvas-container {
@@ -238,6 +313,7 @@ import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
       }
     }
 
+    // ================= ESTILOS MODO NORMAL =================
     .viewer-overlay-card {
       position: absolute;
       top: 12px;
@@ -292,7 +368,7 @@ import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
       display: flex;
       align-items: center;
       gap: 6px;
-      z-index: 15;
+      z-index: 10;
 
       .ctrl-btn {
         background: rgba(15, 23, 42, 0.85);
@@ -345,13 +421,327 @@ import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
       }
     }
 
-    // Modal Explicativo de los Porcentajes
-    .pct-guide-overlay {
+    .zones-legend-bar {
       position: absolute;
+      bottom: 12px;
+      left: 12px;
+      right: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+      pointer-events: auto;
+      z-index: 5;
+
+      .zone-tag {
+        background: rgba(15, 23, 42, 0.78);
+        backdrop-filter: blur(6px);
+        border: 1px solid rgba(148, 163, 184, 0.2);
+        padding: 4px 10px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.7rem;
+        color: #cbd5e1;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:hover, &.active {
+          border-color: var(--zone-color);
+          background: rgba(30, 41, 59, 0.95);
+          transform: translateY(-1px);
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+        }
+
+        .zone-dot {
+          width: 7px;
+          height: 7px;
+          border-radius: 50%;
+        }
+
+        .zone-name {
+          font-weight: 600;
+        }
+
+        .zone-pct {
+          font-weight: 800;
+          color: var(--zone-color);
+          background: rgba(0, 0, 0, 0.25);
+          padding: 1px 5px;
+          border-radius: 4px;
+
+          &.alert-pct {
+            background: rgba(239, 68, 68, 0.25);
+            color: #f87171;
+          }
+        }
+      }
+    }
+
+    // ================= ESTILOS PANTALLA COMPLETA =================
+    .fs-top-bar {
+      height: 54px;
+      width: 100%;
+      background: rgba(15, 23, 42, 0.95);
+      border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 1.25rem;
+      box-sizing: border-box;
+      z-index: 20;
+
+      .fs-bar-left {
+        display: flex;
+        align-items: center;
+        gap: 0.85rem;
+
+        .fs-bar-title {
+          font-size: 0.95rem;
+          font-weight: 800;
+          color: #ffffff;
+        }
+
+        .fs-state-chip {
+          font-size: 0.72rem;
+          font-weight: 800;
+          padding: 2px 10px;
+          border-radius: 999px;
+          color: #ffffff;
+        }
+
+        .fs-lpm-chip {
+          font-size: 0.78rem;
+          font-weight: 700;
+          color: #94a3b8;
+        }
+      }
+
+      .fs-bar-right {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+
+        .fs-zoom-group {
+          display: flex;
+          align-items: center;
+          gap: 3px;
+          background: rgba(30, 41, 59, 0.6);
+          padding: 2px;
+          border-radius: 8px;
+          border: 1px solid rgba(148, 163, 184, 0.2);
+        }
+
+        .fs-btn {
+          background: rgba(30, 41, 59, 0.8);
+          border: 1px solid rgba(148, 163, 184, 0.25);
+          color: #e2e8f0;
+          font-size: 0.74rem;
+          font-weight: 700;
+          padding: 6px 12px;
+          border-radius: 6px;
+          cursor: pointer;
+          transition: all 0.2s;
+
+          &:hover {
+            background: rgba(51, 65, 85, 0.9);
+            color: #ffffff;
+          }
+
+          &.info-btn {
+            background: rgba(14, 116, 144, 0.5);
+            border-color: #06b6d4;
+            color: #e0f2fe;
+
+            &:hover {
+              background: rgba(14, 116, 144, 0.8);
+            }
+          }
+
+          &.close-btn {
+            background: #ef4444;
+            border-color: #f87171;
+            color: #ffffff;
+            font-weight: 800;
+
+            &:hover {
+              background: #dc2626;
+            }
+          }
+        }
+      }
+    }
+
+    .fs-sidebar-panel {
+      position: absolute;
+      top: 54px;
+      right: 0;
+      bottom: 0;
+      width: 340px;
+      background: rgba(15, 23, 42, 0.96);
+      border-left: 1px solid rgba(148, 163, 184, 0.2);
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      z-index: 10;
+      box-sizing: border-box;
+
+      .fs-panel-header {
+        h5 {
+          margin: 0;
+          font-size: 0.95rem;
+          font-weight: 800;
+          color: #ffffff;
+        }
+
+        .fs-panel-sub {
+          margin: 0.2rem 0 0;
+          font-size: 0.72rem;
+          color: #94a3b8;
+        }
+      }
+
+      .fs-vitals-card {
+        background: rgba(30, 41, 59, 0.7);
+        border: 1px solid rgba(148, 163, 184, 0.2);
+        padding: 0.75rem 1rem;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 0.2rem;
+
+        .lbl {
+          font-size: 0.65rem;
+          color: #94a3b8;
+          text-transform: uppercase;
+        }
+
+        .headline-txt {
+          font-size: 0.82rem;
+          color: #ffffff;
+          line-height: 1.3;
+        }
+
+        .fase-txt {
+          font-size: 0.72rem;
+          color: #38bdf8;
+        }
+      }
+
+      .fs-zones-scroll {
+        flex: 1;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 0.65rem;
+        padding-right: 4px;
+
+        &::-webkit-scrollbar {
+          width: 4px;
+        }
+        &::-webkit-scrollbar-thumb {
+          background: rgba(148, 163, 184, 0.4);
+          border-radius: 4px;
+        }
+
+        .list-heading {
+          display: flex;
+          justify-content: space-between;
+          font-size: 0.68rem;
+          font-weight: 800;
+          color: #64748b;
+          letter-spacing: 0.5px;
+          margin-bottom: 0.15rem;
+        }
+
+        .fs-zone-card {
+          background: rgba(30, 41, 59, 0.55);
+          border: 1px solid rgba(148, 163, 184, 0.15);
+          border-radius: 8px;
+          padding: 0.65rem 0.8rem;
+          display: flex;
+          flex-direction: column;
+          gap: 0.35rem;
+          cursor: pointer;
+          transition: all 0.2s ease;
+
+          &:hover {
+            border-color: var(--zone-color);
+            background: rgba(30, 41, 59, 0.9);
+            transform: translateX(-2px);
+          }
+
+          .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            .name-box {
+              display: flex;
+              align-items: center;
+              gap: 6px;
+
+              .dot {
+                width: 7px;
+                height: 7px;
+                border-radius: 50%;
+              }
+
+              .name {
+                font-size: 0.78rem;
+                font-weight: 700;
+                color: #f1f5f9;
+              }
+            }
+
+            .pct-badge {
+              font-size: 0.82rem;
+              font-weight: 900;
+              color: var(--zone-color);
+
+              &.alert {
+                color: #f87171;
+              }
+            }
+          }
+
+          .meter-bar {
+            height: 5px;
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 999px;
+            overflow: hidden;
+
+            .meter-fill {
+              height: 100%;
+              border-radius: 999px;
+              transition: width 0.3s ease;
+            }
+          }
+
+          .card-bottom {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.68rem;
+            color: #94a3b8;
+
+            .stat {
+              color: #cbd5e1;
+              font-style: italic;
+            }
+          }
+        }
+      }
+    }
+
+    // Modal Explicativo de Porcentajes
+    .pct-guide-overlay {
+      position: fixed;
       inset: 0;
-      background: rgba(15, 23, 42, 0.8);
-      backdrop-filter: blur(6px);
-      z-index: 30;
+      background: rgba(15, 23, 42, 0.82);
+      backdrop-filter: blur(8px);
+      z-index: 110000;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -366,7 +756,7 @@ import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
       max-width: 540px;
       width: 100%;
       padding: 1.25rem 1.5rem;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.55);
       border: 1px solid #cbd5e1;
       display: flex;
       flex-direction: column;
@@ -513,218 +903,6 @@ import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
       }
     }
 
-    // Panel Lateral en Modo Pantalla Completa
-    .fullscreen-panel {
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      bottom: 16px;
-      width: 320px;
-      background: rgba(15, 23, 42, 0.88);
-      backdrop-filter: blur(14px);
-      border-radius: 14px;
-      border: 1px solid rgba(148, 163, 184, 0.25);
-      padding: 1.25rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      z-index: 20;
-      box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
-
-      .fs-header {
-        display: flex;
-        flex-direction: column;
-        gap: 0.35rem;
-
-        h4 {
-          margin: 0;
-          font-size: 0.95rem;
-          font-weight: 800;
-          color: #ffffff;
-        }
-
-        .fs-badge {
-          font-size: 0.7rem;
-          font-weight: 800;
-          padding: 3px 10px;
-          border-radius: 999px;
-          color: #ffffff;
-          align-self: flex-start;
-        }
-      }
-
-      .fs-lpm-card {
-        background: rgba(30, 41, 59, 0.7);
-        border: 1px solid rgba(148, 163, 184, 0.2);
-        padding: 0.75rem 1rem;
-        border-radius: 10px;
-        display: flex;
-        flex-direction: column;
-        gap: 0.2rem;
-
-        .fs-label {
-          font-size: 0.68rem;
-          color: #94a3b8;
-          text-transform: uppercase;
-        }
-
-        .fs-lpm-val {
-          font-size: 1.4rem;
-          font-weight: 900;
-          color: #ffffff;
-        }
-
-        .fs-desc {
-          font-size: 0.72rem;
-          color: #cbd5e1;
-          line-height: 1.3;
-        }
-      }
-
-      .fs-zones-scroll {
-        flex: 1;
-        overflow-y: auto;
-        display: flex;
-        flex-direction: column;
-        gap: 0.65rem;
-        padding-right: 4px;
-
-        &::-webkit-scrollbar {
-          width: 4px;
-        }
-        &::-webkit-scrollbar-thumb {
-          background: rgba(148, 163, 184, 0.4);
-          border-radius: 4px;
-        }
-
-        .fs-zones-title {
-          font-size: 0.72rem;
-          font-weight: 700;
-          color: #94a3b8;
-          text-transform: uppercase;
-          margin-bottom: 0.2rem;
-        }
-
-        .fs-zone-item {
-          background: rgba(30, 41, 59, 0.55);
-          border: 1px solid rgba(148, 163, 184, 0.15);
-          border-radius: 8px;
-          padding: 0.6rem 0.75rem;
-          display: flex;
-          flex-direction: column;
-          gap: 0.35rem;
-          cursor: pointer;
-          transition: all 0.2s ease;
-
-          &:hover {
-            border-color: var(--zone-color);
-            background: rgba(30, 41, 59, 0.9);
-            transform: translateX(-2px);
-          }
-
-          .fs-item-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-
-            .fs-zone-name {
-              font-size: 0.78rem;
-              font-weight: 700;
-              color: #f1f5f9;
-            }
-
-            .fs-zone-pct {
-              font-size: 0.85rem;
-              font-weight: 900;
-            }
-          }
-
-          .fs-bar-bg {
-            height: 5px;
-            background: rgba(15, 23, 42, 0.8);
-            border-radius: 999px;
-            overflow: hidden;
-
-            .fs-bar-fill {
-              height: 100%;
-              border-radius: 999px;
-              transition: width 0.3s ease;
-            }
-          }
-
-          .fs-item-footer {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.68rem;
-            color: #94a3b8;
-
-            .status-txt {
-              color: #cbd5e1;
-              font-style: italic;
-            }
-          }
-        }
-      }
-    }
-
-    .zones-legend-bar {
-      position: absolute;
-      bottom: 12px;
-      left: 12px;
-      right: 12px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      justify-content: center;
-      pointer-events: auto;
-      z-index: 10;
-
-      .zone-tag {
-        background: rgba(15, 23, 42, 0.78);
-        backdrop-filter: blur(6px);
-        border: 1px solid rgba(148, 163, 184, 0.2);
-        padding: 4px 10px;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        font-size: 0.7rem;
-        color: #cbd5e1;
-        cursor: pointer;
-        transition: all 0.2s ease;
-
-        &:hover, &.active {
-          border-color: var(--zone-color);
-          background: rgba(30, 41, 59, 0.95);
-          transform: translateY(-1px);
-          box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
-        }
-
-        .zone-dot {
-          width: 7px;
-          height: 7px;
-          border-radius: 50%;
-        }
-
-        .zone-name {
-          font-weight: 600;
-        }
-
-        .zone-pct {
-          font-weight: 800;
-          color: var(--zone-color);
-          background: rgba(0, 0, 0, 0.25);
-          padding: 1px 5px;
-          border-radius: 4px;
-
-          &.alert-pct {
-            background: rgba(239, 68, 68, 0.25);
-            color: #f87171;
-          }
-        }
-      }
-    }
-
     @keyframes heartPulse {
       0% {
         transform: scale(0.9);
@@ -775,27 +953,6 @@ export class Brain3dComponent implements OnInit, OnDestroy {
     } else if (this.isFullscreen()) {
       this.toggleFullscreen();
     }
-  }
-
-  toggleFullscreen(): void {
-    this.isFullscreen.update((v) => !v);
-    setTimeout(() => {
-      this.onWindowResize();
-    }, 60);
-  }
-
-  togglePctGuide(): void {
-    this.showPctGuide.update((v) => !v);
-  }
-
-  zoomIn(): void {
-    if (!this.camera) return;
-    this.camera.position.z = Math.max(3.6, this.camera.position.z - 0.75);
-  }
-
-  zoomOut(): void {
-    if (!this.camera) return;
-    this.camera.position.z = Math.min(13.0, this.camera.position.z + 0.75);
   }
 
   constructor() {
@@ -925,33 +1082,28 @@ export class Brain3dComponent implements OnInit, OnDestroy {
   // Red de partículas y sinapsis interconectadas
   private createNeuralNetworkParticles(): void {
     const particleCount = 280;
+    const geometry = new THREE.BufferGeometry();
     const positions = new Float32Array(particleCount * 3);
-    const colors = new Float32Array(particleCount * 3);
 
     for (let i = 0; i < particleCount; i++) {
-      // Dispersión dentro del volumen elipsoidal del cerebro
-      const theta = Math.random() * Math.PI * 2;
-      const phi = Math.acos(Math.random() * 2 - 1);
-      const radius = 1.3 + Math.random() * 0.9;
+      const u = Math.random();
+      const v = Math.random();
+      const theta = u * 2.0 * Math.PI;
+      const phi = Math.acos(2.0 * v - 1.0);
+      const r = 1.6 + Math.random() * 0.45;
 
-      positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta) * 1.35;
-      positions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta) * 1.05;
-      positions[i * 3 + 2] = radius * Math.cos(phi) * 1.45;
-
-      colors[i * 3] = 0.2;
-      colors[i * 3 + 1] = 0.7;
-      colors[i * 3 + 2] = 0.95;
+      positions[i * 3] = r * Math.sin(phi) * Math.cos(theta) * 1.1;
+      positions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta) * 0.95;
+      positions[i * 3 + 2] = r * Math.cos(phi) * 1.15;
     }
 
-    const geometry = new THREE.BufferGeometry();
     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
     const material = new THREE.PointsMaterial({
+      color: 0x38bdf8,
       size: 0.08,
-      vertexColors: true,
       transparent: true,
-      opacity: 0.85,
+      opacity: 0.75,
       blending: THREE.AdditiveBlending,
     });
 
@@ -959,95 +1111,82 @@ export class Brain3dComponent implements OnInit, OnDestroy {
     this.brainGroup.add(this.particlesMesh);
   }
 
-  // Halo atmosférico y resplandor exterior
+  // Halo atmosférico y resplandor límbico
   private createAtmosphereHalo(): void {
-    const haloGeom = new THREE.SphereGeometry(2.35, 28, 28);
+    const haloGeom = new THREE.SphereGeometry(2.35, 24, 24);
+    haloGeom.scale(1.05, 0.9, 1.15);
+
     const haloMat = new THREE.MeshBasicMaterial({
       color: 0x10b981,
       transparent: true,
-      opacity: 0.09,
+      opacity: 0.14,
       side: THREE.BackSide,
-      blending: THREE.AdditiveBlending,
     });
+
     this.haloMesh = new THREE.Mesh(haloGeom, haloMat);
     this.brainGroup.add(this.haloMesh);
   }
 
-  // Actualizar colores y respuesta lumínica del cerebro según el caso
+  // Actualización dinámica de iluminación y texturas según el estado clínico
   private updateBrainColors(stateId: string): void {
     if (!this.lobes || this.lobes.length === 0) return;
 
     if (stateId === 'REPAIR_SLEEP') {
-      // Verde / Esmeralda / Cyan pacífico
+      // REPAIR SLEEP: Esmeralda y cian serenos, hipocampo activo
       this.lobes.forEach((l) => {
         if (l.id === 'hippocampus') {
           l.material.color.setHex(0x10b981);
-          l.material.emissive.setHex(0x10b981);
-          l.material.emissiveIntensity = 0.75;
+          l.material.emissive.setHex(0x059669);
+          l.material.emissiveIntensity = 1.1;
           l.material.opacity = 0.95;
-        } else if (l.id === 'prefrontal') {
-          l.material.color.setHex(0x38bdf8);
-          l.material.emissive.setHex(0x38bdf8);
-          l.material.emissiveIntensity = 0.35;
-          l.material.opacity = 0.85;
         } else {
-          l.material.color.setHex(0x60a5fa);
-          l.material.emissive.setHex(0x3b82f6);
+          l.material.color.setHex(0x38bdf8);
+          l.material.emissive.setHex(0x0284c7);
           l.material.emissiveIntensity = 0.25;
-          l.material.opacity = 0.78;
+          l.material.opacity = 0.85;
         }
       });
       if (this.haloMesh) {
         (this.haloMesh.material as THREE.MeshBasicMaterial).color.setHex(0x10b981);
-        (this.haloMesh.material as THREE.MeshBasicMaterial).opacity = 0.12;
+        (this.haloMesh.material as THREE.MeshBasicMaterial).opacity = 0.16;
       }
     } else if (stateId === 'ANXIETY') {
-      // Ámbar / Amarillo con foco en Amígdala e Ínsula
+      // ANXIETY: Ámbar brillante en amígdala e ínsula
       this.lobes.forEach((l) => {
         if (l.id === 'amygdala' || l.id === 'insula') {
           l.material.color.setHex(0xf59e0b);
-          l.material.emissive.setHex(0xf59e0b);
-          l.material.emissiveIntensity = 0.95;
+          l.material.emissive.setHex(0xd97706);
+          l.material.emissiveIntensity = 1.25;
           l.material.opacity = 0.98;
-        } else if (l.id === 'brainstem') {
-          l.material.color.setHex(0xfbbf24);
-          l.material.emissive.setHex(0xfbbf24);
-          l.material.emissiveIntensity = 0.65;
-          l.material.opacity = 0.88;
         } else {
           l.material.color.setHex(0x64748b);
           l.material.emissive.setHex(0x475569);
-          l.material.emissiveIntensity = 0.25;
+          l.material.emissiveIntensity = 0.2;
           l.material.opacity = 0.75;
         }
       });
       if (this.haloMesh) {
         (this.haloMesh.material as THREE.MeshBasicMaterial).color.setHex(0xf59e0b);
-        (this.haloMesh.material as THREE.MeshBasicMaterial).opacity = 0.18;
+        (this.haloMesh.material as THREE.MeshBasicMaterial).opacity = 0.22;
       }
     } else if (stateId === 'PANIC') {
-      // Naranja Fuego en núcleo límbico y tronco encefálico
+      // PANIC: Naranja intenso pulsante en amígdala, hipotálamo y tronco
       this.lobes.forEach((l) => {
-        if (l.id === 'amygdala') {
+        if (l.id === 'amygdala' || l.id === 'brainstem') {
           l.material.color.setHex(0xf97316);
           l.material.emissive.setHex(0xea580c);
-          l.material.emissiveIntensity = 1.25;
+          l.material.emissiveIntensity = 1.5;
           l.material.opacity = 1.0;
-        } else if (l.id === 'insula' || l.id === 'brainstem') {
-          l.material.color.setHex(0xfb923c);
-          l.material.emissive.setHex(0xf97316);
-          l.material.emissiveIntensity = 0.9;
-          l.material.opacity = 0.95;
         } else {
           l.material.color.setHex(0x475569);
           l.material.emissive.setHex(0x334155);
-          l.material.emissiveIntensity = 0.2;
+          l.material.emissiveIntensity = 0.15;
           l.material.opacity = 0.7;
         }
       });
       if (this.haloMesh) {
         (this.haloMesh.material as THREE.MeshBasicMaterial).color.setHex(0xf97316);
-        (this.haloMesh.material as THREE.MeshBasicMaterial).opacity = 0.25;
+        (this.haloMesh.material as THREE.MeshBasicMaterial).opacity = 0.28;
       }
     } else {
       // PSYCHOSIS: Rojo carmesí de emergencia y corteza prefrontal apagada (desconexión)
@@ -1080,21 +1219,21 @@ export class Brain3dComponent implements OnInit, OnDestroy {
 
   // Resaltado al pasar el cursor sobre la leyenda
   highlightZone(zoneId: string): void {
+    const stateId = this.neuroService.activeStateId();
+    this.createBrainModelScaleReset();
     this.lobes.forEach((l) => {
       if (l.id === zoneId) {
-        l.material.emissiveIntensity = 1.5;
-        l.mesh.scale.multiplyScalar(1.08);
+        l.material.emissiveIntensity = 1.6;
+        l.mesh.scale.multiplyScalar(1.12);
+        l.material.opacity = 1.0;
       } else {
-        l.material.opacity = 0.4;
+        l.material.opacity = 0.35;
       }
     });
   }
 
   unhighlightZone(): void {
     const stateId = this.neuroService.activeStateId();
-    this.lobes.forEach((l) => {
-      l.mesh.scale.set(1, 1, 1);
-    });
     this.createBrainModelScaleReset();
     this.updateBrainColors(stateId);
   }
@@ -1119,9 +1258,63 @@ export class Brain3dComponent implements OnInit, OnDestroy {
 
   resetCamera(): void {
     this.targetRotation = { x: 0.2, y: 0.4 };
+    if (this.camera) {
+      this.camera.position.set(0, 0, 7.5);
+    }
   }
 
-  // Interacción de rotación por ratón y toque
+  toggleFullscreen(): void {
+    const willBeFs = !this.isFullscreen();
+    this.isFullscreen.set(willBeFs);
+
+    // Resetear rotación y cámara para vista frontal óptima
+    this.resetCamera();
+    this.createBrainModelScaleReset();
+    this.updateBrainColors(this.neuroService.activeStateId());
+
+    // Doble requestAnimationFrame para esperar a que el navegador termine el reflow del layout
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        this.resizeRendererToContainer();
+      });
+    });
+  }
+
+  togglePctGuide(): void {
+    this.showPctGuide.update((v) => !v);
+  }
+
+  zoomIn(): void {
+    if (!this.camera) return;
+    this.camera.position.z = Math.max(3.6, this.camera.position.z - 0.75);
+  }
+
+  zoomOut(): void {
+    if (!this.camera) return;
+    this.camera.position.z = Math.min(13.0, this.camera.position.z + 0.75);
+  }
+
+  private resizeRendererToContainer(): void {
+    if (!this.containerRef || !this.renderer || !this.camera) return;
+    const el = this.containerRef.nativeElement;
+
+    const width = el.clientWidth;
+    const height = el.clientHeight;
+
+    if (width > 50 && height > 50) {
+      this.camera.aspect = width / height;
+      this.camera.updateProjectionMatrix();
+      this.renderer.setSize(width, height);
+      this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    }
+  }
+
+  @HostListener('window:resize')
+  onWindowResize(): void {
+    this.resizeRendererToContainer();
+  }
+
+  // Interacción de rotación por ratón, toque y rueda
   private setupEventListeners(): void {
     const el = this.containerRef.nativeElement;
 
@@ -1160,23 +1353,31 @@ export class Brain3dComponent implements OnInit, OnDestroy {
     });
 
     // Touch
-    el.addEventListener('touchstart', (e: TouchEvent) => {
-      if (e.touches.length > 0) {
-        this.isDragging = true;
+    el.addEventListener(
+      'touchstart',
+      (e: TouchEvent) => {
+        if (e.touches.length > 0) {
+          this.isDragging = true;
+          this.previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        }
+      },
+      { passive: true }
+    );
+
+    window.addEventListener(
+      'touchmove',
+      (e: TouchEvent) => {
+        if (!this.isDragging || e.touches.length === 0) return;
+        const deltaX = e.touches[0].clientX - this.previousMousePosition.x;
+        const deltaY = e.touches[0].clientY - this.previousMousePosition.y;
+
+        this.targetRotation.y += deltaX * 0.01;
+        this.targetRotation.x += deltaY * 0.01;
+
         this.previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-      }
-    }, { passive: true });
-
-    window.addEventListener('touchmove', (e: TouchEvent) => {
-      if (!this.isDragging || e.touches.length === 0) return;
-      const deltaX = e.touches[0].clientX - this.previousMousePosition.x;
-      const deltaY = e.touches[0].clientY - this.previousMousePosition.y;
-
-      this.targetRotation.y += deltaX * 0.01;
-      this.targetRotation.x += deltaY * 0.01;
-
-      this.previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-    }, { passive: true });
+      },
+      { passive: true }
+    );
 
     window.addEventListener('touchend', () => {
       this.isDragging = false;
@@ -1213,16 +1414,5 @@ export class Brain3dComponent implements OnInit, OnDestroy {
     }
 
     this.renderer.render(this.scene, this.camera);
-  }
-
-  @HostListener('window:resize')
-  onWindowResize(): void {
-    if (!this.containerRef || !this.renderer || !this.camera) return;
-    const container = this.containerRef.nativeElement;
-    const width = container.clientWidth;
-    const height = container.clientHeight;
-    this.camera.aspect = width / height;
-    this.camera.updateProjectionMatrix();
-    this.renderer.setSize(width, height);
   }
 }
