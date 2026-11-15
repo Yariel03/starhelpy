@@ -85,7 +85,7 @@ export class StarPetComponent implements OnInit {
   readonly messages = signal<ChatMessage[]>([
     {
       sender: 'helpy',
-      text: '¡Hola, astronauta! Soy Star Helpy, tu asistente orbital. Monitoreo tus entrenamientos, la radiación espacial con NASA DONKI y tu salud neuroconductual y sueño en tiempo real.',
+      text: '¡Hola, astronauta! Soy Star Helpy, tu asistente orbital. Monitoreo tus entrenamientos, la radiación solar en tiempo real y tu salud neuroconductual y sueño.',
       time: 'Ahora',
       mood: 'happy',
     },
@@ -93,10 +93,12 @@ export class StarPetComponent implements OnInit {
 
   // Preguntas rápidas
   readonly quickPrompts = [
-    '¿Cómo está mi cerebro y sueño?',
+    '¿Cómo está mi cerebro y sueño ahora?',
+    'Evolución de mis últimas semanas',
+    '¿Cómo estuve hace 3 días?',
     'Guiar respiración 4-7-8',
-    '¿La radiación espacial es peligrosa?',
-    'Reporte NASA DONKI en vivo',
+    '¿La radiación solar es peligrosa?',
+    'Reporte de Radiación Solar',
     'Reporte Médico de Vuelo',
     '¿Cómo va mi racha hoy?',
     '¿Qué ejercicios me tocan?',
@@ -203,9 +205,9 @@ export class StarPetComponent implements OnInit {
         mood: 'sad',
         badge: isEn ? 'Active Sun' : 'Sol Activo',
         badgeColor: '#f59e0b',
-        message: isEn ? 'Moderate solar disturbance detected by DONKI. Exercise caution during EVA.' : 'Perturbación solar moderada detectada por DONKI. Precaución en actividades EVA.',
+        message: isEn ? 'Moderate solar radiation disturbance detected. Exercise caution during EVA.' : 'Perturbación de radiación solar moderada detectada. Precaución en actividades EVA.',
         actionType: 'chat',
-        actionText: isEn ? 'View DONKI Report' : 'Ver Reporte DONKI',
+        actionText: isEn ? 'View Solar Radiation' : 'Ver Radiación Solar',
       };
     }
 
