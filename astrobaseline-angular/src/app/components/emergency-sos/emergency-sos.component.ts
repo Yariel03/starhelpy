@@ -14,7 +14,7 @@ import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
           <div class="header-left">
             <span class="header-icon">🚨</span>
             <div>
-              <h3>Protocolo Médico de Emergencia Nivel 3 (Psicosis / Confinamiento)</h3>
+              <h3>Protocolo Médico de Emergencia Nivel 3 (Psicosis)</h3>
               <p class="subtitle">Directriz Médica de Seguridad ISS · Alerta a Houston & Bloqueo Cautelar</p>
             </div>
           </div>

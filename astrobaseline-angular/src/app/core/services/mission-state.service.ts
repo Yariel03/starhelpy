@@ -237,8 +237,7 @@ export class MissionStateService {
 
   // Colores calculados para el Body Map SVG (reaccionan al dataset y a la simulación neuroconductual)
   readonly bodyRegionColors = computed<Record<BodyRegionKey, string>>(() => {
-    const stateId = this.neuro.activeStateId();
-
+    const results = this.evaluationResults();
     const colors: Record<BodyRegionKey, string> = {
       head: '#757575',
       chest: '#757575',
@@ -247,43 +246,7 @@ export class MissionStateService {
       legs: '#757575',
     };
 
-    // Reacción directa e instantánea a la simulación de casos neuroconductuales con los mismos colores
-    if (stateId === 'REPAIR_SLEEP') {
-      // SUEÑO REPARADOR: Tono parasimpático óptimo (Esmeralda #10b981)
-      colors.head = '#10b981'; // Ondas delta profundas y regeneración celular
-      colors.chest = '#10b981'; // 50 LPM en reposo
-      colors.abdomen = '#10b981';
-      colors.arms = '#10b981';
-      colors.legs = '#10b981';
-      return colors;
-    } else if (stateId === 'ANXIETY') {
-      // ANSIEDAD: Ámbar de alerta (#f59e0b) en cabeza, pecho y abdomen
-      colors.head = '#f59e0b'; // Amígdala hiperactiva por estrés/cortisol
-      colors.chest = '#f59e0b'; // Taquicardia 92 LPM e hiperarousal
-      colors.abdomen = '#f59e0b'; // Tensión somática visceral
-      colors.arms = '#757575';
-      colors.legs = '#757575';
-      return colors;
-    } else if (stateId === 'PANIC') {
-      // PÁNICO: Naranja intenso de shock (#f97316) en cabeza, pecho, brazos y piernas
-      colors.head = '#f97316'; // Fuego límbico desbordado
-      colors.chest = '#f97316'; // Taquicardia severa 122 LPM
-      colors.arms = '#f97316'; // Vasoconstricción periférica y adrenalina
-      colors.legs = '#f97316'; // Tensión motora de lucha/huida
-      colors.abdomen = '#757575';
-      return colors;
-    } else if (stateId === 'PSYCHOSIS') {
-      // PSICOSIS: Rojo carmesí crítico (#ef4444) en todo el cuerpo por descompensación sistémica
-      colors.head = '#ef4444'; // Hipoactividad prefrontal y delirio
-      colors.chest = '#ef4444'; // Taquicardia 138 LPM sostenida
-      colors.abdomen = '#ef4444';
-      colors.arms = '#ef4444';
-      colors.legs = '#ef4444';
-      return colors;
-    }
-
-    // Fallback: cálculo por dataset histórico si no hay estado neuro
-    const results = this.evaluationResults();
+    // 1. Cálculo base por dataset de biomarcadores para cada región corporal
     const keys: BodyRegionKey[] = ['head', 'chest', 'abdomen', 'arms', 'legs'];
     for (const reg of keys) {
       const info = this.config.REGIONS[reg];
@@ -301,6 +264,18 @@ export class MissionStateService {
         regResults as EvaluationResults
       );
       colors[reg] = this.config.STATUS_CONFIG[lvl]?.color || '#757575';
+    }
+
+    // 2. Solo la cabeza reacciona a la simulación de casos neuroconductuales del mapeo encefálico
+    const stateId = this.neuro.activeStateId();
+    if (stateId === 'REPAIR_SLEEP') {
+      colors.head = '#10b981'; // Sueño Reparador: Esmeralda
+    } else if (stateId === 'ANXIETY') {
+      colors.head = '#f59e0b'; // Ansiedad: Ámbar
+    } else if (stateId === 'PANIC') {
+      colors.head = '#f97316'; // Pánico: Naranja Shock
+    } else if (stateId === 'PSYCHOSIS') {
+      colors.head = '#ef4444'; // Psicosis: Rojo Carmesí
     }
 
     return colors;

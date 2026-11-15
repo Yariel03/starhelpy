@@ -148,8 +148,8 @@ export class NeuroSleepService {
 
     PSYCHOSIS: {
       id: 'PSYCHOSIS',
-      name: 'Descompensación Neuroconductual / Psicosis Espacial',
-      shortName: 'Psicosis / Confinamiento',
+      name: 'Descompensación Neuroconductual / Psicosis',
+      shortName: 'Psicosis',
       icon: '🔴',
       lpmAverage: 138,
       lpmRange: '128 - 146 LPM',
