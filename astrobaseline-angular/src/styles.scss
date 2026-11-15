@@ -35,3 +35,31 @@ html, body {
 button, input, select, textarea {
   font-family: inherit;
 }
+
+/* Modo Pantalla Completa / Teatro 3D para el Mapeo Encefálico */
+body.brain-3d-fullscreen {
+  overflow: hidden !important;
+
+  .column-card:has(app-brain-3d),
+  .column-card.brain-card {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    transform: none !important;
+    animation: none !important;
+    filter: none !important;
+    contain: none !important;
+    position: static !important;
+  }
+
+  .neuro-sleep-container,
+  .neuro-main-grid,
+  .brain-column {
+    transform: none !important;
+    animation: none !important;
+    filter: none !important;
+  }
+
+  .main-content {
+    z-index: 999999 !important;
+  }
+}

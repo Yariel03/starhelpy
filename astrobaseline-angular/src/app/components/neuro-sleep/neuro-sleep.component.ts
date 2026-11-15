@@ -483,6 +483,15 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
         display: flex;
         flex-direction: column;
         gap: 1rem;
+
+        &:has(.fullscreen-mode) {
+          backdrop-filter: none !important;
+          -webkit-backdrop-filter: none !important;
+          transform: none !important;
+          animation: none !important;
+          contain: none !important;
+          position: static !important;
+        }
       }
 
       .card-header {
