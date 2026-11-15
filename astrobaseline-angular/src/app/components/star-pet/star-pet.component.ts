@@ -93,7 +93,9 @@ export class StarPetComponent implements OnInit {
 
   // Preguntas rápidas
   readonly quickPrompts = [
-    '¿Cómo está mi cerebro y sueño?',
+    '¿Cómo está mi cerebro y sueño ahora?',
+    'Evolución de mis últimas semanas',
+    '¿Cómo estuve hace 3 días?',
     'Guiar respiración 4-7-8',
     '¿La radiación espacial es peligrosa?',
     'Reporte NASA DONKI en vivo',
