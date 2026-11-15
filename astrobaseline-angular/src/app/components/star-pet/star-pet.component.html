@@ -399,22 +399,38 @@
             </div>
           </div>
         }
+
+        <!-- Indicador de procesamiento IA en vivo -->
+        @if (isAiLoading()) {
+          <div class="message-row helpy thinking-row">
+            <div class="helpy-msg-avatar" [class]="activeState().mood">AI</div>
+            <div class="message-bubble thinking-bubble">
+              <div class="thinking-dots">
+                <span class="thinking-dot"></span>
+                <span class="thinking-dot"></span>
+                <span class="thinking-dot"></span>
+              </div>
+              <span class="thinking-text">{{ i18n.currentLang() === 'en' ? 'Analyzing orbital telemetry...' : 'Analizando telemetría orbital...' }}</span>
+            </div>
+          </div>
+        }
       </div>
 
       <!-- Input de envío -->
       <div class="chat-input-bar">
         <input
           type="text"
-          placeholder="Escribe un mensaje a Star Helpy..."
+          [placeholder]="isAiLoading() ? (i18n.currentLang() === 'en' ? 'Star Helpy is thinking...' : 'Star Helpy está pensando...') : (i18n.currentLang() === 'en' ? 'Ask Star Helpy anything...' : 'Escribe un mensaje a Star Helpy...')"
           [ngModel]="userInput()"
           (ngModelChange)="userInput.set($event)"
           (keydown.enter)="sendMessage()"
+          [disabled]="isAiLoading()"
           class="chat-input"
         />
         <button
           class="chat-send-btn"
           (click)="sendMessage()"
-          [disabled]="!userInput().trim()"
+          [disabled]="!userInput().trim() || isAiLoading()"
           title="Enviar mensaje"
         >
           ➤
