@@ -262,7 +262,7 @@ export class AppComponent {
     link.setAttribute('href', encodedUri);
     link.setAttribute(
       'download',
-      `Bitacora_Medica_${sid}_${this.state.currentDate() || 'Mision'}.csv`
+      `Datos_Salud_${sid}_${this.state.currentDate() || 'Mision'}.csv`
     );
     document.body.appendChild(link);
     link.click();

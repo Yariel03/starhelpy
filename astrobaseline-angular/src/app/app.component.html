@@ -115,14 +115,14 @@
           [class.active]="activeTab() === 'quality'"
           (click)="setTab('quality')"
         >
-          📋 Bitácora de Datos
+          Historial de Datos
         </button>
         <button
           class="tab-btn tab-btn-highlight"
           [class.active]="activeTab() === 'neuro-sleep'"
           (click)="setTab('neuro-sleep')"
         >
-          🧠 Neuro-Sueño 3D
+          Neuro-Sueño 3D
         </button>
       </nav>
 
@@ -312,19 +312,19 @@
         </div>
       }
 
-      <!-- PESTAÑA 4: BITÁCORA DE DATOS & TELEMETRÍA LONGITUDINAL -->
+      <!-- PESTAÑA 4: HISTORIAL DE DATOS & REGISTROS DIARIOS -->
       @if (activeTab() === 'quality') {
         <div class="tab-pane quality-pane">
-          <!-- Cabecera de la Bitácora Médica -->
+          <!-- Cabecera del Historial de Datos -->
           <div class="bitacora-header-card">
             <div class="header-main">
               <div class="title-meta">
                 <div class="title-with-badge">
-                  <h3>📋 Bitácora Médica y Registros Diarios de Misión</h3>
-                  <span class="confidential-badge">NASA Flight Surgeon Log</span>
+                  <h3>Historial de Datos y Registros Diarios</h3>
+                  <span class="confidential-badge">Registros Médicos</span>
                 </div>
                 <p class="subtitle">
-                  Historial longitudinal de signos vitales, telemetría de sueño, parámetros metabólicos y verificación de biosensores para el astronauta {{ state.selectedAstronaut() }}.
+                  Monitoreo diario de sueño, frecuencia cardíaca, presión arterial, parámetros metabólicos y estado de biosensores para el astronauta {{ state.selectedAstronaut() }}.
                 </p>
               </div>
 
@@ -354,8 +354,8 @@
                   </button>
                 </div>
 
-                <button class="btn-export-csv" (click)="exportCsv()" title="Descargar bitácora en formato CSV para análisis médico">
-                  📥 Exportar CSV
+                <button class="btn-export-csv" (click)="exportCsv()" title="Descargar datos en formato CSV para análisis">
+                  Exportar CSV
                 </button>
               </div>
             </div>
@@ -381,7 +381,7 @@
           <!-- TABLA MAESTRA DE DATOS CLÍNICOS DÍA A DÍA -->
           <div class="table-card bitacora-table-card">
             <div class="table-title-bar">
-              <h4>📊 Registro Histórico Longitudinal de Salud</h4>
+              <h4>Registro Histórico de Salud (Día a Día)</h4>
               <span class="record-counter">{{ dailyClinicalLog().length }} Días Registrados</span>
             </div>
 
