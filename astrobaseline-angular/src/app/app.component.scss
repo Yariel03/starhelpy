@@ -543,19 +543,20 @@
 
       &.tab-btn-highlight {
         background: rgba(99, 102, 241, 0.18);
-        color: #c7d2fe;
-        border: 1px dashed rgba(165, 180, 252, 0.45);
+        color: #fef08a;
+        border: 1px dashed rgba(254, 240, 138, 0.45);
 
         &:hover {
           background: rgba(99, 102, 241, 0.3);
-          color: #ffffff;
+          color: #fef9c3;
+          border-color: rgba(254, 240, 138, 0.7);
         }
 
         &.active {
           background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
-          color: #ffffff;
+          color: #fef08a;
           border-style: solid;
-          border-color: #818cf8;
+          border-color: #fef08a;
           box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
         }
       }
