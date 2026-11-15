@@ -1,5 +1,6 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import Papa from 'papaparse';
 import { ConfigService } from './config.service';
 import { DataLoaderService } from './data-loader.service';
 import { AnalysisService } from './analysis.service';
@@ -405,25 +406,11 @@ export class MissionStateService {
   }
 
   private parseCsvString(csvText: string): any[] {
-    const res = (window as any).Papa
-      ? (window as any).Papa.parse(csvText, { header: true, dynamicTyping: true, skipEmptyLines: true })
-      : { data: [] };
-    if (!res.data || res.data.length === 0) {
-      // Fallback manual simple
-      const lines = csvText.trim().split('\n');
-      if (lines.length <= 1) return [];
-      const headers = lines[0].split(',').map((h) => h.trim().replace(/^"|"$/g, ''));
-      return lines.slice(1).map((l) => {
-        const parts = l.split(',');
-        const row: any = {};
-        headers.forEach((h, i) => {
-          const raw = parts[i] ? parts[i].trim().replace(/^"|"$/g, '') : '';
-          const num = parseFloat(raw);
-          row[h] = !isNaN(num) && raw !== '' ? num : raw;
-        });
-        return row;
-      });
-    }
-    return res.data;
+    const res = Papa.parse(csvText, {
+      header: true,
+      dynamicTyping: true,
+      skipEmptyLines: true,
+    });
+    return (res.data as any[]) || [];
   }
 }

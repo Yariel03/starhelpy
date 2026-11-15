@@ -28,7 +28,7 @@
           />
           <div class="brand-meta">
             <h2 class="brand-name">{{ config.APP_NAME }}</h2>
-            <p class="tagline">{{ config.TAGLINE }}</p>
+            <p class="tagline">{{ i18n.t().tagline }}</p>
           </div>
         </div>
       </div>
@@ -45,9 +45,9 @@
         <div class="sidebar-bodymap-header">
           <div class="header-left">
             <span class="bodymap-icon">🩺</span>
-            <span class="bodymap-title">Mapa Corporal</span>
+            <span class="bodymap-title">{{ i18n.t().sidebar_bodymap }}</span>
           </div>
-          <span class="goto-tab-pill">Ver mapa ↗</span>
+          <span class="goto-tab-pill">{{ i18n.t().sidebar_view_map }}</span>
         </div>
 
         <app-body-map></app-body-map>
@@ -66,7 +66,7 @@
                 {{ config.APP_NAME }} — {{ currentGoal().name }}
               </h1>
               <span class="mission-subtitle">
-                {{ currentDestination().name }} · Meta: {{ currentGoal().archetype }} · Sol {{ state.missionDay() }} de {{ state.missionConfig().daysInSpace }} días
+                {{ currentDestination().name }} · {{ i18n.t().goal_label }}: {{ currentGoal().archetype }} · {{ i18n.t().sol }} {{ state.missionDay() }} {{ i18n.t().of_days }} {{ state.missionConfig().daysInSpace }} {{ i18n.t().days_unit }}
               </span>
             </div>
           </div>
@@ -75,54 +75,77 @@
             <button
               class="flight-report-pill"
               (click)="neuro.openFlightReport()"
-              title="Generar Reporte Médico de Vuelo para Cirujano de Vuelo"
+              title="Generar Reporte Médico de Vuelo"
             >
-              📄 Reporte Médico
+              📄 {{ i18n.t().flight_report }}
             </button>
             <button class="config-mission-pill" (click)="state.openWizard()">
-              ⚙️ Configurar Misión
+              ⚙️ {{ i18n.t().config_mission }}
             </button>
+
+            <!-- SELECTOR DE IDIOMA (ESPAÑOL / INGLÉS) -->
+            <div class="lang-selector-group" title="Seleccionar Idioma / Select Language">
+              <button
+                type="button"
+                class="lang-btn"
+                [class.active]="i18n.currentLang() === 'es'"
+                (click)="i18n.setLanguage('es')"
+                title="Español"
+              >
+                🇪🇸 ES
+              </button>
+              <button
+                type="button"
+                class="lang-btn"
+                [class.active]="i18n.currentLang() === 'en'"
+                (click)="i18n.setLanguage('en')"
+                title="English"
+              >
+                🇺🇸 EN
+              </button>
+            </div>
+
             <span class="date-badge">{{ state.currentDate() }}</span>
           </div>
         </div>
       </header>
 
-      <!-- NAVEGACIÓN POR PESTAÑAS -->
+      <!-- NAVEGACIÓN POR PESTAÑAS (TEXTO LIMPIO SIN ICONOS) -->
       <nav class="tabs-nav">
         <button
           class="tab-btn"
           [class.active]="activeTab() === 'dashboard'"
           (click)="setTab('dashboard')"
         >
-          Panel General
+          {{ i18n.t().tabs_dashboard }}
         </button>
         <button
           class="tab-btn"
           [class.active]="activeTab() === 'trends'"
           (click)="setTab('trends')"
         >
-          Telemetría
+          {{ i18n.t().tabs_telemetry }}
         </button>
         <button
           class="tab-btn"
           [class.active]="activeTab() === 'body'"
           (click)="setTab('body')"
         >
-          Mapa Corporal
+          {{ i18n.t().tabs_body }}
         </button>
         <button
           class="tab-btn"
           [class.active]="activeTab() === 'quality'"
           (click)="setTab('quality')"
         >
-          Historial de Datos
+          {{ i18n.t().tabs_history }}
         </button>
         <button
           class="tab-btn tab-btn-highlight"
           [class.active]="activeTab() === 'neuro-sleep'"
           (click)="setTab('neuro-sleep')"
         >
-          Neuro-Sueño 3D
+          {{ i18n.t().tabs_neuro }}
         </button>
       </nav>
 
@@ -318,15 +341,15 @@
           <!-- Cabecera simple y directa -->
           <div class="simple-history-header">
             <div class="header-text-block">
-              <h3>Historial de Datos de Salud</h3>
+              <h3>{{ i18n.t().history_title }}</h3>
               <p>
-                Valores diarios registrados de sueño, ritmo cardíaco, presión arterial y biomarcadores del astronauta {{ state.selectedAstronaut() }}.
+                {{ i18n.t().history_subtitle }} {{ state.selectedAstronaut() }}.
               </p>
             </div>
 
             <!-- Botón de Descarga -->
-            <button class="btn-export-csv" (click)="exportCsv()" title="Descargar datos en archivo Excel / CSV">
-              📥 Descargar en Excel / CSV
+            <button class="btn-export-csv" (click)="exportCsv()" [title]="i18n.t().export_csv_btn">
+              📥 {{ i18n.t().export_csv_btn }}
             </button>
           </div>
 
@@ -335,24 +358,24 @@
             <div class="kpi-card">
               <span class="kpi-icon">🛌</span>
               <div class="kpi-body">
-                <span class="kpi-label">Sueño Promedio</span>
-                <strong class="kpi-val">{{ clinicalSummaryKpis().avgSleep }} h <small>/ noche</small></strong>
+                <span class="kpi-label">{{ i18n.t().avg_sleep_title }}</span>
+                <strong class="kpi-val">{{ clinicalSummaryKpis().avgSleep }} h <small>/ {{ i18n.t().avg_sleep_unit }}</small></strong>
               </div>
             </div>
 
             <div class="kpi-card">
               <span class="kpi-icon">💓</span>
               <div class="kpi-body">
-                <span class="kpi-label">Frecuencia Cardíaca</span>
-                <strong class="kpi-val">{{ clinicalSummaryKpis().avgLpm }} <small>LPM promedio</small></strong>
+                <span class="kpi-label">{{ i18n.t().avg_hr_title }}</span>
+                <strong class="kpi-val">{{ clinicalSummaryKpis().avgLpm }} <small>{{ i18n.t().avg_hr_unit }}</small></strong>
               </div>
             </div>
 
             <div class="kpi-card">
               <span class="kpi-icon">📅</span>
               <div class="kpi-body">
-                <span class="kpi-label">Días Visualizados</span>
-                <strong class="kpi-val">{{ clinicalSummaryKpis().totalDays }} <small>días</small></strong>
+                <span class="kpi-label">{{ i18n.t().days_viewed_title }}</span>
+                <strong class="kpi-val">{{ clinicalSummaryKpis().totalDays }} <small>{{ i18n.t().days_unit }}</small></strong>
               </div>
             </div>
           </div>
@@ -360,7 +383,7 @@
           <!-- Barra de Filtros de Días (Prominente y con respuesta inmediata) -->
           <div class="filter-controls-bar">
             <div class="filter-left">
-              <span class="filter-title">Seleccionar período:</span>
+              <span class="filter-title">{{ i18n.t().filter_period_label }}</span>
               <div class="filter-buttons-group">
                 <button
                   type="button"
@@ -368,7 +391,7 @@
                   [class.active]="tableTimeRange() === '7days'"
                   (click)="setTimeRange('7days')"
                 >
-                  Últimos 7 Días
+                  {{ i18n.t().filter_7days }}
                 </button>
                 <button
                   type="button"
@@ -376,7 +399,7 @@
                   [class.active]="tableTimeRange() === '14days'"
                   (click)="setTimeRange('14days')"
                 >
-                  Últimos 14 Días
+                  {{ i18n.t().filter_14days }}
                 </button>
                 <button
                   type="button"
@@ -384,7 +407,7 @@
                   [class.active]="tableTimeRange() === '30days'"
                   (click)="setTimeRange('30days')"
                 >
-                  Últimos 30 Días
+                  {{ i18n.t().filter_30days }}
                 </button>
                 <button
                   type="button"
@@ -392,13 +415,13 @@
                   [class.active]="tableTimeRange() === 'all'"
                   (click)="setTimeRange('all')"
                 >
-                  Misión Completa ({{ state.currentAstronautRecords().length }} Días)
+                  {{ i18n.t().filter_all }} ({{ state.currentAstronautRecords().length }} {{ i18n.t().days_unit }})
                 </button>
               </div>
             </div>
 
             <span class="filter-counter-tag">
-              Mostrando {{ dailyClinicalLog().length }} de {{ state.currentAstronautRecords().length }} días registrados
+              {{ i18n.t().showing_records_label }} {{ dailyClinicalLog().length }} {{ i18n.t().of_label }} {{ state.currentAstronautRecords().length }} {{ i18n.t().records_registered }}
             </span>
           </div>
 
@@ -408,14 +431,14 @@
               <table class="data-table simple-data-table">
                 <thead>
                   <tr>
-                    <th>Fecha</th>
-                    <th>Sueño</th>
-                    <th>Frecuencia Cardíaca</th>
-                    <th>Presión Arterial</th>
-                    <th>Glucosa</th>
-                    <th>Temperatura</th>
-                    <th>Ánimo</th>
-                    <th>Estado</th>
+                    <th>{{ i18n.t().col_date }}</th>
+                    <th>{{ i18n.t().col_sleep }}</th>
+                    <th>{{ i18n.t().col_hr }}</th>
+                    <th>{{ i18n.t().col_bp }}</th>
+                    <th>{{ i18n.t().col_glucose }}</th>
+                    <th>{{ i18n.t().col_temp }}</th>
+                    <th>{{ i18n.t().col_mood }}</th>
+                    <th>{{ i18n.t().col_status }}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -426,7 +449,7 @@
                         <div class="date-flex">
                           <strong class="date-text">{{ row.date }}</strong>
                           @if (row.isToday) {
-                            <span class="today-chip">HOY</span>
+                            <span class="today-chip">{{ i18n.t().chip_today }}</span>
                           }
                         </div>
                       </td>

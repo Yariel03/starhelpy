@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { MissionStateService } from './core/services/mission-state.service';
 import { ConfigService } from './core/services/config.service';
 import { NeuroSleepService } from './core/services/neuro-sleep.service';
+import { I18nService } from './core/services/i18n.service';
 import { BadgeComponent } from './components/badge/badge.component';
 import { BodyMapComponent } from './components/body-map/body-map.component';
 import { MissionWizardComponent } from './components/mission-wizard/mission-wizard.component';
@@ -42,6 +43,7 @@ export class AppComponent {
   readonly state = inject(MissionStateService);
   readonly config = inject(ConfigService);
   readonly neuro = inject(NeuroSleepService);
+  readonly i18n = inject(I18nService);
 
   readonly activeTab = signal<'dashboard' | 'trends' | 'body' | 'quality' | 'neuro-sleep'>('dashboard');
   readonly expandedMetric = signal<string | null>(null);
@@ -124,6 +126,9 @@ export class AppComponent {
       filtered = sorted.slice(0, 30);
     }
 
+    const t = this.i18n.t();
+    const isEn = this.i18n.currentLang() === 'en';
+
     return filtered.map((r) => {
       const isToday = r.date === currDate;
       const isSimulated = isToday && !!stateId;
@@ -132,16 +137,16 @@ export class AppComponent {
       let sleepH = r.sleep_hours ?? 7.5;
       let sleepQual =
         sleepH >= 7.5
-          ? 'Excelente (92%)'
+          ? (isEn ? 'Excellent (92%)' : 'Excelente (92%)')
           : sleepH >= 6
-          ? 'Moderado (72%)'
-          : 'Insuficiente (48%)';
+          ? (isEn ? 'Moderate (72%)' : 'Moderado (72%)')
+          : (isEn ? 'Insufficient (48%)' : 'Insuficiente (48%)');
       let moodScore = r.mood ?? 4.0;
       let sysBp = r.systolic_bp ? Math.round(r.systolic_bp) : 118;
       let diaBp = r.diastolic_bp ? Math.round(r.diastolic_bp) : 76;
       let gluc = r.glucose ? Math.round(r.glucose) : 95;
       let temp = r.temperature ?? 36.6;
-      let statusText = 'Normal';
+      let statusText = t.status_normal;
       let statusColor = '#10b981';
 
       if (isSimulated) {
@@ -152,26 +157,26 @@ export class AppComponent {
         if (stateId === 'REPAIR_SLEEP') {
           sleepH = 8.5;
           moodScore = 5.0;
-          statusText = 'Sueño Óptimo';
+          statusText = t.status_optimal;
         } else if (stateId === 'ANXIETY') {
           sleepH = 5.2;
           moodScore = 2.4;
-          statusText = 'Ansiedad';
+          statusText = t.status_anxiety;
         } else if (stateId === 'PANIC') {
           sleepH = 3.1;
           moodScore = 1.2;
-          statusText = 'Pánico';
+          statusText = t.status_panic;
         } else if (stateId === 'PSYCHOSIS') {
           sleepH = 1.4;
           moodScore = 1.0;
-          statusText = 'Psicosis';
+          statusText = t.status_psychosis;
         }
       } else {
         if (lpm > 100 || sleepH < 5 || moodScore < 2) {
-          statusText = 'Alerta';
+          statusText = t.status_alert;
           statusColor = '#ef4444';
         } else if (lpm > 85 || sleepH < 6.5 || moodScore < 3) {
-          statusText = 'Atención';
+          statusText = t.status_attention;
           statusColor = '#f59e0b';
         }
       }
