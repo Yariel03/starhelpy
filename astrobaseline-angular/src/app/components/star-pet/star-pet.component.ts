@@ -23,6 +23,17 @@ export interface ChatMessage {
   isAlert?: boolean;
 }
 
+export interface HelpyPriorityState {
+  level: 'CRITICAL_RADIATION' | 'PSYCHOSIS' | 'PANIC' | 'ANXIETY' | 'RADIATION_WARNING' | 'ROUTINE';
+  priority: 1 | 2 | 3 | 4;
+  mood: 'happy' | 'sad' | 'angry';
+  badge: string;
+  badgeColor: string;
+  message: string;
+  actionType: 'breathe' | 'chat';
+  actionText: string;
+}
+
 @Component({
   selector: 'app-star-pet',
   standalone: true,
@@ -74,105 +85,162 @@ export class StarPetComponent implements OnInit {
     '🏋️ ¿Qué ejercicios me tocan?',
   ];
 
-  // Estado emocional de la mascota estrella
-  // Reacciona a los ejercicios Y a los estados neuroconductuales (sueño, ansiedad, pánico, psicosis)
-  readonly mood = this.state.petMood;
-
-  readonly currentMood = computed<'happy' | 'sad' | 'angry'>(() => {
-    if (this.nasa.isDangerous()) return 'angry';
-    const nCase = this.neuro.activeCase();
-    if (nCase.id === 'PSYCHOSIS') return 'angry';
-    if (nCase.id === 'PANIC') return 'angry';
-    if (nCase.id === 'ANXIETY') return 'sad';
-    return this.mood();
-  });
-
-  // Texto contextual de la burbuja según el estado emocional, radiación DONKI y neuroconducta
-  readonly bubbleText = computed(() => {
-    // Prioridad 1: Radiación espacial crítica
+  // Máquina de estados jerárquica unificada para Star Helpy
+  // Resuelve colisiones entre Radiación Solar, Crisis Neuroconductuales y Hábitos de Misión
+  readonly activeState = computed<HelpyPriorityState>(() => {
+    // 1. NIVEL CRÍTICO 1: Tormenta de Radiación Espacial Solar NASA DONKI (>1000 pfu)
     if (this.nasa.isDangerous()) {
-      return `☢️ ¡ALERTA NASA DONKI! Radiación espacial PELIGROSA detectada (>1000 pfu). ¡Protégete en zona blindada!`;
+      return {
+        level: 'CRITICAL_RADIATION',
+        priority: 1,
+        mood: 'angry',
+        badge: '☢️ ¡Alerta Solar!',
+        badgeColor: '#ef4444',
+        message: '¡Flujo crítico de radiación espacial! Suspende toda actividad exterior y refúgiate.',
+        actionType: 'chat',
+        actionText: '🛡️ Ver Protocolo',
+      };
     }
 
-    // Prioridad 2: Alteración neuroconductual aguda (Ansiedad, Pánico o Psicosis)
-    const nCase = this.neuro.activeCase();
-    if (nCase.id !== 'REPAIR_SLEEP') {
-      return `[${nCase.helpyBadge}] ${nCase.helpyMessage} · (${this.neuro.liveLpm()} LPM en reposo)`;
+    const neuroCase = this.neuro.activeCase();
+
+    // 2. NIVEL DE CRISIS 2: Emergencias Neuroconductuales Agudas (Psicosis o Pánico)
+    if (neuroCase.id === 'PSYCHOSIS') {
+      return {
+        level: 'PSYCHOSIS',
+        priority: 2,
+        mood: 'angry',
+        badge: '🔴 Alerta Psicosis',
+        badgeColor: '#ef4444',
+        message: `¡Taquicardia severa (${this.neuro.liveLpm()} LPM) y sobrecarga por confinamiento!`,
+        actionType: 'breathe',
+        actionText: '🫁 Calmar con Respiración 4-7-8',
+      };
     }
 
-    const m = this.currentMood();
+    if (neuroCase.id === 'PANIC') {
+      return {
+        level: 'PANIC',
+        priority: 2,
+        mood: 'angry',
+        badge: '🟠 Pánico Nocturno',
+        badgeColor: '#f97316',
+        message: `Despertar con taquicardia (${this.neuro.liveLpm()} LPM). Amígdala hiperactivada.`,
+        actionType: 'breathe',
+        actionText: '🫁 Iniciar Respiración 4-7-8',
+      };
+    }
+
+    // 3. NIVEL DE ADVERTENCIA 3: Estrés en Sueño o Radiación Moderada
+    if (neuroCase.id === 'ANXIETY') {
+      return {
+        level: 'ANXIETY',
+        priority: 3,
+        mood: 'sad',
+        badge: '🟡 Ansiedad Detectada',
+        badgeColor: '#f59e0b',
+        message: `Detecto estrés en tu descanso (${this.neuro.liveLpm()} LPM). ¿Hacemos una pausa?`,
+        actionType: 'breathe',
+        actionText: '🫁 Respirar 4-7-8',
+      };
+    }
+
+    if (this.nasa.radiationLevel() === 'WARNING') {
+      return {
+        level: 'RADIATION_WARNING',
+        priority: 3,
+        mood: 'sad',
+        badge: '🟡 Sol Activo',
+        badgeColor: '#f59e0b',
+        message: 'Perturbación solar moderada detectada por DONKI. Precaución en actividades EVA.',
+        actionType: 'chat',
+        actionText: '🛰️ Ver Reporte DONKI',
+      };
+    }
+
+    // 4. NIVEL DE RUTINA 4: Hábitos de Misión y Ejercicio Físico
     const completed = this.state.completedExercisesCount();
     const total = this.state.currentExercises().length;
     const day = this.state.missionDay();
-    const radLevel = this.nasa.radiationLevel();
-    const radTag = radLevel === 'SAFE' ? '🛡️ DONKI: Nominal' : '🟡 DONKI: Precaución';
 
-    if (m === 'happy') {
-      return `¡Genial, astronauta! Has completado ${completed}/${total} ejercicios. Racha de ${day} días asegurada ⭐ · [${radTag}] · [🧠 Neuro: Óptimo]`;
-    } else if (m === 'sad') {
-      return `Llevas ${completed}/${total} ejercicios completados... ¡La atrofia muscular no espera! Vamos por el segundo 🥺 · [${radTag}]`;
+    if (completed === total) {
+      return {
+        level: 'ROUTINE',
+        priority: 4,
+        mood: 'happy',
+        badge: `⭐ Sol ${day} · Al Día`,
+        badgeColor: '#10b981',
+        message: `¡Excelente! Completaste tus ${completed}/${total} ejercicios. Racha asegurada.`,
+        actionType: 'chat',
+        actionText: '💬 Chatear con Helpy',
+      };
+    } else if (completed > 0) {
+      return {
+        level: 'ROUTINE',
+        priority: 4,
+        mood: 'sad',
+        badge: `⏳ ${completed}/${total} Ejercicios`,
+        badgeColor: '#3b82f6',
+        message: `Llevas ${completed}/${total} ejercicios. ¡No dejes que la gravedad cero te debilite!`,
+        actionType: 'chat',
+        actionText: '🏋️ Ver Rutina',
+      };
     } else {
-      return `¡OYE! Tienes 0/${total} ejercicios hoy. ¿Quieres perder densidad ósea? ¡A entrenar de inmediato! 😤 · [${radTag}]`;
+      return {
+        level: 'ROUTINE',
+        priority: 4,
+        mood: 'angry',
+        badge: `⚠️ 0/${total} Hoy`,
+        badgeColor: '#f59e0b',
+        message: `Tienes 0/${total} ejercicios hoy. Recuerda que la masa muscular se pierde rápido en el espacio.`,
+        actionType: 'chat',
+        actionText: '🚀 Entrenar Ahora',
+      };
     }
   });
 
-  // Título del estado emocional / radiación / neuroconductual
-  readonly moodTitle = computed(() => {
-    if (this.nasa.isDangerous()) {
-      return '☢️ ¡Alerta de Radiación Espacial Peligrosa Activa!';
-    }
-    const nCase = this.neuro.activeCase();
-    if (nCase.id === 'PSYCHOSIS') return '🔴 Alerta Crítica: Psicosis y Confinamiento Espacial';
-    if (nCase.id === 'PANIC') return '🟠 Alerta Cardioneural: Taquicardia y Despertar';
-    if (nCase.id === 'ANXIETY') return '🟡 Ansiedad y Estrés del Sueño Detectado';
-
-    const m = this.currentMood();
-    if (m === 'happy') return 'Feliz & Radiante (Meta Cumplida)';
-    if (m === 'sad') return 'Preocupado (Entrenamiento Incompleto)';
-    return 'Enojado (Cero Ejercicios Hoy)';
-  });
+  // Atajos derivados para retrocompatibilidad
+  readonly currentMood = computed(() => this.activeState().mood);
+  readonly mood = computed(() => this.activeState().mood);
+  readonly bubbleText = computed(() => this.activeState().message);
+  readonly moodTitle = computed(() => `${this.activeState().badge} — ${this.activeState().message}`);
 
   private previousCheckCount = 0;
   private lastNeuroState = 'REPAIR_SLEEP';
 
   constructor() {
-    // Efecto reactivo para anunciar el estado de radiación de NASA DONKI cada minuto
+    // Solo reabrir la burbuja de Star Helpy ante emergencias reales (Nivel 1 o 2)
+    effect(() => {
+      const isDanger = this.nasa.isDangerous();
+      const neuroId = this.neuro.activeStateId();
+
+      if (isDanger) {
+        this.isBubbleVisible.set(true);
+      }
+
+      if (neuroId !== this.lastNeuroState) {
+        this.lastNeuroState = neuroId;
+        if (neuroId === 'PSYCHOSIS' || neuroId === 'PANIC' || neuroId === 'ANXIETY') {
+          this.isBubbleVisible.set(true);
+        }
+      }
+    });
+
+    // Notificaciones discretas en el historial de chat para no saturar la pantalla
     effect(() => {
       const count = this.nasa.checkCount();
       if (count > this.previousCheckCount && count > 1) {
         this.previousCheckCount = count;
-        this.isBubbleVisible.set(true);
-
-        const timeStr = this.nasa.lastCheckedTime().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        const isDanger = this.nasa.isDangerous();
-        const headline = this.nasa.radiationHeadline();
-
-        if (isDanger) {
+        if (this.nasa.isDangerous()) {
+          const timeStr = this.nasa.lastCheckedTime().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
           this.addMessage(
             'helpy',
-            `☢️ [${timeStr}] ¡ALERTA DE RADIACIÓN PELIGROSA NASA DONKI! ${headline}. No realizar caminatas espaciales (EVA). Permanecer en compartimentos blindados.`,
+            `☢️ [${timeStr}] ALERTA CRÍTICA NASA DONKI: Flujo de protones energéticos peligroso (>1000 pfu). Refugio obligatorio.`,
             true
           );
         }
       } else {
         this.previousCheckCount = count;
-      }
-    });
-
-    // Efecto reactivo para reaccionar a cambios en los casos neuroconductuales simulados
-    effect(() => {
-      const curr = this.neuro.activeStateId();
-      if (curr !== this.lastNeuroState) {
-        this.lastNeuroState = curr;
-        this.isBubbleVisible.set(true);
-        const nCase = this.neuro.activeCase();
-        if (curr === 'PSYCHOSIS' || curr === 'PANIC') {
-          this.addMessage(
-            'helpy',
-            `🚨 ¡ALERTA CLÍNICA [${nCase.name}]! Frecuencia en reposo: ${this.neuro.liveLpm()} LPM.\n\n${nCase.clinicalDescription}\n\nRecomendación: Inicia Respiración 4-7-8 para calmar la amígdala.`,
-            true
-          );
-        }
       }
     });
   }
@@ -264,6 +332,14 @@ export class StarPetComponent implements OnInit {
 
   closeChat(): void {
     this.isChatOpen.set(false);
+  }
+
+  onActionButtonClick(): void {
+    if (this.activeState().actionType === 'breathe') {
+      this.neuro.openBreathingExercise();
+    } else {
+      this.toggleChat();
+    }
   }
 
   dismissBubble(event: Event): void {

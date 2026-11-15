@@ -9,20 +9,18 @@
   @if (isBubbleVisible() && !isChatOpen()) {
     <div
       class="pet-speech-bubble"
-      [class]="currentMood()"
-      [class.radiation-danger-bubble]="nasa.isDangerous()"
-      [class.neuro-alert-bubble]="!nasa.isDangerous() && neuro.activeStateId() !== 'REPAIR_SLEEP'"
+      [class]="activeState().mood"
+      [class.priority-critical]="activeState().priority === 1 || activeState().priority === 2"
     >
       <div class="bubble-header">
         <div class="sender-info">
           <span class="bubble-sender">⭐ Star Helpy</span>
-          @if (nasa.isDangerous()) {
-            <span class="danger-tag-pill">☢️ ¡PELIGRO!</span>
-          } @else if (neuro.activeStateId() !== 'REPAIR_SLEEP') {
-            <span class="danger-tag-pill neuro-tag-pill" [style.background]="neuro.activeCase().helpyAuraColor">
-              {{ neuro.activeCase().helpyBadge }}
-            </span>
-          }
+          <span
+            class="header-state-pill"
+            [style.background]="activeState().badgeColor"
+          >
+            {{ activeState().badge }}
+          </span>
         </div>
         <button
           class="pet-bubble-close"
@@ -33,54 +31,31 @@
         </button>
       </div>
 
-      <!-- TEXTO PRINCIPAL DE LA MASCOTA -->
-      <p class="bubble-message">{{ bubbleText() }}</p>
+      <!-- TEXTO PRINCIPAL DE LA MASCOTA (CONCISO Y DIRECTO) -->
+      <p class="bubble-message">{{ activeState().message }}</p>
 
-      <!-- ACCIÓN DIRECTA SI HAY ALTERACIÓN NEUROCONDUCTUAL -->
-      @if (neuro.activeStateId() !== 'REPAIR_SLEEP') {
-        <div class="bubble-neuro-action">
-          <button class="neuro-breathe-btn" (click)="neuro.openBreathingExercise()">
-            🫁 Iniciar Respiración 4-7-8
-          </button>
-        </div>
-      }
-
-      <!-- TARJETA EN TIEMPO REAL: NASA DONKI (MONITOREO CADA 1 MINUTO) -->
-      <div class="donki-radiation-card" [class]="nasa.radiationLevel().toLowerCase()">
-        <div class="donki-card-top">
-          <span class="donki-title">
-            <span class="satellite-icon">🛰️</span> NASA DONKI
-          </span>
-          <span class="donki-badge" [class]="nasa.radiationLevel().toLowerCase()">
-            @if (nasa.isDangerous()) {
-              ☢️ PELIGROSO
-            } @else if (nasa.radiationLevel() === 'WARNING') {
-              🟡 PRECAUCIÓN
-            } @else {
-              🛡️ SEGURO
-            }
-          </span>
-        </div>
-
-        <p class="donki-desc">{{ nasa.radiationHeadline() }}</p>
-
-        <div class="donki-card-bottom">
-          <span class="donki-timer" title="Actualización automática cada 60 segundos">
-            ⏳ Próx. escaneo: <strong>{{ nasa.secondsUntilNextCheck() }}s</strong>
-          </span>
-          <button
-            class="refresh-donki-btn"
-            (click)="refreshDonki($event)"
-            title="Consultar NASA DONKI ahora"
-          >
-            🔄
-          </button>
-        </div>
+      <!-- MICRO-TELEMETRÍA DISCRETA DE 1 LÍNEA (DONKI + LPM) -->
+      <div class="bubble-telemetry-strip">
+        <span
+          class="telemetry-pill"
+          [class]="nasa.radiationLevel().toLowerCase()"
+          title="Clima espacial NASA DONKI"
+        >
+          🛰️ {{ nasa.radiationLevel() === 'SAFE' ? 'DONKI Nominal' : (nasa.radiationLevel() === 'WARNING' ? 'DONKI Alerta' : 'DONKI Peligro') }}
+        </span>
+        <span class="telemetry-pill neuro-pill" title="Frecuencia cardíaca en reposo">
+          🧠 {{ neuro.liveLpm() }} LPM
+        </span>
       </div>
 
+      <!-- BOTÓN DE ACCIÓN CONTEXTUAL ÚNICO -->
       <div class="bubble-footer">
-        <button class="chat-open-btn" (click)="toggleChat()">
-          💬 Chatear con Helpy
+        <button
+          class="context-action-btn"
+          [class.breathe]="activeState().actionType === 'breathe'"
+          (click)="onActionButtonClick()"
+        >
+          {{ activeState().actionText }}
         </button>
       </div>
 
@@ -92,19 +67,11 @@
   <!-- MASCOTA ESTRELLA ANIMADA (SVG INTERACTIVO CON EXPRESIONES EMOCIONALES) -->
   <div
     class="star-mascot"
-    [class]="currentMood()"
-    [class.radiation-hazard-star]="nasa.isDangerous()"
-    [class.neuro-alert-star]="!nasa.isDangerous() && neuro.activeStateId() !== 'REPAIR_SLEEP'"
+    [class]="activeState().mood"
+    [class.priority-critical-star]="activeState().priority === 1 || activeState().priority === 2"
     (click)="onStarClick()"
-    [title]="'Star Helpy (' + moodTitle() + ') — Arrástrame o haz clic para chatear'"
+    [title]="'Star Helpy · ' + activeState().badge + ' (Clic para chatear, arrastrar para mover)'"
   >
-    @if (nasa.isDangerous()) {
-      <div class="hazard-top-banner">☢️ RADIACIÓN PELIGROSA</div>
-    } @else if (neuro.activeStateId() !== 'REPAIR_SLEEP') {
-      <div class="hazard-top-banner neuro-banner" [style.background]="neuro.activeCase().helpyAuraColor">
-        {{ neuro.activeCase().helpyBadge }}
-      </div>
-    }
     <svg
       viewBox="0 0 100 100"
       width="78"
@@ -258,17 +225,17 @@
     <!-- Píldora de estado de la mascota -->
     <div
       class="mood-badge"
-      [class]="currentMood()"
-      [style.background]="neuro.activeStateId() !== 'REPAIR_SLEEP' ? neuro.activeCase().helpyAuraColor : null"
+      [class]="activeState().mood"
+      [style.background]="activeState().badgeColor"
     >
-      {{ neuro.activeStateId() !== 'REPAIR_SLEEP' ? neuro.activeCase().helpyBadge : (currentMood() === 'happy' ? '⭐ Feliz' : (currentMood() === 'sad' ? '🥺 Triste' : '😡 ¡A entrenar!')) }}
+      {{ activeState().badge }}
     </div>
 
     <!-- Aura de partículas -->
     <div
       class="pet-glow-aura"
-      [class]="currentMood()"
-      [style.background]="neuro.activeStateId() !== 'REPAIR_SLEEP' ? neuro.activeCase().helpyAuraColor : null"
+      [class]="activeState().mood"
+      [style.background]="activeState().badgeColor"
     ></div>
   </div>
 
@@ -278,11 +245,11 @@
       <!-- Header del Chat -->
       <div class="chat-header">
         <div class="chat-header-profile">
-          <div class="avatar-mini" [class]="currentMood()">⭐</div>
+          <div class="avatar-mini" [class]="activeState().mood">⭐</div>
           <div class="header-texts">
             <h4>Star Helpy</h4>
             <span class="status-indicator">
-              <span class="dot" [class.danger-dot]="nasa.isDangerous() || neuro.activeStateId() === 'PSYCHOSIS'"></span> En línea · {{ moodTitle() }}
+              <span class="dot" [class.danger-dot]="activeState().priority === 1 || activeState().priority === 2"></span> En línea · {{ activeState().badge }}
             </span>
           </div>
         </div>
@@ -319,7 +286,7 @@
             [class.alert-row]="msg.isAlert"
           >
             @if (msg.sender === 'helpy') {
-              <div class="helpy-msg-avatar" [class]="msg.mood || mood()">
+              <div class="helpy-msg-avatar" [class]="msg.mood || activeState().mood">
                 {{ msg.isAlert ? '☢️' : '⭐' }}
               </div>
             }

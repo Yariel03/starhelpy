@@ -14,19 +14,19 @@
   }
 }
 
-// Burbuja de diálogo (Speech Bubble)
+// Burbuja de diálogo compacta (Speech Bubble)
 .pet-speech-bubble {
   position: absolute;
-  bottom: 88px;
-  right: -30px;
-  width: 260px;
+  bottom: 84px;
+  right: -25px;
+  width: 245px;
   background: #ffffff;
-  border-radius: 16px;
-  padding: 0.85rem 1rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), 0 0 1px rgba(0,0,0,0.1);
+  border-radius: 14px;
+  padding: 0.75rem 0.9rem;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18), 0 0 1px rgba(0,0,0,0.1);
   display: flex;
   flex-direction: column;
-  gap: 0.45rem;
+  gap: 0.4rem;
   border: 2px solid #facc15;
   animation: bubblePop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   pointer-events: auto;
@@ -46,43 +46,11 @@
     background: linear-gradient(180deg, #ffffff 0%, #fef2f2 100%);
   }
 
-  &.radiation-danger-bubble {
+  &.priority-critical {
     border-color: #ef4444 !important;
     background: linear-gradient(180deg, #ffffff 0%, #fff1f2 100%) !important;
     box-shadow: 0 10px 30px rgba(239, 68, 68, 0.35), 0 0 20px rgba(239, 68, 68, 0.45);
     animation: bubbleDangerPulse 1.4s infinite alternate ease-in-out;
-  }
-
-  &.neuro-alert-bubble {
-    border-color: #f97316;
-    box-shadow: 0 10px 30px rgba(249, 115, 22, 0.25), 0 0 16px rgba(249, 115, 22, 0.2);
-  }
-
-  .bubble-neuro-action {
-    margin: 0.2rem 0;
-
-    .neuro-breathe-btn {
-      width: 100%;
-      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-      color: #ffffff;
-      border: none;
-      border-radius: 8px;
-      padding: 6px 10px;
-      font-size: 0.74rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.35rem;
-      box-shadow: 0 2px 6px rgba(16, 185, 129, 0.35);
-      transition: all 0.2s ease;
-
-      &:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 10px rgba(16, 185, 129, 0.45);
-      }
-    }
   }
 
   .bubble-header {
@@ -93,26 +61,26 @@
     .sender-info {
       display: flex;
       align-items: center;
-      gap: 0.4rem;
+      gap: 0.35rem;
+      flex-wrap: wrap;
     }
 
     .bubble-sender {
       font-size: 0.72rem;
       font-weight: 800;
       color: #0f172a;
-      text-transform: uppercase;
-      letter-spacing: 0.4px;
+      letter-spacing: 0.2px;
     }
 
-    .danger-tag-pill {
+    .header-state-pill {
       font-size: 0.6rem;
       font-weight: 800;
-      background: #ef4444;
       color: #ffffff;
-      padding: 1px 6px;
+      padding: 1px 7px;
       border-radius: 999px;
-      animation: blinkPill 0.9s infinite alternate;
-      letter-spacing: 0.3px;
+      white-space: nowrap;
+      letter-spacing: 0.2px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.15);
     }
 
     .pet-bubble-close {
@@ -121,7 +89,7 @@
       font-size: 0.8rem;
       color: #94a3b8;
       cursor: pointer;
-      padding: 0 4px;
+      padding: 0 3px;
       line-height: 1;
 
       &:hover {
@@ -132,131 +100,83 @@
 
   .bubble-message {
     margin: 0;
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     color: #334155;
     line-height: 1.35;
-    font-weight: 500;
+    font-weight: 600;
   }
 
-  // Tarjeta de Radiación NASA DONKI en la burbuja
-  .donki-radiation-card {
-    background: #f8fafc;
-    border-radius: 10px;
-    padding: 0.45rem 0.6rem;
-    border: 1px solid #e2e8f0;
+  // Micro-telemetría limpia de 1 sola línea
+  .bubble-telemetry-strip {
     display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
+    align-items: center;
+    gap: 0.35rem;
+    margin: 0.15rem 0;
+    flex-wrap: wrap;
 
-    &.danger {
-      background: #fff1f2;
-      border-color: #fecdd3;
-    }
-    &.warning {
-      background: #fffbeb;
-      border-color: #fde68a;
-    }
-    &.safe {
-      background: #f0fdf4;
-      border-color: #bbf7d0;
-    }
-
-    .donki-card-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      .donki-title {
-        font-size: 0.68rem;
-        font-weight: 800;
-        color: #334155;
-        display: flex;
-        align-items: center;
-        gap: 0.25rem;
-
-        .satellite-icon {
-          font-size: 0.78rem;
-        }
-      }
-
-      .donki-badge {
-        font-size: 0.62rem;
-        font-weight: 800;
-        padding: 1px 6px;
-        border-radius: 999px;
-
-        &.danger {
-          background: #ef4444;
-          color: #ffffff;
-        }
-        &.warning {
-          background: #f59e0b;
-          color: #ffffff;
-        }
-        &.safe {
-          background: #10b981;
-          color: #ffffff;
-        }
-      }
-    }
-
-    .donki-desc {
-      font-size: 0.68rem;
+    .telemetry-pill {
+      font-size: 0.62rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: #f1f5f9;
       color: #475569;
-      margin: 0;
-      line-height: 1.25;
-    }
+      border: 1px solid rgba(0, 0, 0, 0.05);
 
-    .donki-card-bottom {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.64rem;
-      color: #64748b;
-
-      .donki-timer {
-        strong {
-          color: #0f172a;
-        }
+      &.safe {
+        background: #ecfdf5;
+        color: #047857;
       }
-
-      .refresh-donki-btn {
-        background: none;
-        border: none;
-        cursor: pointer;
-        font-size: 0.72rem;
-        padding: 0;
-        opacity: 0.7;
-        transition: transform 0.2s, opacity 0.2s;
-
-        &:hover {
-          transform: rotate(45deg);
-          opacity: 1;
-        }
+      &.warning {
+        background: #fffbeb;
+        color: #b45309;
+      }
+      &.danger {
+        background: #fef2f2;
+        color: #b91c1c;
+        animation: blinkPill 0.9s infinite alternate;
+      }
+      &.neuro-pill {
+        background: #eef2ff;
+        color: #4338ca;
       }
     }
   }
 
+  // Botón de acción único contextual
   .bubble-footer {
     display: flex;
-    justify-content: flex-end;
     margin-top: 0.2rem;
 
-    .chat-open-btn {
-      background: #2563eb;
-      color: #ffffff;
+    .context-action-btn {
+      width: 100%;
       border: none;
-      border-radius: 20px;
+      border-radius: 8px;
       font-size: 0.72rem;
       font-weight: 700;
-      padding: 4px 10px;
+      padding: 6px 10px;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.3rem;
       transition: all 0.2s ease;
+      background: #2563eb;
+      color: #ffffff;
       box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
 
       &:hover {
-        background: #1d4ed8;
         transform: translateY(-1px);
+        filter: brightness(1.08);
+      }
+
+      &.breathe {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        box-shadow: 0 2px 6px rgba(16, 185, 129, 0.35);
+
+        &:hover {
+          box-shadow: 0 4px 10px rgba(16, 185, 129, 0.45);
+        }
       }
     }
   }
@@ -324,44 +244,12 @@
     animation: angryRumble 0.35s infinite ease-in-out;
   }
 
-  &.radiation-hazard-star {
+  &.priority-critical-star {
     animation: hazardStarRumble 0.4s infinite ease-in-out !important;
 
     .pet-glow-aura {
-      background: #ef4444 !important;
-      opacity: 0.8 !important;
+      opacity: 0.85 !important;
       filter: blur(14px) !important;
-    }
-  }
-
-  &.neuro-alert-star {
-    animation: sadSway 2s infinite ease-in-out;
-
-    .pet-glow-aura {
-      opacity: 0.7;
-      filter: blur(16px);
-    }
-  }
-
-  .hazard-top-banner {
-    position: absolute;
-    top: -18px;
-    font-size: 0.6rem;
-    font-weight: 900;
-    background: #ef4444;
-    color: #ffffff;
-    padding: 2px 8px;
-    border-radius: 999px;
-    white-space: nowrap;
-    box-shadow: 0 0 12px rgba(239, 68, 68, 0.85);
-    animation: blinkPill 0.8s infinite alternate;
-    z-index: 10;
-    border: 1px solid #ffffff;
-    letter-spacing: 0.4px;
-
-    &.neuro-banner {
-      box-shadow: 0 0 10px rgba(249, 115, 22, 0.6);
-      animation: blinkPill 1.2s infinite alternate;
     }
   }
 
@@ -370,15 +258,17 @@
     bottom: -6px;
     font-size: 0.65rem;
     font-weight: 800;
-    padding: 2px 8px;
+    padding: 2px 9px;
     border-radius: 999px;
     color: #ffffff;
     white-space: nowrap;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
     border: 1.5px solid #ffffff;
+    letter-spacing: 0.2px;
+    z-index: 5;
 
     &.happy {
-      background: linear-gradient(135deg, #f59e0b, #ea580c);
+      background: linear-gradient(135deg, #10b981, #059669);
     }
     &.sad {
       background: linear-gradient(135deg, #3b82f6, #1d4ed8);
