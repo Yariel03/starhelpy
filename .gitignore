@@ -3,6 +3,7 @@ node_modules/
 dist/
 venv/
 *.zip
+astrobaseline.zip
 .vscode/
 .DS_Store
 astrobaseline/
