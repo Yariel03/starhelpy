@@ -1,8 +1,10 @@
 .reward-streak-card {
-  background: #ffffff;
+  background: var(--card-glass-bg);
+  backdrop-filter: var(--card-glass-blur);
+  -webkit-backdrop-filter: var(--card-glass-blur);
   border-radius: 16px;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.06);
+  border: var(--card-glass-border);
+  box-shadow: var(--card-glass-shadow);
   padding: 1.5rem;
   margin-top: 1.25rem;
   margin-bottom: 1.25rem;
@@ -436,8 +438,10 @@
     }
 
     .exercise-accordion-card {
-      background: #ffffff;
-      border: 1.5px solid #e2e8f0;
+      background: rgba(255, 255, 255, 0.70);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1.5px solid rgba(255, 255, 255, 0.75);
       border-radius: 12px;
       overflow: hidden;
       cursor: pointer;

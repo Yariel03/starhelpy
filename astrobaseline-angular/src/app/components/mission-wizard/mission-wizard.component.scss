@@ -21,18 +21,19 @@
 }
 
 .wizard-modal {
-  background: rgba(255, 255, 255, 0.98);
-  backdrop-filter: blur(16px);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   width: 100%;
   max-width: 900px;
   max-height: 90vh;
   margin: auto;
   border-radius: 16px;
-  box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 25px 60px -10px rgba(19, 5, 131, 0.35);
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border: 1px solid rgba(226, 232, 240, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.7);
   animation: modalEnter 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   box-sizing: border-box;
 
@@ -389,8 +390,10 @@
   }
 
   .dest-card {
-    background: #ffffff;
-    border: 2px solid #e2e8f0;
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 2px solid rgba(255, 255, 255, 0.8);
     border-radius: 12px;
     overflow: hidden;
     cursor: pointer;
@@ -400,7 +403,7 @@
 
     &:hover {
       transform: translateY(-4px);
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 10px 20px rgba(19, 5, 131, 0.12);
       border-color: #93c5fd;
     }
 
@@ -471,8 +474,10 @@
   }
 
   .goal-card {
-    background: #ffffff;
-    border: 2px solid #e2e8f0;
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 2px solid rgba(255, 255, 255, 0.8);
     border-radius: 14px;
     overflow: hidden;
     cursor: pointer;
@@ -482,7 +487,7 @@
 
     &:hover {
       transform: translateY(-4px);
-      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.09);
+      box-shadow: 0 12px 24px rgba(19, 5, 131, 0.12);
       border-color: #93c5fd;
     }
 

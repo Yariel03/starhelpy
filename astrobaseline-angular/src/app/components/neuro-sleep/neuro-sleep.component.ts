@@ -222,13 +222,14 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
 
     // Cabecera superior
     .neuro-header-banner {
-      background: rgba(255, 255, 255, 0.96);
-      backdrop-filter: blur(12px);
+      background: var(--card-glass-bg);
+      backdrop-filter: var(--card-glass-blur);
+      -webkit-backdrop-filter: var(--card-glass-blur);
       border-radius: 14px;
       padding: 1.25rem 1.75rem;
-      border: 1px solid rgba(226, 232, 240, 0.8);
+      border: var(--card-glass-border);
       border-left: 6px solid #10b981;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+      box-shadow: var(--card-glass-shadow);
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -320,11 +321,13 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
 
     // Panel del Simulador
     .simulator-panel-card {
-      background: #ffffff;
-      border: 1.5px solid #e2e8f0;
+      background: var(--card-glass-bg);
+      backdrop-filter: var(--card-glass-blur);
+      -webkit-backdrop-filter: var(--card-glass-blur);
+      border: var(--card-glass-border);
       border-radius: 14px;
       padding: 1.1rem 1.4rem;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+      box-shadow: var(--card-glass-shadow);
       display: flex;
       flex-direction: column;
       gap: 0.85rem;
@@ -452,11 +455,13 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
       }
 
       .column-card {
-        background: #ffffff;
-        border: 1px solid #e2e8f0;
+        background: var(--card-glass-bg);
+        backdrop-filter: var(--card-glass-blur);
+        -webkit-backdrop-filter: var(--card-glass-blur);
+        border: var(--card-glass-border);
         border-radius: 14px;
         padding: 1.25rem;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+        box-shadow: var(--card-glass-shadow);
         display: flex;
         flex-direction: column;
         gap: 1rem;
@@ -554,8 +559,10 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
       // Gráfica de Línea de Tiempo de 8 Horas
       .timeline-card {
         .timeline-chart-wrapper {
-          background: #f8fafc;
-          border: 1px solid #e2e8f0;
+          background: rgba(248, 250, 252, 0.65);
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
+          border: 1px solid rgba(255, 255, 255, 0.7);
           border-radius: 12px;
           padding: 1.25rem 0.75rem 0.75rem 0.75rem;
 

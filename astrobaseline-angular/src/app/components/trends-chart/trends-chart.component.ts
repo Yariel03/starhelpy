@@ -23,10 +23,13 @@ import { IndicatorKey } from '../../core/models/indicator.model';
     .chart-wrapper {
       width: 100%;
       min-height: 460px;
-      background: #ffffff;
+      background: var(--card-glass-bg);
+      backdrop-filter: var(--card-glass-blur);
+      -webkit-backdrop-filter: var(--card-glass-blur);
       border-radius: 12px;
       padding: 0.5rem;
-      border: 1px solid #e2e8f0;
+      border: var(--card-glass-border);
+      box-shadow: var(--card-glass-shadow);
     }
     .plotly-container {
       width: 100%;
@@ -192,8 +195,8 @@ export class TrendsChartComponent {
       annotations,
       margin: { t: 50, r: 30, l: 60, b: 50 },
       hovermode: 'closest',
-      plot_bgcolor: '#ffffff',
-      paper_bgcolor: '#ffffff',
+      plot_bgcolor: 'transparent',
+      paper_bgcolor: 'transparent',
     };
 
     Plotly.react(this.chartContainer.nativeElement, traces, layout, {
