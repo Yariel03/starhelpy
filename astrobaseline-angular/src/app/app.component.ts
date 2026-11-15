@@ -95,9 +95,9 @@ export class AppComponent {
   });
 
   // Rango de tiempo seleccionado para el historial de datos
-  readonly tableTimeRange = signal<'7days' | '14days' | 'all'>('7days');
+  readonly tableTimeRange = signal<'7days' | '14days' | '30days' | 'all'>('7days');
 
-  setTimeRange(range: '7days' | '14days' | 'all'): void {
+  setTimeRange(range: '7days' | '14days' | '30days' | 'all'): void {
     this.tableTimeRange.set(range);
   }
 
@@ -120,6 +120,8 @@ export class AppComponent {
       filtered = sorted.slice(0, 7);
     } else if (range === '14days') {
       filtered = sorted.slice(0, 14);
+    } else if (range === '30days') {
+      filtered = sorted.slice(0, 30);
     }
 
     return filtered.map((r) => {
