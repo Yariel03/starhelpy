@@ -46,6 +46,7 @@ export interface NeuroCaseConfig {
 export class NeuroSleepService {
   // Estado activo de la simulación
   readonly activeStateId = signal<NeuroStateId>('REPAIR_SLEEP');
+  readonly userExplicitCase = signal<NeuroStateId | null>(null);
 
   // LPM en tiempo real con leve variabilidad fisiológica (+/- 2 bpm)
   readonly liveLpm = signal<number>(50);
@@ -262,6 +263,7 @@ export class NeuroSleepService {
   // Cambiar el caso activo
   simulateCase(id: NeuroStateId): void {
     this.activeStateId.set(id);
+    this.userExplicitCase.set(id);
     this.liveLpm.set(this.cases[id].lpmAverage);
   }
 

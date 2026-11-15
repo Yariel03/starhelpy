@@ -80,25 +80,39 @@
       xmlns="http://www.w3.org/2000/svg"
     >
       <defs>
-        <!-- Gradiente Feliz (Dorado Solar) -->
-        <linearGradient id="happyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <!-- 1. Dorado Solar (celebrate, motivated, waiting) -->
+        <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stop-color="#fef08a" />
           <stop offset="45%" stop-color="#facc15" />
           <stop offset="100%" stop-color="#f59e0b" />
         </linearGradient>
 
-        <!-- Gradiente Triste (Azul Melancólico) -->
-        <linearGradient id="sadGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#bfdbfe" />
-          <stop offset="50%" stop-color="#60a5fa" />
-          <stop offset="100%" stop-color="#3b82f6" />
+        <!-- 2. Esmeralda Sereno (peaceful / sueño reparador) -->
+        <linearGradient id="emeraldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#a7f3d0" />
+          <stop offset="50%" stop-color="#34d399" />
+          <stop offset="100%" stop-color="#059669" />
         </linearGradient>
 
-        <!-- Gradiente Enojado (Fuego Carmesí) -->
-        <linearGradient id="angryGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <!-- 3. Ámbar Alerta (anxious / ansiedad) -->
+        <linearGradient id="amberGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#fef3c7" />
+          <stop offset="50%" stop-color="#fbbf24" />
+          <stop offset="100%" stop-color="#d97706" />
+        </linearGradient>
+
+        <!-- 4. Naranja Shock (panic / taquicardia) -->
+        <linearGradient id="orangeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#fed7aa" />
+          <stop offset="50%" stop-color="#fb923c" />
+          <stop offset="100%" stop-color="#ea580c" />
+        </linearGradient>
+
+        <!-- 5. Carmesí Sobrecarga (psychosis & danger) -->
+        <linearGradient id="crimsonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stop-color="#fca5a5" />
           <stop offset="45%" stop-color="#ef4444" />
-          <stop offset="100%" stop-color="#b91c1c" />
+          <stop offset="100%" stop-color="#991b1b" />
         </linearGradient>
 
         <!-- Sombra y resplandor -->
@@ -121,103 +135,167 @@
            L 5,35
            L 38,32
            Z"
-        [attr.fill]="currentMood() === 'happy' ? 'url(#happyGrad)' : (currentMood() === 'sad' ? 'url(#sadGrad)' : 'url(#angryGrad)')"
+        [attr.fill]="currentEmotion() === 'peaceful' ? 'url(#emeraldGrad)' : (currentEmotion() === 'anxious' ? 'url(#amberGrad)' : (currentEmotion() === 'panic' ? 'url(#orangeGrad)' : ((currentEmotion() === 'psychosis' || currentEmotion() === 'danger') ? 'url(#crimsonGrad)' : 'url(#goldGrad)')))"
         stroke="#ffffff"
         stroke-width="2.5"
         stroke-linejoin="round"
         class="star-body"
       />
 
-      <!-- ================= EXPRESIÓN 1: FELIZ ================= -->
-      @if (currentMood() === 'happy') {
-        <!-- Ojos con brillo de estrella -->
-        <ellipse cx="40" cy="46" rx="4.5" ry="6" fill="#1e293b" />
-        <circle cx="38.5" cy="44" r="2" fill="#ffffff" />
-        <circle cx="41.5" cy="48" r="1" fill="#ffffff" />
+      <!-- ================= EMOCIÓN 1: CELEBRATE (3/3 EJERCICIOS COMPLETADOS) ================= -->
+      @if (currentEmotion() === 'celebrate') {
+        <!-- Ojos con estrellas brillantes ✨ doradas -->
+        <path d="M 40,40 L 42,46 L 48,46 L 43,50 L 45,56 L 40,52 L 35,56 L 37,50 L 32,46 L 38,46 Z" fill="#ffffff" stroke="#0f172a" stroke-width="1.2" />
+        <path d="M 60,40 L 62,46 L 68,46 L 63,50 L 65,56 L 60,52 L 55,56 L 57,50 L 52,46 L 58,46 Z" fill="#ffffff" stroke="#0f172a" stroke-width="1.2" />
 
-        <ellipse cx="60" cy="46" rx="4.5" ry="6" fill="#1e293b" />
-        <circle cx="58.5" cy="44" r="2" fill="#ffffff" />
-        <circle cx="61.5" cy="48" r="1" fill="#ffffff" />
+        <!-- Mejillas sonrojadas de fiesta -->
+        <ellipse cx="32" cy="53" rx="4" ry="2.2" fill="#f43f5e" opacity="0.6" />
+        <ellipse cx="68" cy="53" rx="4" ry="2.2" fill="#f43f5e" opacity="0.6" />
 
-        <!-- Mejillas sonrojadas -->
-        <ellipse cx="33" cy="52" rx="3.5" ry="2" fill="#f43f5e" opacity="0.45" />
-        <ellipse cx="67" cy="52" rx="3.5" ry="2" fill="#f43f5e" opacity="0.45" />
+        <!-- Gran sonrisa de victoria con lengua -->
+        <path d="M 39,53 Q 50,67 61,53 Z" fill="#1e293b" />
+        <path d="M 45,60 Q 50,67 55,60 Z" fill="#f43f5e" />
 
-        <!-- Sonrisa amplia y alegre -->
-        <path
-          d="M 41,54 Q 50,65 59,54"
-          fill="none"
-          stroke="#1e293b"
-          stroke-width="2.5"
-          stroke-linecap="round"
-        />
-        <!-- Lengüita feliz -->
-        <path
-          d="M 46,59 Q 50,64 54,59 Z"
-          fill="#f43f5e"
-          opacity="0.8"
-        />
+        <!-- Destellos de estrellas alrededor -->
+        <circle cx="20" cy="30" r="1.5" fill="#fef08a" />
+        <circle cx="80" cy="30" r="1.5" fill="#fef08a" />
       }
 
-      <!-- ================= EXPRESIÓN 2: TRISTE ================= -->
-      @if (currentMood() === 'sad') {
-        <!-- Cejas caídas preocupadas -->
-        <path d="M 35,39 Q 41,43 45,42" fill="none" stroke="#1e293b" stroke-width="2" stroke-linecap="round" />
-        <path d="M 65,39 Q 59,43 55,42" fill="none" stroke="#1e293b" stroke-width="2" stroke-linecap="round" />
+      <!-- ================= EMOCIÓN 2: MOTIVATED (1-2/3 EJERCICIOS - EN PROGRESO) ================= -->
+      @if (currentEmotion() === 'motivated') {
+        <!-- Vincha deportiva sobre la frente -->
+        <path d="M 28,34 Q 50,30 72,34" fill="none" stroke="#2563eb" stroke-width="4" stroke-linecap="round" />
+        <path d="M 28,34 Q 50,30 72,34" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" />
 
-        <!-- Ojos caídos / lagrimosos -->
-        <ellipse cx="40" cy="48" rx="4" ry="5" fill="#1e293b" />
-        <circle cx="39" cy="46" r="1.5" fill="#ffffff" />
+        <!-- Ojo guiñando en arco pícaro (izquierdo) -->
+        <path d="M 35,47 Q 40,43 45,47" fill="none" stroke="#1e293b" stroke-width="3" stroke-linecap="round" />
 
-        <ellipse cx="60" cy="48" rx="4" ry="5" fill="#1e293b" />
-        <circle cx="59" cy="46" r="1.5" fill="#ffffff" />
+        <!-- Ojo abierto enfocado y decidido (derecho) -->
+        <ellipse cx="60" cy="47" rx="4.5" ry="6" fill="#1e293b" />
+        <circle cx="58.5" cy="45" r="2" fill="#ffffff" />
+        <circle cx="61.5" cy="49" r="1" fill="#ffffff" />
 
-        <!-- Gota de lágrima -->
-        <path
-          d="M 33,53 C 33,51 35,48 35,48 C 35,48 37,51 37,53 C 37,55 35,56 34,56 C 33,56 33,54 33,53 Z"
-          fill="#38bdf8"
-        />
+        <!-- Mejillas activas -->
+        <ellipse cx="67" cy="53" rx="3.5" ry="2" fill="#f43f5e" opacity="0.45" />
 
-        <!-- Boquita triste puchero -->
-        <path
-          d="M 43,60 Q 50,54 57,60"
-          fill="none"
-          stroke="#1e293b"
-          stroke-width="2.5"
-          stroke-linecap="round"
-        />
+        <!-- Sonrisa de determinación -->
+        <path d="M 42,55 Q 50,63 58,56" fill="none" stroke="#1e293b" stroke-width="2.5" stroke-linecap="round" />
       }
 
-      <!-- ================= EXPRESIÓN 3: ENOJADO ================= -->
-      @if (currentMood() === 'angry') {
-        <!-- Cejas afiladas de enojo -->
+      <!-- ================= EMOCIÓN 3: WAITING (0 EJERCICIOS - OJITOS TIERNOS ANIME) ================= -->
+      @if (currentEmotion() === 'waiting') {
+        <!-- Ojos gigantes brillantes y tiernos esperando entrenar -->
+        <ellipse cx="40" cy="46" rx="5.5" ry="7" fill="#1e293b" />
+        <circle cx="38.5" cy="43" r="2.5" fill="#ffffff" />
+        <circle cx="42" cy="48" r="1.3" fill="#ffffff" />
+
+        <ellipse cx="60" cy="46" rx="5.5" ry="7" fill="#1e293b" />
+        <circle cx="58.5" cy="43" r="2.5" fill="#ffffff" />
+        <circle cx="62" cy="48" r="1.3" fill="#ffffff" />
+
+        <!-- Mejillas tiernas -->
+        <ellipse cx="32" cy="53" rx="3.5" ry="2" fill="#f43f5e" opacity="0.5" />
+        <ellipse cx="68" cy="53" rx="3.5" ry="2" fill="#f43f5e" opacity="0.5" />
+
+        <!-- Boquita en puchero tierno "¿empezamos?" -->
+        <path d="M 45,57 Q 50,54 55,57" fill="none" stroke="#1e293b" stroke-width="2.2" stroke-linecap="round" />
+      }
+
+      <!-- ================= EMOCIÓN 4: PEACEFUL (SUEÑO REPARADOR 50 LPM) ================= -->
+      @if (currentEmotion() === 'peaceful') {
+        <!-- Ojos serenos cerrados en arco de descanso ^_^ -->
+        <path d="M 34,48 Q 40,42 46,48" fill="none" stroke="#064e3b" stroke-width="2.5" stroke-linecap="round" />
+        <path d="M 54,48 Q 60,42 66,48" fill="none" stroke="#064e3b" stroke-width="2.5" stroke-linecap="round" />
+
+        <!-- Mejillas relajadas -->
+        <ellipse cx="32" cy="52" rx="3" ry="1.8" fill="#10b981" opacity="0.4" />
+        <ellipse cx="68" cy="52" rx="3" ry="1.8" fill="#10b981" opacity="0.4" />
+
+        <!-- Boquita plácida -->
+        <path d="M 45,55 Q 50,58 55,55" fill="none" stroke="#064e3b" stroke-width="2" stroke-linecap="round" />
+
+        <!-- Letras Zzz flotando suavemente -->
+        <text x="68" y="32" font-size="9" font-weight="900" fill="#047857" opacity="0.9">Z</text>
+        <text x="74" y="24" font-size="6.5" font-weight="900" fill="#059669" opacity="0.75">z</text>
+      }
+
+      <!-- ================= EMOCIÓN 5: ANXIOUS (ANSIEDAD NOCTURNA 92 LPM) ================= -->
+      @if (currentEmotion() === 'anxious') {
+        <!-- Cejas curvadas de tensión interna -->
+        <path d="M 33,37 Q 40,32 46,38" fill="none" stroke="#78350f" stroke-width="2.6" stroke-linecap="round" />
+        <path d="M 67,37 Q 60,32 54,38" fill="none" stroke="#78350f" stroke-width="2.6" stroke-linecap="round" />
+
+        <!-- Ojos con pupilas temblorosas mirando con estrés -->
+        <ellipse cx="41" cy="47" rx="3.5" ry="4.5" fill="#1e293b" />
+        <circle cx="40" cy="45" r="1.2" fill="#ffffff" />
+
+        <ellipse cx="59" cy="47" rx="3.5" ry="4.5" fill="#1e293b" />
+        <circle cx="58" cy="45" r="1.2" fill="#ffffff" />
+
+        <!-- Gotita de sudor frío cayendo en la sien -->
+        <path d="M 70,36 C 70,34 72,31 72,31 C 72,31 74,34 74,36 C 74,38 72,39 71,39 C 70,39 70,37 70,36 Z" fill="#38bdf8" stroke="#0284c7" stroke-width="0.8" />
+
+        <!-- Boquita ondulada temblorosa de nervios ~ -->
+        <path d="M 41,58 Q 46,54 50,58 Q 54,62 59,58" fill="none" stroke="#78350f" stroke-width="2.3" stroke-linecap="round" />
+      }
+
+      <!-- ================= EMOCIÓN 6: PANIC (PÁNICO Y DESPERTAR 122 LPM) ================= -->
+      @if (currentEmotion() === 'panic') {
+        <!-- Cejas levantadas en shock -->
+        <path d="M 32,32 Q 40,26 47,33" fill="none" stroke="#7c2d12" stroke-width="2.8" stroke-linecap="round" />
+        <path d="M 68,32 Q 60,26 53,33" fill="none" stroke="#7c2d12" stroke-width="2.8" stroke-linecap="round" />
+
+        <!-- Ojos completamente desorbitados con pupilas diminutas de shock -->
+        <ellipse cx="39" cy="46" rx="6.5" ry="7.5" fill="#ffffff" stroke="#1e293b" stroke-width="2" />
+        <circle cx="39" cy="46" r="2.2" fill="#1e293b" />
+
+        <ellipse cx="61" cy="46" rx="6.5" ry="7.5" fill="#ffffff" stroke="#1e293b" stroke-width="2" />
+        <circle cx="61" cy="46" r="2.2" fill="#1e293b" />
+
+        <!-- Líneas de sobresalto / taquicardia a los lados -->
+        <line x1="26" y1="44" x2="21" y2="42" stroke="#ea580c" stroke-width="2.2" stroke-linecap="round" />
+        <line x1="74" y1="44" x2="79" y2="42" stroke="#ea580c" stroke-width="2.2" stroke-linecap="round" />
+
+        <!-- Boca abierta en O de susto -->
+        <ellipse cx="50" cy="60" rx="4.8" ry="6.5" fill="#1e293b" />
+        <ellipse cx="50" cy="62" rx="3.2" ry="3" fill="#f43f5e" />
+      }
+
+      <!-- ================= EMOCIÓN 7: PSYCHOSIS (PSICOSIS / CONFINAMIENTO 138 LPM) ================= -->
+      @if (currentEmotion() === 'psychosis') {
+        <!-- Espirales hipnóticas de delirio en ambos ojos -->
+        <path d="M 40,46 m -5,0 a 5,5 0 1,0 10,0 a 4,4 0 1,0 -8,0 a 3,3 0 1,0 6,0 a 2,2 0 1,0 -4,0" fill="none" stroke="#7f1d1d" stroke-width="1.8" />
+        <path d="M 60,46 m -5,0 a 5,5 0 1,0 10,0 a 4,4 0 1,0 -8,0 a 3,3 0 1,0 6,0 a 2,2 0 1,0 -4,0" fill="none" stroke="#7f1d1d" stroke-width="1.8" />
+
+        <!-- Relámpagos de sobrecarga eléctrica cerebral saliendo de la cabeza -->
+        <path d="M 47,8 L 50,14 L 48,15 L 53,21" fill="none" stroke="#ef4444" stroke-width="2" stroke-linejoin="round" />
+        <path d="M 66,20 L 70,24 L 68,26 L 73,31" fill="none" stroke="#ef4444" stroke-width="2" stroke-linejoin="round" />
+
+        <!-- Sonrisa torcida y errática con dientes -->
+        <path d="M 41,56 Q 48,65 59,54" fill="none" stroke="#7f1d1d" stroke-width="2.8" stroke-linecap="round" />
+        <line x1="45" y1="58" x2="45" y2="62" stroke="#7f1d1d" stroke-width="1.5" />
+        <line x1="50" y1="59" x2="50" y2="63" stroke="#7f1d1d" stroke-width="1.5" />
+        <line x1="55" y1="58" x2="55" y2="61" stroke="#7f1d1d" stroke-width="1.5" />
+      }
+
+      <!-- ================= EMOCIÓN 8: DANGER (TORMENTA SOLAR CRÍTICA >1000 PFU) ================= -->
+      @if (currentEmotion() === 'danger') {
+        <!-- Cejas afiladas rojas de alarma -->
         <path d="M 33,40 L 46,46" fill="none" stroke="#7f1d1d" stroke-width="3" stroke-linecap="round" />
         <path d="M 67,40 L 54,46" fill="none" stroke="#7f1d1d" stroke-width="3" stroke-linecap="round" />
 
-        <!-- Ojos feroces entrecerrados -->
+        <!-- Ojos feroces de peligro -->
         <ellipse cx="41" cy="49" rx="3.5" ry="4" fill="#1e293b" />
         <circle cx="40" cy="48" r="1.2" fill="#ffffff" />
 
         <ellipse cx="59" cy="49" rx="3.5" ry="4" fill="#1e293b" />
         <circle cx="60" cy="48" r="1.2" fill="#ffffff" />
 
-        <!-- Humito / Vena de enojo -->
-        <path
-          d="M 68,26 Q 73,28 72,33"
-          fill="none"
-          stroke="#ef4444"
-          stroke-width="2"
-          stroke-linecap="round"
-        />
+        <!-- Humito de advertencia -->
+        <path d="M 68,26 Q 73,28 72,33" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" />
 
-        <!-- Boca de regaño gruñona -->
-        <path
-          d="M 43,61 Q 50,57 57,61"
-          fill="none"
-          stroke="#7f1d1d"
-          stroke-width="3"
-          stroke-linecap="round"
-        />
+        <!-- Boca de regaño -->
+        <path d="M 43,61 Q 50,57 57,61" fill="none" stroke="#7f1d1d" stroke-width="3" stroke-linecap="round" />
         <line x1="45" y1="58" x2="55" y2="58" stroke="#7f1d1d" stroke-width="2" />
       }
     </svg>

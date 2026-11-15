@@ -23,9 +23,20 @@ export interface ChatMessage {
   isAlert?: boolean;
 }
 
+export type StarEmotion =
+  | 'celebrate'
+  | 'motivated'
+  | 'waiting'
+  | 'peaceful'
+  | 'anxious'
+  | 'panic'
+  | 'psychosis'
+  | 'danger';
+
 export interface HelpyPriorityState {
-  level: 'CRITICAL_RADIATION' | 'PSYCHOSIS' | 'PANIC' | 'ANXIETY' | 'RADIATION_WARNING' | 'ROUTINE';
+  level: 'CRITICAL_RADIATION' | 'PSYCHOSIS' | 'PANIC' | 'ANXIETY' | 'REPAIR_SLEEP' | 'RADIATION_WARNING' | 'ROUTINE';
   priority: 1 | 2 | 3 | 4;
+  emotion: StarEmotion;
   mood: 'happy' | 'sad' | 'angry';
   badge: string;
   badgeColor: string;
@@ -85,14 +96,14 @@ export class StarPetComponent implements OnInit {
     '🏋️ ¿Qué ejercicios me tocan?',
   ];
 
-  // Máquina de estados jerárquica unificada para Star Helpy
-  // Resuelve colisiones entre Radiación Solar, Crisis Neuroconductuales y Hábitos de Misión
+  // Máquina de estados jerárquica unificada para Star Helpy con 8 emociones únicas
   readonly activeState = computed<HelpyPriorityState>(() => {
     // 1. NIVEL CRÍTICO 1: Tormenta de Radiación Espacial Solar NASA DONKI (>1000 pfu)
     if (this.nasa.isDangerous()) {
       return {
         level: 'CRITICAL_RADIATION',
         priority: 1,
+        emotion: 'danger',
         mood: 'angry',
         badge: '☢️ ¡Alerta Solar!',
         badgeColor: '#ef4444',
@@ -109,6 +120,7 @@ export class StarPetComponent implements OnInit {
       return {
         level: 'PSYCHOSIS',
         priority: 2,
+        emotion: 'psychosis',
         mood: 'angry',
         badge: '🔴 Alerta Psicosis',
         badgeColor: '#ef4444',
@@ -122,6 +134,7 @@ export class StarPetComponent implements OnInit {
       return {
         level: 'PANIC',
         priority: 2,
+        emotion: 'panic',
         mood: 'angry',
         badge: '🟠 Pánico Nocturno',
         badgeColor: '#f97316',
@@ -136,6 +149,7 @@ export class StarPetComponent implements OnInit {
       return {
         level: 'ANXIETY',
         priority: 3,
+        emotion: 'anxious',
         mood: 'sad',
         badge: '🟡 Ansiedad Detectada',
         badgeColor: '#f59e0b',
@@ -149,6 +163,7 @@ export class StarPetComponent implements OnInit {
       return {
         level: 'RADIATION_WARNING',
         priority: 3,
+        emotion: 'anxious',
         mood: 'sad',
         badge: '🟡 Sol Activo',
         badgeColor: '#f59e0b',
@@ -158,30 +173,47 @@ export class StarPetComponent implements OnInit {
       };
     }
 
-    // 4. NIVEL DE RUTINA 4: Hábitos de Misión y Ejercicio Físico (Amigable y Positivo)
+    // Caso de Sueño Reparador explícito simulado por el astronauta
+    if (this.neuro.userExplicitCase() === 'REPAIR_SLEEP') {
+      return {
+        level: 'REPAIR_SLEEP',
+        priority: 4,
+        emotion: 'peaceful',
+        mood: 'happy',
+        badge: '🟢 Sueño Reparador',
+        badgeColor: '#10b981',
+        message: 'Frecuencia en reposo ideal (50 LPM). Ondas delta profundas y regeneración celular.',
+        actionType: 'chat',
+        actionText: '💬 Chatear con Helpy',
+      };
+    }
+
+    // 4. NIVEL DE RUTINA 4: Reacción Directa e Instantánea a los Ejercicios Físicos
     const completed = this.state.completedExercisesCount();
     const total = this.state.currentExercises().length;
     const day = this.state.missionDay();
 
-    if (completed === total) {
+    if (completed === total && total > 0) {
       return {
         level: 'ROUTINE',
         priority: 4,
+        emotion: 'celebrate',
         mood: 'happy',
-        badge: `⭐ Sol ${day} · Meta Cumplida`,
+        badge: `🎉 Sol ${day} · ¡Meta Cumplida!`,
         badgeColor: '#10b981',
-        message: `¡Excelente trabajo! Completaste tus ${completed}/${total} ejercicios de hoy. Racha asegurada.`,
+        message: `¡Increíble, comandante! Has completado ${completed}/${total} ejercicios. Racha asegurada ⭐.`,
         actionType: 'chat',
-        actionText: '💬 Chatear con Helpy',
+        actionText: '🏆 Ver Recompensas',
       };
     } else if (completed > 0) {
       return {
         level: 'ROUTINE',
         priority: 4,
+        emotion: 'motivated',
         mood: 'happy',
-        badge: `⏳ ${completed}/${total} Completados`,
+        badge: `⚡ ${completed}/${total} Completados`,
         badgeColor: '#3b82f6',
-        message: `¡Buen ritmo! Llevas ${completed}/${total} ejercicios. Vamos por el siguiente de la rutina.`,
+        message: `¡Buen ritmo! Llevas ${completed}/${total} ejercicios. ¡A por el siguiente de la rutina!`,
         actionType: 'chat',
         actionText: '🏋️ Ver Rutina',
       };
@@ -189,17 +221,19 @@ export class StarPetComponent implements OnInit {
       return {
         level: 'ROUTINE',
         priority: 4,
+        emotion: 'waiting',
         mood: 'happy',
         badge: `🚀 Sol ${day} · ¡A despegar!`,
-        badgeColor: '#10b981',
-        message: `¡Bienvenido a bordo, comandante! Tu Sol de hoy tiene ${total} ejercicios programados. ¿Listos para entrenar?`,
+        badgeColor: '#8b5cf6',
+        message: `¡Bienvenido a bordo! Tu Sol de hoy tiene ${total} ejercicios programados. ¿Empezamos con el primero?`,
         actionType: 'chat',
         actionText: '🚀 Iniciar Entrenamiento',
       };
     }
   });
 
-  // Atajos derivados para retrocompatibilidad
+  // Atajos derivados
+  readonly currentEmotion = computed<StarEmotion>(() => this.activeState().emotion);
   readonly currentMood = computed(() => this.activeState().mood);
   readonly mood = computed(() => this.activeState().mood);
   readonly bubbleText = computed(() => this.activeState().message);
