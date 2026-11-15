@@ -260,9 +260,9 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
 
           .lpm-tag {
             font-size: 0.78rem;
-            color: #475569;
+            color: #cbd5e1;
             strong {
-              color: #0f172a;
+              color: #ffffff;
             }
           }
         }
@@ -271,13 +271,13 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
           margin: 0;
           font-size: 1.35rem;
           font-weight: 800;
-          color: #0f172a;
+          color: #ffffff;
         }
 
         .headline-sub {
           margin: 0.25rem 0 0;
           font-size: 0.85rem;
-          color: #64748b;
+          color: #cbd5e1;
           font-weight: 500;
         }
       }
@@ -288,8 +288,8 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
         flex-wrap: wrap;
 
         .metric-block {
-          background: #f8fafc;
-          border: 1px solid #e2e8f0;
+          background: rgba(15, 23, 42, 0.45);
+          border: 1px solid rgba(255, 255, 255, 0.15);
           padding: 0.6rem 1rem;
           border-radius: 10px;
           display: flex;
@@ -298,18 +298,18 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
 
           .metric-label {
             font-size: 0.68rem;
-            color: #64748b;
+            color: #cbd5e1;
             font-weight: 600;
           }
 
           .metric-value {
             font-size: 1rem;
             font-weight: 800;
-            color: #0f172a;
+            color: #ffffff;
             margin-top: 0.15rem;
 
             &.highlight {
-              color: #2563eb;
+              color: #60a5fa;
             }
             &.danger {
               color: #ef4444;
@@ -350,7 +350,7 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
             margin: 0;
             font-size: 0.88rem;
             font-weight: 800;
-            color: #0f172a;
+            color: #ffffff;
             letter-spacing: 0.3px;
           }
         }
@@ -418,13 +418,13 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
             .btn-title {
               font-size: 0.82rem;
               font-weight: 800;
-              color: #1e293b;
+              color: #ffffff;
               transition: color 0.2s;
             }
 
             .btn-sub {
               font-size: 0.72rem;
-              color: #64748b;
+              color: #cbd5e1;
               margin-top: 0.1rem;
             }
           }
@@ -485,7 +485,7 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
             margin: 0;
             font-size: 0.95rem;
             font-weight: 800;
-            color: #0f172a;
+            color: #ffffff;
           }
         }
 
@@ -496,22 +496,22 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
 
           .card-hint {
             font-size: 0.68rem;
-            color: #94a3b8;
+            color: #cbd5e1;
             font-weight: 600;
           }
         }
 
         .card-hint {
           font-size: 0.68rem;
-          color: #94a3b8;
+          color: #cbd5e1;
           font-weight: 600;
         }
       }
 
       // Caja de diagnóstico 3D
       .brain-diagnostic-box {
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
+        background: rgba(15, 23, 42, 0.45);
+        border: 1px solid rgba(255, 255, 255, 0.15);
         border-radius: 10px;
         padding: 0.9rem 1rem;
 
@@ -519,13 +519,13 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
           margin: 0 0 0.35rem 0;
           font-size: 0.82rem;
           font-weight: 700;
-          color: #1e293b;
+          color: #ffffff;
         }
 
         .diag-desc {
           margin: 0 0 0.65rem 0;
           font-size: 0.78rem;
-          color: #475569;
+          color: #cbd5e1;
           line-height: 1.4;
         }
 
@@ -533,7 +533,7 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
           .pillbox-title {
             font-size: 0.72rem;
             font-weight: 700;
-            color: #64748b;
+            color: #cbd5e1;
             display: block;
             margin-bottom: 0.35rem;
           }
@@ -544,9 +544,9 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
             gap: 0.35rem;
 
             .zone-pill {
-              background: #ffffff;
-              border: 1px solid #cbd5e1;
-              color: #334155;
+              background: rgba(15, 23, 42, 0.6);
+              border: 1px solid rgba(255, 255, 255, 0.2);
+              color: #ffffff;
               padding: 2px 8px;
               border-radius: 8px;
               font-size: 0.7rem;
@@ -559,10 +559,10 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
       // Gráfica de Línea de Tiempo de 8 Horas
       .timeline-card {
         .timeline-chart-wrapper {
-          background: rgba(248, 250, 252, 0.65);
+          background: rgba(15, 23, 42, 0.45);
           backdrop-filter: blur(8px);
           -webkit-backdrop-filter: blur(8px);
-          border: 1px solid rgba(255, 255, 255, 0.7);
+          border: 1px solid rgba(255, 255, 255, 0.15);
           border-radius: 12px;
           padding: 1.25rem 0.75rem 0.75rem 0.75rem;
 
@@ -584,13 +584,14 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
               .bar-value-label {
                 font-size: 0.65rem;
                 font-weight: 700;
-                color: #0f172a;
+                color: #ffffff;
               }
 
               .bar-track {
                 width: 14px;
                 height: 100px;
-                background: #e2e8f0;
+                background: rgba(15, 23, 42, 0.5);
+                border: 1px solid rgba(255, 255, 255, 0.12);
                 border-radius: 4px;
                 overflow: hidden;
                 display: flex;
@@ -620,7 +621,7 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
 
               .bar-hour-label {
                 font-size: 0.62rem;
-                color: #94a3b8;
+                color: #cbd5e1;
                 font-weight: 600;
               }
             }
@@ -632,7 +633,7 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
           justify-content: center;
           gap: 1rem;
           font-size: 0.7rem;
-          color: #64748b;
+          color: #cbd5e1;
           font-weight: 600;
 
           .legend-item {
@@ -670,13 +671,13 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
             margin: 0;
             font-size: 0.95rem;
             font-weight: 800;
-            color: #0f172a;
+            color: #ffffff;
           }
 
           .cm-sub {
             margin: 0.15rem 0 0;
             font-size: 0.75rem;
-            color: #64748b;
+            color: #cbd5e1;
           }
         }
 
@@ -693,11 +694,11 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
             align-items: flex-start;
             gap: 0.45rem;
             font-size: 0.78rem;
-            color: #334155;
+            color: #e2e8f0;
             line-height: 1.35;
 
             .check-bullet {
-              color: #16a34a;
+              color: #10b981;
               font-weight: 900;
               line-height: 1.2;
             }
@@ -758,11 +759,11 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
             }
 
             &.btn-report {
-              background: #f1f5f9;
-              color: #0f172a;
-              border: 1px solid #cbd5e1;
+              background: rgba(255, 255, 255, 0.15);
+              color: #ffffff;
+              border: 1px solid rgba(255, 255, 255, 0.25);
               &:hover {
-                background: #e2e8f0;
+                background: rgba(255, 255, 255, 0.25);
                 transform: translateY(-2px);
               }
             }

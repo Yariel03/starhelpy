@@ -75,7 +75,7 @@
           margin: 0;
           font-size: 1.35rem;
           font-weight: 800;
-          color: #0f172a;
+          color: #ffffff;
           letter-spacing: -0.3px;
         }
 
@@ -95,7 +95,7 @@
       .streak-motto {
         margin: 0.25rem 0 0 0;
         font-size: 0.85rem;
-        color: #64748b;
+        color: #cbd5e1;
         max-width: 540px;
         line-height: 1.35;
       }
@@ -114,13 +114,14 @@
       gap: 0.6rem;
       padding: 0.5rem 0.9rem;
       border-radius: 12px;
-      border: 1px solid #e2e8f0;
-      background: #f8fafc;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(15, 23, 42, 0.5);
       transition: all 0.2s ease;
 
       &:hover {
         transform: translateY(-2px);
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+        border-color: rgba(255, 255, 255, 0.3);
       }
 
       .pill-icon {
@@ -134,38 +135,38 @@
         .pill-val {
           font-size: 0.85rem;
           font-weight: 800;
-          color: #0f172a;
+          color: #ffffff;
           line-height: 1.1;
         }
 
         .pill-lbl {
           font-size: 0.68rem;
-          color: #64748b;
+          color: #cbd5e1;
           font-weight: 600;
         }
       }
 
       &.xp-pill {
-        border-color: #fde68a;
-        background: #fffbeb;
+        border-color: rgba(245, 158, 11, 0.4);
+        background: rgba(245, 158, 11, 0.15);
         .pill-val {
-          color: #b45309;
+          color: #fde047;
         }
       }
 
       &.level-pill {
-        border-color: #bfdbfe;
-        background: #eff6ff;
+        border-color: rgba(59, 130, 246, 0.4);
+        background: rgba(59, 130, 246, 0.15);
         .pill-val {
-          color: #1d4ed8;
+          color: #93c5fd;
         }
       }
 
       &.shield-pill {
-        border-color: #bbf7d0;
-        background: #f0fdf4;
+        border-color: rgba(34, 197, 94, 0.4);
+        background: rgba(34, 197, 94, 0.15);
         .pill-val {
-          color: #15803d;
+          color: #86efac;
         }
       }
     }
@@ -192,12 +193,12 @@
     .timeline-label {
       font-size: 0.88rem;
       font-weight: 700;
-      color: #1e293b;
+      color: #ffffff;
     }
 
     .timeline-sub {
       font-size: 0.74rem;
-      color: #64748b;
+      color: #cbd5e1;
     }
   }
 
@@ -209,7 +210,7 @@
       height: 6px;
     }
     &::-webkit-scrollbar-thumb {
-      background: #cbd5e1;
+      background: rgba(255, 255, 255, 0.2);
       border-radius: 999px;
     }
   }
@@ -244,13 +245,13 @@
 
       .node-caption {
         font-size: 0.7rem;
-        color: #64748b;
+        color: #cbd5e1;
         font-weight: 600;
 
         .today-tag {
-          color: #d97706;
+          color: #fde047;
           font-weight: 800;
-          background: #fef3c7;
+          background: rgba(245, 158, 11, 0.3);
           padding: 0.1rem 0.35rem;
           border-radius: 4px;
         }
@@ -262,8 +263,9 @@
         font-weight: 700;
         padding: 0.2rem 0.45rem;
         border-radius: 6px;
-        background: #e2e8f0;
-        color: #475569;
+        background: rgba(15, 23, 42, 0.5);
+        color: #cbd5e1;
+        border: 1px solid rgba(255, 255, 255, 0.15);
         white-space: nowrap;
 
         &.unlocked {
@@ -376,12 +378,12 @@
           margin: 0.15rem 0 0 0;
           font-size: 1.15rem;
           font-weight: 800;
-          color: #0f172a;
+          color: #ffffff;
         }
 
         .goal-focus-text {
           font-size: 0.78rem;
-          color: #64748b;
+          color: #cbd5e1;
           font-weight: 500;
         }
       }
@@ -401,19 +403,20 @@
         .progress-title {
           font-size: 0.78rem;
           font-weight: 600;
-          color: #334155;
+          color: #cbd5e1;
         }
 
         .progress-stat {
           font-size: 0.8rem;
           font-weight: 700;
-          color: #2563eb;
+          color: #60a5fa;
         }
       }
 
       .progress-bar-bg {
         height: 8px;
-        background: #e2e8f0;
+        background: rgba(15, 23, 42, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.15);
         border-radius: 999px;
         overflow: hidden;
 
@@ -438,32 +441,32 @@
     }
 
     .exercise-accordion-card {
-      background: rgba(255, 255, 255, 0.70);
+      background: rgba(15, 23, 42, 0.45);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
-      border: 1.5px solid rgba(255, 255, 255, 0.75);
+      border: 1.5px solid rgba(255, 255, 255, 0.15);
       border-radius: 12px;
       overflow: hidden;
       cursor: pointer;
       transition: all 0.2s ease;
 
       &:hover {
-        border-color: #93c5fd;
-        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
+        border-color: #60a5fa;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
       }
 
       &.done {
-        background: #f0fdf4;
-        border-color: #86efac;
+        background: rgba(16, 185, 129, 0.15);
+        border-color: rgba(52, 211, 153, 0.4);
 
         .exercise-title {
-          color: #1e293b;
+          color: #ffffff;
         }
       }
 
       &.expanded {
-        border-color: #2563eb;
-        box-shadow: 0 4px 14px rgba(37, 99, 235, 0.12);
+        border-color: #3b82f6;
+        box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);
       }
 
       .exercise-main-row {
@@ -476,13 +479,13 @@
           width: 26px;
           height: 26px;
           border-radius: 7px;
-          border: 2px solid #cbd5e1;
+          border: 2px solid rgba(255, 255, 255, 0.3);
           display: flex;
           justify-content: center;
           align-items: center;
           flex-shrink: 0;
           transition: all 0.2s ease;
-          background: #ffffff;
+          background: rgba(15, 23, 42, 0.6);
           padding: 0;
           cursor: pointer;
 
@@ -515,7 +518,7 @@
         .exercise-title {
           font-size: 0.95rem;
           font-weight: 700;
-          color: #1e293b;
+          color: #ffffff;
           flex: 1;
         }
 
@@ -529,31 +532,33 @@
             font-weight: 700;
             padding: 0.2rem 0.55rem;
             border-radius: 6px;
-            background: #fef3c7;
-            color: #92400e;
+            background: rgba(245, 158, 11, 0.25);
+            color: #fde047;
+            border: 1px solid rgba(245, 158, 11, 0.35);
 
             &.done {
-              background: #dcfce7;
-              color: #15803d;
+              background: rgba(16, 185, 129, 0.25);
+              color: #86efac;
+              border: 1px solid rgba(16, 185, 129, 0.35);
             }
           }
 
           .expand-chevron {
             font-size: 0.75rem;
-            color: #94a3b8;
+            color: #cbd5e1;
             transition: transform 0.25s ease;
 
             &.rotated {
               transform: rotate(180deg);
-              color: #2563eb;
+              color: #60a5fa;
             }
           }
         }
       }
 
       .exercise-details-drawer {
-        background: #f8fafc;
-        border-top: 1px solid #e2e8f0;
+        background: rgba(15, 23, 42, 0.7);
+        border-top: 1px solid rgba(255, 255, 255, 0.12);
         padding: 0.85rem 1.15rem;
         display: flex;
         flex-direction: column;
@@ -568,7 +573,7 @@
           .detail-label {
             font-size: 0.74rem;
             font-weight: 700;
-            color: #475569;
+            color: #93c5fd;
             text-transform: uppercase;
             letter-spacing: 0.4px;
           }
@@ -576,17 +581,17 @@
           .detail-value {
             font-size: 0.85rem;
             font-weight: 700;
-            color: #1e293b;
+            color: #ffffff;
 
             &.highlight {
-              color: #2563eb;
+              color: #60a5fa;
             }
           }
 
           .detail-desc {
             margin: 0;
             font-size: 0.82rem;
-            color: #334155;
+            color: #cbd5e1;
             line-height: 1.45;
           }
         }

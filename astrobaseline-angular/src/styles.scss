@@ -4,14 +4,20 @@
 :root {
   --font-family-base: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 
-  /* Glassmorphism Space Theme Variables */
-  /* Combina transparencia cristalina con matiz cósmico azul/índigo (#130583) para ver el fondo con desenfoque elegante */
-  --card-glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.78) 0%, rgba(240, 244, 255, 0.68) 55%, rgba(19, 5, 131, 0.08) 100%);
-  --card-glass-bg-subtle: rgba(255, 255, 255, 0.72);
-  --card-glass-blur: blur(16px);
-  --card-glass-border: 1px solid rgba(255, 255, 255, 0.75);
-  --card-glass-border-subtle: 1px solid rgba(226, 232, 240, 0.65);
-  --card-glass-shadow: 0 8px 32px 0 rgba(19, 5, 131, 0.10), 0 2px 8px 0 rgba(0, 0, 0, 0.04);
+  /* Glassmorphism Space Theme Variables - Ultra-transparente con matiz cósmico (#130583) */
+  --card-glass-bg: linear-gradient(135deg, rgba(19, 5, 131, 0.28) 0%, rgba(15, 23, 42, 0.38) 100%);
+  --card-glass-bg-subtle: rgba(15, 23, 42, 0.26);
+  --card-glass-bg-hover: linear-gradient(135deg, rgba(19, 5, 131, 0.42) 0%, rgba(30, 41, 59, 0.48) 100%);
+  --card-glass-blur: blur(14px);
+  --card-glass-border: 1px solid rgba(255, 255, 255, 0.18);
+  --card-glass-border-subtle: 1px solid rgba(255, 255, 255, 0.12);
+  --card-glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37), inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+
+  /* Tokens de tipografía clara para máxima legibilidad sobre fondo espacial */
+  --text-primary: #ffffff;
+  --text-secondary: #e2e8f0;
+  --text-muted: #cbd5e1;
+  --text-dim: #94a3b8;
 }
 
 *, *::before, *::after {

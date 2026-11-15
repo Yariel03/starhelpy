@@ -144,7 +144,7 @@ export class TrendsChartComponent {
         y: bHi,
         text: isEn ? 'Personal baseline ± 2σ' : 'Línea base personal ± 2σ',
         showarrow: false,
-        font: { size: 10, color: '#2563eb' },
+        font: { size: 10, color: '#93c5fd' },
         xanchor: 'right',
         yanchor: 'bottom',
       });
@@ -188,9 +188,23 @@ export class TrendsChartComponent {
     }
 
     const layout: any = {
-      title: `${cfg.label} (${cfg.unit}) — ${isEn ? 'Temporal Evolution' : 'Evolución Temporal'}`,
-      xaxis: { title: isEn ? 'Mission Date' : 'Fecha de Misión', showgrid: true, gridcolor: '#f1f5f9' },
-      yaxis: { title: `${cfg.label} (${cfg.unit})`, showgrid: true, gridcolor: '#f1f5f9' },
+      title: {
+        text: `${cfg.label} (${cfg.unit}) — ${isEn ? 'Temporal Evolution' : 'Evolución Temporal'}`,
+        font: { color: '#ffffff', size: 14 },
+      },
+      xaxis: {
+        title: { text: isEn ? 'Mission Date' : 'Fecha de Misión', font: { color: '#cbd5e1' } },
+        tickfont: { color: '#cbd5e1' },
+        showgrid: true,
+        gridcolor: 'rgba(255, 255, 255, 0.12)',
+      },
+      yaxis: {
+        title: { text: `${cfg.label} (${cfg.unit})`, font: { color: '#cbd5e1' } },
+        tickfont: { color: '#cbd5e1' },
+        showgrid: true,
+        gridcolor: 'rgba(255, 255, 255, 0.12)',
+      },
+      legend: { font: { color: '#ffffff' } },
       shapes,
       annotations,
       margin: { t: 50, r: 30, l: 60, b: 50 },

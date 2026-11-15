@@ -81,10 +81,21 @@ export class QualityHeatmapComponent {
     ];
 
     const layout: any = {
-      title: 'Mediciones registradas (verde) vs ausentes (rojo)',
+      title: {
+        text: 'Mediciones registradas (verde) vs ausentes (rojo)',
+        font: { color: '#ffffff', size: 14 },
+      },
       margin: { t: 40, r: 20, l: 240, b: 60 },
-      xaxis: { title: 'Fecha de Misión', tickangle: -45, showgrid: false },
-      yaxis: { autorange: 'reversed' },
+      xaxis: {
+        title: { text: 'Fecha de Misión', font: { color: '#cbd5e1' } },
+        tickfont: { color: '#cbd5e1' },
+        tickangle: -45,
+        showgrid: false,
+      },
+      yaxis: {
+        autorange: 'reversed',
+        tickfont: { color: '#ffffff' },
+      },
       plot_bgcolor: 'transparent',
       paper_bgcolor: 'transparent',
     };
