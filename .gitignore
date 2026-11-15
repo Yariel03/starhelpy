@@ -5,3 +5,4 @@ venv/
 *.zip
 .vscode/
 .DS_Store
+astrobaseline/
