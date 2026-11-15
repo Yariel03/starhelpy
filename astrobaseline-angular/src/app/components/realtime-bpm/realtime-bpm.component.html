@@ -8,7 +8,7 @@
         [style.background-color]="activeColor()"
         [style.box-shadow]="'0 0 8px ' + activeColor()"
       ></span>
-      <span class="live-text">{{ isRunning() ? 'EN VIVO · TELEMETRÍA' : 'PAUSADO' }}</span>
+      <span class="live-text">{{ isRunning() ? i18n.t().live_telemetry : i18n.t().paused }}</span>
     </div>
 
     <div class="telemetry-controls">
@@ -25,7 +25,7 @@
       <button
         class="pause-btn"
         (click)="toggleStreaming()"
-        [title]="isRunning() ? 'Pausar transmisión' : 'Reanudar transmisión'"
+        [title]="isRunning() ? i18n.t().pause_stream : i18n.t().resume_stream"
       >
         {{ isRunning() ? '⏸' : '▶' }}
       </button>
@@ -63,15 +63,15 @@
   <!-- Estadísticas de la sesión -->
   <div class="telemetry-stats">
     <div class="stat-col">
-      <span class="stat-label">MÍN</span>
+      <span class="stat-label">{{ i18n.t().stat_min }}</span>
       <span class="stat-val">{{ minBpm() }}</span>
     </div>
     <div class="stat-col">
-      <span class="stat-label">PROM</span>
+      <span class="stat-label">{{ i18n.t().stat_avg }}</span>
       <span class="stat-val">{{ avgBpm() }}</span>
     </div>
     <div class="stat-col">
-      <span class="stat-label">MÁX</span>
+      <span class="stat-label">{{ i18n.t().stat_max }}</span>
       <span class="stat-val">{{ maxBpm() }}</span>
     </div>
   </div>

@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
+import { I18nService } from '../../core/services/i18n.service';
 
 @Component({
   selector: 'app-realtime-bpm',
@@ -23,6 +24,7 @@ export class RealtimeBpmComponent implements OnInit, OnDestroy {
   @ViewChild('ecgCanvas', { static: true }) canvasRef!: ElementRef<HTMLCanvasElement>;
 
   readonly neuro = inject(NeuroSleepService);
+  readonly i18n = inject(I18nService);
 
   // Estado del monitor en vivo
   readonly currentBpm = signal<number>(50);
@@ -58,20 +60,21 @@ export class RealtimeBpmComponent implements OnInit, OnDestroy {
   readonly statusLabel = computed(() => {
     const activeCase = this.neuro.activeCase();
     const bpm = this.currentBpm();
+    const isEn = this.i18n.currentLang() === 'en';
 
     if (activeCase.id === 'REPAIR_SLEEP') {
-      return { text: 'Sueño Reparador (Sinusal)', color: '#10b981' };
+      return { text: isEn ? 'Restorative Sleep (Sinus)' : 'Sueño Reparador (Sinusal)', color: '#10b981' };
     } else if (activeCase.id === 'ANXIETY') {
-      return { text: 'Ansiedad / Hiperarousal', color: '#f59e0b' };
+      return { text: isEn ? 'Anxiety / Hyperarousal' : 'Ansiedad / Hiperarousal', color: '#f59e0b' };
     } else if (activeCase.id === 'PANIC') {
-      return { text: 'Taquicardia por Pánico', color: '#f97316' };
+      return { text: isEn ? 'Panic Tachycardia' : 'Taquicardia por Pánico', color: '#f97316' };
     } else if (activeCase.id === 'PSYCHOSIS') {
-      return { text: 'Crisis Crítica / Descompensación', color: '#ef4444' };
+      return { text: isEn ? 'Critical Episode / Decompensation' : 'Crisis Crítica / Descompensación', color: '#ef4444' };
     }
 
-    if (bpm < 50) return { text: 'Bradicardia', color: '#f59e0b' };
-    if (bpm > 100) return { text: 'Ritmo Elevado (ARED)', color: '#ef4444' };
-    return { text: 'Ritmo Sinusal Normal', color: '#10b981' };
+    if (bpm < 50) return { text: isEn ? 'Bradycardia' : 'Bradicardia', color: '#f59e0b' };
+    if (bpm > 100) return { text: isEn ? 'Elevated Rhythm (ARED)' : 'Ritmo Elevado (ARED)', color: '#ef4444' };
+    return { text: isEn ? 'Normal Sinus Rhythm' : 'Ritmo Sinusal Normal', color: '#10b981' };
   });
 
   constructor() {

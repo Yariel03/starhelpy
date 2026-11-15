@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { MissionStateService } from '../../core/services/mission-state.service';
+import { I18nService } from '../../core/services/i18n.service';
 import { BodyRegionKey } from '../../core/models/indicator.model';
 
 @Component({
@@ -24,7 +25,7 @@ import { BodyRegionKey } from '../../core/models/indicator.model';
           [class.selected]="selectedRegion() === 'head'"
           (click)="selectRegion('head')"
         >
-          <title>Cabeza: Cerebro y comportamiento</title>
+          <title>{{ i18n.currentLang() === 'en' ? 'Head: Brain & Behavior' : 'Cabeza: Cerebro y comportamiento' }}</title>
         </circle>
 
         <!-- Chest -->
@@ -41,7 +42,7 @@ import { BodyRegionKey } from '../../core/models/indicator.model';
           [class.selected]="selectedRegion() === 'chest'"
           (click)="selectRegion('chest')"
         >
-          <title>Pecho: Sistema cardiovascular</title>
+          <title>{{ i18n.currentLang() === 'en' ? 'Chest: Cardiovascular System' : 'Pecho: Sistema cardiovascular' }}</title>
         </rect>
 
         <!-- Abdomen -->
@@ -58,7 +59,7 @@ import { BodyRegionKey } from '../../core/models/indicator.model';
           [class.selected]="selectedRegion() === 'abdomen'"
           (click)="selectRegion('abdomen')"
         >
-          <title>Abdomen: Metabolismo (Glucosa)</title>
+          <title>{{ i18n.currentLang() === 'en' ? 'Abdomen: Metabolism (Glucose)' : 'Abdomen: Metabolismo (Glucosa)' }}</title>
         </rect>
 
         <!-- Left Arm -->
@@ -75,7 +76,7 @@ import { BodyRegionKey } from '../../core/models/indicator.model';
           [class.selected]="selectedRegion() === 'arms'"
           (click)="selectRegion('arms')"
         >
-          <title>Brazos: Termorregulación y respuesta inmunológica</title>
+          <title>{{ i18n.currentLang() === 'en' ? 'Arms: Thermoregulation & Immune Response' : 'Brazos: Termorregulación y respuesta inmunológica' }}</title>
         </rect>
 
         <!-- Right Arm -->
@@ -92,7 +93,7 @@ import { BodyRegionKey } from '../../core/models/indicator.model';
           [class.selected]="selectedRegion() === 'arms'"
           (click)="selectRegion('arms')"
         >
-          <title>Brazos: Termorregulación y respuesta inmunológica</title>
+          <title>{{ i18n.currentLang() === 'en' ? 'Arms: Thermoregulation & Immune Response' : 'Brazos: Termorregulación y respuesta inmunológica' }}</title>
         </rect>
 
         <!-- Left Leg -->
@@ -109,7 +110,7 @@ import { BodyRegionKey } from '../../core/models/indicator.model';
           [class.selected]="selectedRegion() === 'legs'"
           (click)="selectRegion('legs')"
         >
-          <title>Piernas: Sistema musculoesquelético</title>
+          <title>{{ i18n.currentLang() === 'en' ? 'Legs: Musculoskeletal System' : 'Piernas: Sistema musculoesquelético' }}</title>
         </rect>
 
         <!-- Right Leg -->
@@ -126,7 +127,7 @@ import { BodyRegionKey } from '../../core/models/indicator.model';
           [class.selected]="selectedRegion() === 'legs'"
           (click)="selectRegion('legs')"
         >
-          <title>Piernas: Sistema musculoesquelético</title>
+          <title>{{ i18n.currentLang() === 'en' ? 'Legs: Musculoskeletal System' : 'Piernas: Sistema musculoesquelético' }}</title>
         </rect>
       </svg>
     </div>
@@ -168,6 +169,7 @@ import { BodyRegionKey } from '../../core/models/indicator.model';
 })
 export class BodyMapComponent {
   private state = inject(MissionStateService);
+  readonly i18n = inject(I18nService);
 
   readonly colors = this.state.bodyRegionColors;
   readonly selectedRegion = this.state.selectedBodyRegion;

@@ -1,4 +1,5 @@
-import { Component, input } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
+import { I18nService } from '../../core/services/i18n.service';
 
 @Component({
   selector: 'app-badge',
@@ -25,18 +26,20 @@ import { Component, input } from '@angular/core';
   `],
 })
 export class BadgeComponent {
+  private readonly i18n = inject(I18nService);
   level = input.required<number>();
 
   badgeConfig() {
+    const t = this.i18n.t();
     switch (this.level()) {
       case 0:
-        return { name: 'Normal', color: '#2e7d32' };
+        return { name: t.badge_normal, color: '#2e7d32' };
       case 1:
-        return { name: 'Atención', color: '#f9a825' };
+        return { name: t.badge_attention, color: '#f9a825' };
       case 2:
-        return { name: 'Alerta', color: '#c62828' };
+        return { name: t.badge_alert, color: '#c62828' };
       default:
-        return { name: 'Sin datos', color: '#757575' };
+        return { name: t.badge_nodata, color: '#757575' };
     }
   }
 }

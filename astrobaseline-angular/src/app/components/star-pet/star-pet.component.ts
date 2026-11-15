@@ -14,6 +14,7 @@ import { MissionStateService } from '../../core/services/mission-state.service';
 import { ConfigService } from '../../core/services/config.service';
 import { NasaDonkiService } from '../../core/services/nasa-donki.service';
 import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
+import { I18nService } from '../../core/services/i18n.service';
 
 export interface ChatMessage {
   sender: 'helpy' | 'astronaut';
@@ -58,6 +59,7 @@ export class StarPetComponent implements OnInit {
   readonly config = inject(ConfigService);
   readonly nasa = inject(NasaDonkiService);
   readonly neuro = inject(NeuroSleepService);
+  readonly i18n = inject(I18nService);
   private el = inject(ElementRef);
 
   // Posición flotante arrastrable
@@ -99,6 +101,8 @@ export class StarPetComponent implements OnInit {
 
   // Máquina de estados jerárquica unificada para Star Helpy con 9 emociones únicas
   readonly activeState = computed<HelpyPriorityState>(() => {
+    const isEn = this.i18n.currentLang() === 'en';
+
     // 1. NIVEL CRÍTICO 1: Tormenta de Radiación Espacial Solar NASA DONKI (>1000 pfu)
     if (this.nasa.isDangerous()) {
       return {
@@ -106,11 +110,11 @@ export class StarPetComponent implements OnInit {
         priority: 1,
         emotion: 'danger',
         mood: 'angry',
-        badge: '☢️ ¡Alerta Solar!',
+        badge: isEn ? '☢️ Solar Storm Alert!' : '☢️ ¡Alerta Solar!',
         badgeColor: '#ef4444',
-        message: '¡Flujo crítico de radiación espacial! Suspende toda actividad exterior y refúgiate.',
+        message: isEn ? 'Critical space radiation flux! Suspend all EVA operations and seek shelter.' : '¡Flujo crítico de radiación espacial! Suspende toda actividad exterior y refúgiate.',
         actionType: 'chat',
-        actionText: '🛡️ Ver Protocolo',
+        actionText: isEn ? '🛡️ View Protocol' : '🛡️ Ver Protocolo',
       };
     }
 
@@ -127,11 +131,13 @@ export class StarPetComponent implements OnInit {
           priority: 2,
           emotion: 'psychosis',
           mood: 'angry',
-          badge: '🔴 Alerta Psicosis N3',
+          badge: isEn ? '🔴 Psychosis Alert L3' : '🔴 Alerta Psicosis N3',
           badgeColor: '#ef4444',
-          message: `¡Desconexión prefrontal crítica (${this.neuro.liveLpm()} LPM)! Bloqueando mandos y enlazando con Houston.`,
+          message: isEn
+            ? `Critical prefrontal disconnect (${this.neuro.liveLpm()} BPM)! Securing controls and connecting to Flight Surgeon.`
+            : `¡Desconexión prefrontal crítica (${this.neuro.liveLpm()} LPM)! Bloqueando mandos y enlazando con Houston.`,
           actionType: 'psychosis',
-          actionText: '🚨 SOS Cirujano de Vuelo',
+          actionText: isEn ? '🚨 Flight Surgeon SOS' : '🚨 SOS Cirujano de Vuelo',
         };
       }
 
@@ -141,11 +147,13 @@ export class StarPetComponent implements OnInit {
           priority: 2,
           emotion: 'panic',
           mood: 'angry',
-          badge: '🟠 Pánico Nocturno',
+          badge: isEn ? '🟠 Panic Awakening' : '🟠 Pánico Nocturno',
           badgeColor: '#f97316',
-          message: `Despertar confusional taquicárdico (${this.neuro.liveLpm()} LPM). ¡Cabina 100% segura, activa el rescate!`,
+          message: isEn
+            ? `Confusional tachycardic arousal (${this.neuro.liveLpm()} BPM). Cabin is 100% safe, start rescue sighs!`
+            : `Despertar confusional taquicárdico (${this.neuro.liveLpm()} LPM). ¡Cabina 100% segura, activa el rescate!`,
           actionType: 'panic',
-          actionText: '⚡ Suspiro & Anclaje 5-4-3-2-1',
+          actionText: isEn ? '⚡ 5-4-3-2-1 Grounding' : '⚡ Suspiro & Anclaje 5-4-3-2-1',
         };
       }
 
@@ -156,11 +164,13 @@ export class StarPetComponent implements OnInit {
           priority: 3,
           emotion: 'anxious',
           mood: 'sad',
-          badge: '🟡 Ansiedad Detectada',
+          badge: isEn ? '🟡 Anxiety Detected' : '🟡 Ansiedad Detectada',
           badgeColor: '#f59e0b',
-          message: `Detecto hiperarousal simpático (${this.neuro.liveLpm()} LPM). Regula tu tono con respiración vagal.`,
+          message: isEn
+            ? `Sympathetic hyperarousal detected (${this.neuro.liveLpm()} BPM). Regulate vagal tone with guided breathing.`
+            : `Detecto hiperarousal simpático (${this.neuro.liveLpm()} LPM). Regula tu tono con respiración vagal.`,
           actionType: 'breathe',
-          actionText: '🫁 Respiración 4-7-8',
+          actionText: isEn ? '🫁 4-7-8 Breathing' : '🫁 Respiración 4-7-8',
         };
       }
 
@@ -171,11 +181,13 @@ export class StarPetComponent implements OnInit {
           priority: 4,
           emotion: 'peaceful',
           mood: 'happy',
-          badge: '🟢 Sueño Reparador',
+          badge: isEn ? '🟢 Restorative Sleep' : '🟢 Sueño Reparador',
           badgeColor: '#10b981',
-          message: 'Frecuencia ideal (50 LPM), ondas lentas delta N3 y regeneración sinusal plena.',
+          message: isEn
+            ? 'Optimal heart rate (50 BPM), slow delta N3 waves and full cellular regeneration.'
+            : 'Frecuencia ideal (50 LPM), ondas lentas delta N3 y regeneración sinusal plena.',
           actionType: 'report',
-          actionText: '📄 Reporte Médico de Sueño',
+          actionText: isEn ? '📄 Sleep Medical Report' : '📄 Reporte Médico de Sueño',
         };
       }
     }
@@ -186,11 +198,11 @@ export class StarPetComponent implements OnInit {
         priority: 3,
         emotion: 'anxious',
         mood: 'sad',
-        badge: '🟡 Sol Activo',
+        badge: isEn ? '🟡 Active Sun' : '🟡 Sol Activo',
         badgeColor: '#f59e0b',
-        message: 'Perturbación solar moderada detectada por DONKI. Precaución en actividades EVA.',
+        message: isEn ? 'Moderate solar disturbance detected by DONKI. Exercise caution during EVA.' : 'Perturbación solar moderada detectada por DONKI. Precaución en actividades EVA.',
         actionType: 'chat',
-        actionText: '🛰️ Ver Reporte DONKI',
+        actionText: isEn ? '🛰️ View DONKI Report' : '🛰️ Ver Reporte DONKI',
       };
     }
 
@@ -206,11 +218,13 @@ export class StarPetComponent implements OnInit {
         priority: 4,
         emotion: 'angry',
         mood: 'angry',
-        badge: `😠 Sol ${day} · 0/${total} Ejercicios`,
+        badge: isEn ? `😠 Sol ${day} · 0/${total} Exercises` : `😠 Sol ${day} · 0/${total} Ejercicios`,
         badgeColor: '#ef4444',
-        message: `¡No has hecho ningún ejercicio todavía! En gravedad cero tus músculos y huesos se atrofian si no entrenas hoy. ¡A entrenar, comandante!`,
+        message: isEn
+          ? `You have not done any exercise yet! In microgravity your muscles and bones atrophy without training. Let's work out, Commander!`
+          : `¡No has hecho ningún ejercicio todavía! En gravedad cero tus músculos y huesos se atrofian si no entrenas hoy. ¡A entrenar, comandante!`,
         actionType: 'chat',
-        actionText: '🏋️ Ir al Entrenamiento',
+        actionText: isEn ? '🏋️ Go to Training' : '🏋️ Ir al Entrenamiento',
       };
     } else if (completed === total && total > 0) {
       return {
@@ -218,11 +232,13 @@ export class StarPetComponent implements OnInit {
         priority: 4,
         emotion: 'celebrate',
         mood: 'happy',
-        badge: `🎉 Sol ${day} · ¡Meta Cumplida!`,
+        badge: isEn ? `🎉 Sol ${day} · Goal Reached!` : `🎉 Sol ${day} · ¡Meta Cumplida!`,
         badgeColor: '#10b981',
-        message: `¡Increíble, comandante! Has completado ${completed}/${total} ejercicios. Racha diaria asegurada y físico protegido ⭐.`,
+        message: isEn
+          ? `Outstanding, Commander! You completed ${completed}/${total} exercises. Daily streak secured and physical readiness protected ⭐.`
+          : `¡Increíble, comandante! Has completado ${completed}/${total} ejercicios. Racha diaria asegurada y físico protegido ⭐.`,
         actionType: 'chat',
-        actionText: '🏆 Ver Recompensas',
+        actionText: isEn ? '🏆 View Rewards' : '🏆 Ver Recompensas',
       };
     } else {
       return {
@@ -230,11 +246,13 @@ export class StarPetComponent implements OnInit {
         priority: 4,
         emotion: 'motivated',
         mood: 'happy',
-        badge: `⚡ ${completed}/${total} Completados`,
+        badge: isEn ? `⚡ ${completed}/${total} Completed` : `⚡ ${completed}/${total} Completados`,
         badgeColor: '#3b82f6',
-        message: `¡Buen ritmo! Llevas ${completed}/${total} ejercicios. ¡A por el siguiente de la rutina para completar el Sol!`,
+        message: isEn
+          ? `Good pace! You have finished ${completed}/${total} exercises. Onto the next one to complete the Sol!`
+          : `¡Buen ritmo! Llevas ${completed}/${total} ejercicios. ¡A por el siguiente de la rutina para completar el Sol!`,
         actionType: 'chat',
-        actionText: '🏋️ Ver Rutina',
+        actionText: isEn ? '🏋️ View Routine' : '🏋️ Ver Rutina',
       };
     }
   });

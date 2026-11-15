@@ -4,6 +4,7 @@ import { MissionStateService } from '../../core/services/mission-state.service';
 import { ConfigService } from '../../core/services/config.service';
 import { NasaDonkiService } from '../../core/services/nasa-donki.service';
 import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
+import { I18nService } from '../../core/services/i18n.service';
 
 @Component({
   selector: 'app-flight-report',
@@ -14,10 +15,10 @@ import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
       <div class="report-sheet">
         <!-- Barra de acciones superiores (No imprimible) -->
         <div class="report-top-actions no-print">
-          <span class="confidential-tag">🔒 TELEMETRÍA MÉDICA OFICIAL · NASA SPACE APPS 2026</span>
+          <span class="confidential-tag">{{ i18n.t().report_confidential }}</span>
           <div class="action-buttons">
-            <button class="btn btn-print" (click)="printReport()">🖨️ Imprimir / Guardar PDF</button>
-            <button class="btn btn-close" (click)="close()">✕ Cerrar</button>
+            <button class="btn btn-print" (click)="printReport()">{{ i18n.t().report_btn_print }}</button>
+            <button class="btn btn-close" (click)="close()">{{ i18n.t().report_btn_close }}</button>
           </div>
         </div>
 
@@ -26,15 +27,15 @@ import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
           <div class="header-branding">
             <img src="/assets/images/logo/logo-dark.png" alt="Start Helpy" class="report-header-logo" />
             <div class="brand-text">
-              <h2>START HELPY — RESUMEN CLÍNICO DE VUELO</h2>
-              <p class="agency-sub">División de Medicina Espacial y Factores Humanos · Telemetría Orbital</p>
+              <h2>{{ i18n.t().report_title }}</h2>
+              <p class="agency-sub">{{ i18n.t().report_sub }}</p>
             </div>
           </div>
           <div class="flight-meta-box">
-            <div class="meta-row"><span>Misión:</span> <strong>{{ destination().name }}</strong></div>
-            <div class="meta-row"><span>Sujeto:</span> <strong>Astronauta {{ state.selectedAstronaut() }}</strong></div>
-            <div class="meta-row"><span>Cronología:</span> <strong>Sol {{ state.missionDay() }} de {{ state.missionConfig().daysInSpace }} días</strong></div>
-            <div class="meta-row"><span>Fecha Tierra:</span> <strong>{{ state.currentDate() || 'Tiempo Real' }}</strong></div>
+            <div class="meta-row"><span>{{ i18n.t().report_mission }}</span> <strong>{{ destination().name }}</strong></div>
+            <div class="meta-row"><span>{{ i18n.t().report_subject }}</span> <strong>{{ i18n.currentLang() === 'en' ? 'Astronaut' : 'Astronauta' }} {{ state.selectedAstronaut() }}</strong></div>
+            <div class="meta-row"><span>{{ i18n.t().report_chronology }}</span> <strong>{{ i18n.t().sol }} {{ state.missionDay() }} {{ i18n.t().of_days }} {{ state.missionConfig().daysInSpace }} {{ i18n.t().days_unit }}</strong></div>
+            <div class="meta-row"><span>{{ i18n.t().report_earth_date }}</span> <strong>{{ state.currentDate() || (i18n.currentLang() === 'en' ? 'Real Time' : 'Tiempo Real') }}</strong></div>
           </div>
         </div>
 
@@ -42,56 +43,56 @@ import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
 
         <!-- 1. Perfil Fisiológico y Comparativa con Línea Base de Tierra -->
         <section class="report-section">
-          <h3 class="section-title">1. Telemetría de Signos Vitales vs. Línea Base Terrestre</h3>
-          <p class="section-intro">Comparativa robusta de biomarcadores orbitales en relación a la ventana pre-vuelo en gravedad terrestre (1g):</p>
+          <h3 class="section-title">{{ i18n.t().report_sec1_title }}</h3>
+          <p class="section-intro">{{ i18n.t().report_sec1_sub }}</p>
           <div class="vitals-table-wrapper">
             <table class="report-table">
               <thead>
                 <tr>
-                  <th>Biomarcador</th>
-                  <th>Línea Base Tierra</th>
-                  <th>Medición en Vuelo</th>
-                  <th>Delta Relativo</th>
-                  <th>Evaluación Fisiológica</th>
+                  <th>{{ i18n.t().report_col_bio }}</th>
+                  <th>{{ i18n.t().report_col_base }}</th>
+                  <th>{{ i18n.t().report_col_meas }}</th>
+                  <th>{{ i18n.t().report_col_delta }}</th>
+                  <th>{{ i18n.t().report_col_eval }}</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td><strong>Frecuencia Cardíaca en Reposo</strong></td>
+                  <td><strong>{{ i18n.t().heart_resting }}</strong></td>
                   <td>58.2 bpm</td>
                   <td>61.9 bpm</td>
                   <td><span class="delta-tag plus">+6.3%</span></td>
-                  <td><span class="badge-status ok">Nominal (Microgravedad)</span></td>
+                  <td><span class="badge-status ok">{{ i18n.currentLang() === 'en' ? 'Nominal (Microgravity)' : 'Nominal (Microgravedad)' }}</span></td>
                 </tr>
                 <tr>
-                  <td><strong>Presión Arterial Sistólica</strong></td>
+                  <td><strong>{{ i18n.t().col_bp }} (Sistólica)</strong></td>
                   <td>115.0 mmHg</td>
                   <td>116.3 mmHg</td>
                   <td><span class="delta-tag plus">+1.1%</span></td>
-                  <td><span class="badge-status ok">Normal / Sin Desplazamiento Cefálico Crítico</span></td>
+                  <td><span class="badge-status ok">{{ i18n.currentLang() === 'en' ? 'Normal / No Cephalic Shift' : 'Normal / Sin Desplazamiento Cefálico Crítico' }}</span></td>
                 </tr>
                 <tr>
-                  <td><strong>Glucosa en Sangre</strong></td>
+                  <td><strong>{{ i18n.t().col_glucose }}</strong></td>
                   <td>90.0 mg/dL</td>
                   <td>92.4 mg/dL</td>
                   <td><span class="delta-tag plus">+2.6%</span></td>
-                  <td><span class="badge-status ok">Metabolismo Óptimo</span></td>
+                  <td><span class="badge-status ok">{{ i18n.currentLang() === 'en' ? 'Optimal Metabolism' : 'Metabolismo Óptimo' }}</span></td>
                 </tr>
                 <tr>
-                  <td><strong>Temperatura Corporal</strong></td>
+                  <td><strong>{{ i18n.t().col_temp }}</strong></td>
                   <td>36.5 °C</td>
                   <td>36.6 °C</td>
                   <td><span class="delta-tag neutral">+0.2%</span></td>
-                  <td><span class="badge-status ok">Termorregulación Estable</span></td>
+                  <td><span class="badge-status ok">{{ i18n.currentLang() === 'en' ? 'Stable Thermoregulation' : 'Termorregulación Estable' }}</span></td>
                 </tr>
                 <tr>
-                  <td><strong>Duración del Sueño</strong></td>
+                  <td><strong>{{ i18n.t().col_sleep }}</strong></td>
                   <td>7.8 h</td>
                   <td>{{ neuro.activeCase().id === 'PSYCHOSIS' ? '2.1 h' : '6.9 h' }}</td>
                   <td><span class="delta-tag minus">{{ neuro.activeCase().id === 'PSYCHOSIS' ? '-73%' : '-11.5%' }}</span></td>
                   <td>
                     <span class="badge-status" [class.alert]="neuro.activeCase().id === 'PSYCHOSIS'" [class.ok]="neuro.activeCase().id !== 'PSYCHOSIS'">
-                      {{ neuro.activeCase().id === 'PSYCHOSIS' ? 'Alerta Crítica: Insomnio' : 'Adaptativo Aceptable' }}
+                      {{ neuro.activeCase().id === 'PSYCHOSIS' ? (i18n.currentLang() === 'en' ? 'Critical Alert: Severe Insomnia' : 'Alerta Crítica: Insomnio') : (i18n.currentLang() === 'en' ? 'Acceptable Adaptation' : 'Adaptativo Aceptable') }}
                     </span>
                   </td>
                 </tr>
@@ -102,59 +103,59 @@ import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
 
         <!-- 2. Adherencia Física y Protocolo de Preservación Muscular / Ósea -->
         <section class="report-section">
-          <h3 class="section-title">2. Protocolo de Entrenamiento Físico y Combate a la Atrofia</h3>
+          <h3 class="section-title">{{ i18n.currentLang() === 'en' ? '2. Physical Training Protocol & Atrophy Mitigation' : '2. Protocolo de Entrenamiento Físico y Combate a la Atrofia' }}</h3>
           <div class="exercise-summary-grid">
             <div class="summary-card">
-              <span class="card-label">Meta Asignada:</span>
+              <span class="card-label">{{ i18n.t().assigned_goal }}:</span>
               <strong class="card-val">{{ goal().name }}</strong>
               <p class="card-desc">{{ goal().archetype }}</p>
             </div>
             <div class="summary-card">
-              <span class="card-label">Racha Consecutiva:</span>
-              <strong class="card-val flame">🔥 {{ state.missionDay() }} Días Activos</strong>
-              <p class="card-desc">{{ state.completedExercisesCount() }} / {{ state.currentExercises().length }} ejercicios completados en el Sol actual</p>
+              <span class="card-label">{{ i18n.currentLang() === 'en' ? 'Consecutive Streak:' : 'Racha Consecutiva:' }}</span>
+              <strong class="card-val flame">🔥 {{ state.missionDay() }} {{ i18n.currentLang() === 'en' ? 'Days Active' : 'Días Activos' }}</strong>
+              <p class="card-desc">{{ state.completedExercisesCount() }} / {{ state.currentExercises().length }} {{ i18n.currentLang() === 'en' ? 'exercises completed today' : 'ejercicios completados en el Sol actual' }}</p>
             </div>
             <div class="summary-card">
-              <span class="card-label">Índice de Preservación Muscular:</span>
-              <strong class="card-val green">96.4% Óptimo</strong>
-              <p class="card-desc">Carga guiada resistiva continua contra osteopenia</p>
+              <span class="card-label">{{ i18n.currentLang() === 'en' ? 'Muscle Preservation Index:' : 'Índice de Preservación Muscular:' }}</span>
+              <strong class="card-val green">96.4% {{ i18n.t().status_optimal }}</strong>
+              <p class="card-desc">{{ i18n.currentLang() === 'en' ? 'Continuous resistive guided load against osteopenia' : 'Carga guiada resistiva continua contra osteopenia' }}</p>
             </div>
           </div>
         </section>
 
         <!-- 3. Clima Espacial y Radiación Ionizante NASA DONKI -->
         <section class="report-section">
-          <h3 class="section-title">3. Exposición a Radiación Espacial (NASA DONKI Live)</h3>
+          <h3 class="section-title">{{ i18n.currentLang() === 'en' ? '3. Space Radiation Exposure (NASA DONKI Live)' : '3. Exposición a Radiación Espacial (NASA DONKI Live)' }}</h3>
           <div class="radiation-report-box" [class.danger]="nasa.isDangerous()">
             <div class="rad-header">
               <div class="rad-status-pill" [class.danger]="nasa.isDangerous()">
-                {{ nasa.isDangerous() ? '☢️ RADIACIÓN PELIGROSA (>1000 pfu)' : '🛡️ NIVELES NOMINALES / SEGUROS' }}
+                {{ nasa.isDangerous() ? (i18n.currentLang() === 'en' ? '☢️ HAZARDOUS RADIATION (>1000 pfu)' : '☢️ RADIACIÓN PELIGROSA (>1000 pfu)') : (i18n.currentLang() === 'en' ? '🛡️ NOMINAL / SAFE RADIATION LEVELS' : '🛡️ NIVELES NOMINALES / SEGUROS') }}
               </div>
-              <span class="rad-time">Último escaneo satelital: {{ lastCheckedStr() }}</span>
+              <span class="rad-time">{{ i18n.currentLang() === 'en' ? 'Satellite scan:' : 'Último escaneo satelital:' }} {{ lastCheckedStr() }}</span>
             </div>
-            <p class="rad-headline"><strong>Diagnóstico DONKI:</strong> {{ nasa.radiationHeadline() }}</p>
+            <p class="rad-headline"><strong>{{ i18n.currentLang() === 'en' ? 'DONKI Diagnosis:' : 'Diagnóstico DONKI:' }}</strong> {{ nasa.radiationHeadline() }}</p>
             <p class="rad-details">{{ nasa.radiationDetails() }}</p>
             <div class="rad-recommendation">
-              <strong>Recomendación para Caminatas Espaciales (EVA):</strong>
-              {{ nasa.isDangerous() ? 'PROHIBIDAS DE INMEDIATO. Permanecer en módulo con blindaje hídrico/polietileno.' : 'AUTORIZADAS. Parámetros de partículas energéticas dentro de los límites permisibles de la NASA.' }}
+              <strong>{{ i18n.currentLang() === 'en' ? 'Spacewalk (EVA) Recommendation:' : 'Recomendación para Caminatas Espaciales (EVA):' }}</strong>
+              {{ nasa.isDangerous() ? (i18n.currentLang() === 'en' ? 'IMMEDIATELY PROHIBITED. Shelter in water/polyethylene shielded quarters.' : 'PROHIBIDAS DE INMEDIATO. Permanecer en módulo con blindaje hídrico/polietileno.') : (i18n.currentLang() === 'en' ? 'AUTHORIZED. Energetic particle flux within permissible NASA bounds.' : 'AUTORIZADAS. Parámetros de partículas energéticas dentro de los límites permisibles de la NASA.') }}
             </div>
           </div>
         </section>
 
         <!-- 4. Neuroconducta, Arquitectura de Sueño y Diagnóstico Límbico -->
         <section class="report-section">
-          <h3 class="section-title">4. Estado Neuroconductual, Eje Cerebro-Corazón y Sueño</h3>
+          <h3 class="section-title">{{ i18n.currentLang() === 'en' ? '4. Neurobehavioral Status, Brain-Heart Axis & Sleep' : '4. Estado Neuroconductual, Eje Cerebro-Corazón y Sueño' }}</h3>
           <div class="neuro-summary-box" [style.border-left-color]="neuro.activeCase().severityColor">
             <div class="neuro-top">
               <span class="neuro-badge" [style.background-color]="neuro.activeCase().severityColor">
                 {{ neuro.activeCase().shortName }} ({{ neuro.liveLpm() }} BPM)
               </span>
-              <span class="neuro-stage">Fase Dominante: <strong>{{ neuro.activeCase().dominantStage }}</strong></span>
+              <span class="neuro-stage">{{ i18n.t().dominant_stage }} <strong>{{ neuro.activeCase().dominantStage }}</strong></span>
             </div>
             <p class="neuro-headline"><strong>{{ neuro.activeCase().headline }}</strong></p>
             <p class="neuro-desc">{{ neuro.activeCase().clinicalDescription }}</p>
             <div class="neuro-zones">
-              <span class="zones-title">Zonas Encefálicas con Hiperactivación:</span>
+              <span class="zones-title">{{ i18n.t().zones_involved }}</span>
               <ul class="zones-list">
                 @for (zone of neuro.activeCase().zonesActivated; track zone) {
                   <li>{{ zone }}</li>
@@ -167,12 +168,12 @@ import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
         <!-- Validación Digital del Sistema -->
         <div class="clinical-signature-footer">
           <div class="footer-system-info">
-            <span class="system-title">Sistema Autónomo de Telemetría y Salud de Tripulación</span>
-            <span class="system-sub">Datos validados y sincronizados en tiempo real para misión orbital</span>
+            <span class="system-title">{{ i18n.currentLang() === 'en' ? 'Autonomous Telemetry & Crew Health System' : 'Sistema Autónomo de Telemetría y Salud de Tripulación' }}</span>
+            <span class="system-sub">{{ i18n.currentLang() === 'en' ? 'Validated and synchronized in real time for orbital mission' : 'Datos validados y sincronizados en tiempo real para misión orbital' }}</span>
           </div>
           <div class="system-stamp">
-            <span class="stamp-pill">PROCESADO POR START HELPY v2.0</span>
-            <span class="stamp-time">Telemetría Sincronizada</span>
+            <span class="stamp-pill">PROCESSED BY START HELPY v2.0</span>
+            <span class="stamp-time">{{ i18n.currentLang() === 'en' ? 'Synchronized Telemetry' : 'Telemetría Sincronizada' }}</span>
           </div>
         </div>
       </div>
@@ -613,6 +614,7 @@ export class FlightReportComponent {
   readonly config = inject(ConfigService);
   readonly nasa = inject(NasaDonkiService);
   readonly neuro = inject(NeuroSleepService);
+  readonly i18n = inject(I18nService);
 
   readonly destination = computed(() => {
     const env = this.state.selectedEnvironment();

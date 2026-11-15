@@ -8,6 +8,7 @@ import {
 import Plotly from 'plotly.js-dist-min';
 import { MissionStateService } from '../../core/services/mission-state.service';
 import { ConfigService } from '../../core/services/config.service';
+import { I18nService } from '../../core/services/i18n.service';
 import { IndicatorKey } from '../../core/models/indicator.model';
 
 @Component({
@@ -38,13 +39,15 @@ export class TrendsChartComponent {
 
   private state = inject(MissionStateService);
   private config = inject(ConfigService);
+  private i18n = inject(I18nService);
 
   constructor() {
     effect(() => {
-      // Suscribirse a cambios en registros recortados, indicador seleccionado y resultados
+      // Suscribirse a cambios en registros recortados, indicador seleccionado, resultados e idioma
       const records = this.state.recordsUpToCurrent();
       const indicatorKey = this.state.selectedIndicatorForTrends();
       const results = this.state.evaluationResults();
+      const lang = this.i18n.currentLang();
 
       if (records.length > 0 && indicatorKey && this.chartContainer) {
         this.renderPlot(records, indicatorKey, results[indicatorKey]);
@@ -56,6 +59,7 @@ export class TrendsChartComponent {
     const cfg = this.config.INDICATORS[key];
     if (!cfg) return;
 
+    const isEn = this.i18n.currentLang() === 'en';
     const xDates = records.map((r) => r.date);
     const yValues = records.map((r) =>
       typeof r[key] === 'number' && !isNaN(r[key]) ? r[key] : null
@@ -90,7 +94,7 @@ export class TrendsChartComponent {
       yref: 'y',
       x: 0.02,
       y: hi,
-      text: 'Rango de referencia',
+      text: isEn ? 'Reference range' : 'Rango de referencia',
       showarrow: false,
       font: { size: 10, color: '#2e7d32' },
       xanchor: 'left',
@@ -135,7 +139,7 @@ export class TrendsChartComponent {
         yref: 'y',
         x: 0.98,
         y: bHi,
-        text: 'Línea base personal ± 2σ',
+        text: isEn ? 'Personal baseline ± 2σ' : 'Línea base personal ± 2σ',
         showarrow: false,
         font: { size: 10, color: '#2563eb' },
         xanchor: 'right',
@@ -170,7 +174,7 @@ export class TrendsChartComponent {
         x: missingDates,
         y: missingY,
         mode: 'markers',
-        name: 'Medición ausente',
+        name: isEn ? 'Missing measurement' : 'Medición ausente',
         marker: {
           symbol: 'x',
           size: 10,
@@ -181,8 +185,8 @@ export class TrendsChartComponent {
     }
 
     const layout: any = {
-      title: `${cfg.label} (${cfg.unit}) — Evolución Temporal`,
-      xaxis: { title: 'Fecha de Misión', showgrid: true, gridcolor: '#f1f5f9' },
+      title: `${cfg.label} (${cfg.unit}) — ${isEn ? 'Temporal Evolution' : 'Evolución Temporal'}`,
+      xaxis: { title: isEn ? 'Mission Date' : 'Fecha de Misión', showgrid: true, gridcolor: '#f1f5f9' },
       yaxis: { title: `${cfg.label} (${cfg.unit})`, showgrid: true, gridcolor: '#f1f5f9' },
       shapes,
       annotations,

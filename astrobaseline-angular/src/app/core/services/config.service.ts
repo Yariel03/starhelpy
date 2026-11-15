@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {
   IndicatorConfig,
   IndicatorKey,
@@ -8,13 +8,19 @@ import {
   MissionDestination,
   TrainingGoal,
 } from '../models/indicator.model';
+import { I18nService } from './i18n.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ConfigService {
+  private readonly i18n = inject(I18nService);
+
   readonly APP_NAME = 'Start Helpy';
-  readonly TAGLINE = 'Monitoreo de salud y rendimiento físico de astronautas';
+
+  get TAGLINE(): string {
+    return this.i18n.t().tagline;
+  }
 
   readonly DATE_COL = 'date';
   readonly SUBJECT_COL = 'astronaut_id';
@@ -36,7 +42,7 @@ export class ConfigService {
 
   readonly LONG_VAL_SYNONYMS = ['value', 'valor', 'result', 'reading', 'measure'];
 
-  readonly INDICATORS: Record<IndicatorKey, IndicatorConfig> = {
+  private readonly INDICATORS_ES: Record<IndicatorKey, IndicatorConfig> = {
     heart_rate: {
       label: 'Frecuencia cardíaca en reposo',
       unit: 'lpm',
@@ -165,7 +171,140 @@ export class ConfigService {
     },
   };
 
-  readonly REGIONS: Record<BodyRegionKey, RegionInfo> = {
+  private readonly INDICATORS_EN: Record<IndicatorKey, IndicatorConfig> = {
+    heart_rate: {
+      label: 'Resting Heart Rate',
+      unit: 'bpm',
+      ref_low: 50,
+      ref_high: 100,
+      hard_low: 40,
+      hard_high: 120,
+      plaus_low: 20,
+      plaus_high: 250,
+      min_sigma: 2.0,
+      region: 'chest',
+      hazard: 'Gravitational fields (fluid shifts, cardiovascular deconditioning); operational stress',
+      why: 'Fluid redistribution and zero-g deconditioning, coupled with operational stress and poor sleep, disrupt baseline cardiac rhythm.',
+      how: 'Wearable telemetry monitor or manual pulse check at rest (seated, 5 min).',
+      attention: 'Rest, hydrate, recheck in 10 min; assess sleep hygiene and stress levels.',
+      alert: 'Repeat measurement; if confirmed, apply onboard medical protocol and notify Flight Surgeon.',
+      synonyms: ['hr', 'heartrate', 'pulse', 'bpm', 'fc', 'frecuenciacardiaca', 'pulso', 'heart_rate_bpm'],
+    },
+    systolic_bp: {
+      label: 'Systolic Blood Pressure',
+      unit: 'mmHg',
+      ref_low: 90,
+      ref_high: 130,
+      hard_low: 80,
+      hard_high: 160,
+      plaus_low: 60,
+      plaus_high: 260,
+      min_sigma: 4.0,
+      region: 'chest',
+      hazard: 'Microgravity (cephalad fluid shift); space radiation (cardiovascular risk)',
+      why: 'Altered gravity shifts body fluids toward the head, altering blood pressure regulation.',
+      how: 'Automatic digital arm cuff, seated at rest, same arm and time of day.',
+      attention: 'Repeat after 10 min rest; reduce sodium and caffeine; log in telemetry log.',
+      alert: 'Repeat reading; if critical range confirmed, trigger onboard protocol and alert Flight Surgeon.',
+      synonyms: ['sbp', 'systolic', 'sys', 'bpsys', 'presionsistolica', 'systolicbloodpressure', 'ps'],
+    },
+    diastolic_bp: {
+      label: 'Diastolic Blood Pressure',
+      unit: 'mmHg',
+      ref_low: 60,
+      ref_high: 85,
+      hard_low: 50,
+      hard_high: 100,
+      plaus_low: 30,
+      plaus_high: 160,
+      min_sigma: 3.0,
+      region: 'chest',
+      hazard: 'Microgravity (cephalad fluid shift); cosmic radiation',
+      why: 'Same mechanism as systolic pressure; evaluated together to assess systemic vascular resistance.',
+      how: 'Same digital arm cuff protocol as systolic blood pressure.',
+      attention: 'Repeat after 10 min rest; record in telemetry log.',
+      alert: 'Repeat; if critical value confirmed, follow emergency procedure and notify ground.',
+      synonyms: ['dbp', 'diastolic', 'dia', 'bpdia', 'presiondiastolica', 'diastolicbloodpressure', 'pd'],
+    },
+    glucose: {
+      label: 'Blood Glucose',
+      unit: 'mg/dL',
+      ref_low: 70,
+      ref_high: 110,
+      hard_low: 60,
+      hard_high: 180,
+      plaus_low: 20,
+      plaus_high: 600,
+      min_sigma: 5.0,
+      region: 'abdomen',
+      hazard: 'Confined habitat (space nutrition, metabolic stress); energy expenditure changes',
+      why: 'Changes in diet, psychological stress and lower gravity load alter carbohydrate metabolism and insulin sensitivity.',
+      how: 'Capillary fingertip glucometer, fasting state, same time each morning.',
+      attention: 'Review dietary log and recent exercise; repeat fasting measurement.',
+      alert: 'Repeat test; if persistent alteration, apply onboard metabolic protocol and notify Flight Surgeon.',
+      synonyms: ['glucose', 'glucosa', 'bloodsugar', 'bg', 'glu', 'glycemia', 'glicemia', 'bloodglucose'],
+    },
+    temperature: {
+      label: 'Body Temperature',
+      unit: '°C',
+      ref_low: 36.0,
+      ref_high: 37.5,
+      hard_low: 35.0,
+      hard_high: 38.5,
+      plaus_low: 30,
+      plaus_high: 43,
+      min_sigma: 0.2,
+      region: 'arms',
+      hazard: 'Closed environment (pathogen transmission, habitat thermal load); immune dysregulation',
+      why: 'Microgravity suppresses immune response and closed quarters increase microbial transmission risks.',
+      how: 'Infrared forehead sensor or digital oral thermometer, same time daily.',
+      attention: 'Hydrate, verify cabin module ventilation, repeat reading in 30 min.',
+      alert: 'Preemptively isolate astronaut if viable, follow clinical protocol and report to ground.',
+      synonyms: ['temp', 'bodytemp', 'bodytemperature', 'temperatura', 'tempc', 'temperature_c', 'temperaturec'],
+    },
+    sleep_hours: {
+      label: 'Sleep Duration',
+      unit: 'h',
+      ref_low: 6.0,
+      ref_high: 10.0,
+      hard_low: 4.5,
+      hard_high: null,
+      plaus_low: 0,
+      plaus_high: 24,
+      min_sigma: 0.5,
+      region: 'head',
+      hazard: 'Isolation and confinement; circadian disruption (~16 orbital sunrises/day); acoustic noise',
+      why: 'Frequent orbital light-dark cycles, life support noise, and high workloads compromise restorative rest.',
+      how: 'Wearable sleep telemetry tracker or daily astronaut log.',
+      attention: 'Protect sleep window; dim lighting and minimize noise; review daily workload.',
+      alert: 'Report acute fatigue risk to Flight Surgeon; request temporary schedule adjustment.',
+      synonyms: ['sleep', 'sleeptime', 'sleepduration', 'sueno', 'horassueno', 'sleephours', 'hoursofsleep', 'totalsleep'],
+    },
+    mood: {
+      label: 'Mood Score (1-5)',
+      unit: 'pts',
+      ref_low: 3,
+      ref_high: null,
+      hard_low: 2,
+      hard_high: null,
+      plaus_low: 1,
+      plaus_high: 5,
+      min_sigma: 0.5,
+      region: 'head',
+      hazard: 'Extreme isolation, confinement and Earth-out-of-view phenomenon',
+      why: 'Prolonged distance and confinement directly impact psychological wellbeing and behavioral health. Scale: 1 = Very low, 5 = Excellent.',
+      how: 'Quick daily self-assessment (1-5) taking under 10 seconds.',
+      attention: 'Schedule family or crew private comms window; adjust recreation time.',
+      alert: 'Request behavioral health psychological consult with mission support on Earth.',
+      synonyms: ['mood', 'animo', 'estadoanimo', 'wellbeing', 'mentalstate', 'moodscore'],
+    },
+  };
+
+  get INDICATORS(): Record<IndicatorKey, IndicatorConfig> {
+    return this.i18n.currentLang() === 'en' ? this.INDICATORS_EN : this.INDICATORS_ES;
+  }
+
+  private readonly REGIONS_ES: Record<BodyRegionKey, RegionInfo> = {
     head: {
       label: 'Cerebro y Comportamiento',
       indicators: ['sleep_hours', 'mood'],
@@ -192,6 +331,38 @@ export class ConfigService {
       note: 'La pérdida de densidad ósea y muscular requiere imagenología a bordo (DXA / ultrasonido).',
     },
   };
+
+  private readonly REGIONS_EN: Record<BodyRegionKey, RegionInfo> = {
+    head: {
+      label: 'Brain & Behavior',
+      indicators: ['sleep_hours', 'mood'],
+      note: 'Mental health, psychological wellbeing and sleep quality.',
+    },
+    chest: {
+      label: 'Cardiovascular System',
+      indicators: ['heart_rate', 'systolic_bp', 'diastolic_bp'],
+      note: 'Cardiac monitoring, sinus rhythm and blood pressure regulation.',
+    },
+    abdomen: {
+      label: 'Metabolism & Nutrition',
+      indicators: ['glucose'],
+      note: 'Glycemic control and metabolic response to exercise and space nutrition.',
+    },
+    arms: {
+      label: 'Thermoregulation & Immune System',
+      indicators: ['temperature'],
+      note: 'Body temperature monitoring for infection or habitat overheating.',
+    },
+    legs: {
+      label: 'Musculoskeletal System',
+      indicators: [],
+      note: 'Bone and muscle density monitoring requires onboard ultrasound or DXA.',
+    },
+  };
+
+  get REGIONS(): Record<BodyRegionKey, RegionInfo> {
+    return this.i18n.currentLang() === 'en' ? this.REGIONS_EN : this.REGIONS_ES;
+  }
 
   readonly STATUS_CONFIG: Record<number, { name: string; color: string }> = {
     [-1]: { name: 'Sin datos', color: '#757575' },
@@ -234,7 +405,7 @@ export class ConfigService {
     'mood',
   ];
 
-  readonly DESTINATIONS: MissionDestination[] = [
+  private readonly DESTINATIONS_ES: MissionDestination[] = [
     {
       id: 'iss',
       name: 'Estación Espacial Internacional (ISS)',
@@ -258,7 +429,35 @@ export class ConfigService {
     },
   ];
 
-  readonly TRAINING_GOALS: TrainingGoal[] = [
+  private readonly DESTINATIONS_EN: MissionDestination[] = [
+    {
+      id: 'iss',
+      name: 'International Space Station (ISS)',
+      environmentKey: 'Estación espacial (órbita terrestre baja)',
+      image: '/assets/images/destinations/iss.jpg',
+      description: 'Low Earth orbit, microgravity, < 1s latency with mission control.',
+    },
+    {
+      id: 'moon',
+      name: 'The Moon (Artemis Base Camp)',
+      environmentKey: 'Base lunar / superficie lunar',
+      image: '/assets/images/destinations/luna.jpg',
+      description: '1/6 g gravity, lunar radiation, ~1.3 s one-way communications delay.',
+    },
+    {
+      id: 'mars',
+      name: 'Mars (Transit & Surface)',
+      environmentKey: 'Tránsito / superficie de Marte',
+      image: '/assets/images/destinations/marte.jpeg',
+      description: '0.38 g gravity, high autonomy required, 3 to 22 minutes one-way delay.',
+    },
+  ];
+
+  get DESTINATIONS(): MissionDestination[] {
+    return this.i18n.currentLang() === 'en' ? this.DESTINATIONS_EN : this.DESTINATIONS_ES;
+  }
+
+  private readonly TRAINING_GOALS_ES: TrainingGoal[] = [
     {
       id: 'A-01',
       name: 'Meta CBUM — Hipertrofia & Fuerza Muscular',
@@ -276,4 +475,27 @@ export class ConfigService {
       routineFocus: 'Circuitos aeróbicos continuos en cicloergómetro (CEVIS), cinta rodante (T2) y control de variabilidad de frecuencia cardíaca.',
     },
   ];
+
+  private readonly TRAINING_GOALS_EN: TrainingGoal[] = [
+    {
+      id: 'A-01',
+      name: 'CBUM Goal — Hypertrophy & Muscle Strength',
+      archetype: 'Lean muscle mass preservation and development',
+      avatar: '/assets/images/astronauts/cbum.jpeg',
+      description: 'Training focused on muscle retention, body density, and maximal strength to counteract microgravity atrophy.',
+      routineFocus: 'Biomechanical overload on ARED (Advanced Resistive Exercise Device), strict monitoring of glucose and protein metabolism.',
+    },
+    {
+      id: 'A-02',
+      name: 'Spartacus Goal — Endurance & Spartan Conditioning',
+      archetype: 'Cardiovascular capacity and extreme functional stamina',
+      avatar: '/assets/images/astronauts/spartacus.jpeg',
+      description: 'High-intensity physical conditioning, prolonged work capacity, and stress tolerance for demanding exploration missions.',
+      routineFocus: 'Continuous aerobic circuits on CEVIS cycle ergometer, T2 treadmill, and heart rate variability tracking.',
+    },
+  ];
+
+  get TRAINING_GOALS(): TrainingGoal[] {
+    return this.i18n.currentLang() === 'en' ? this.TRAINING_GOALS_EN : this.TRAINING_GOALS_ES;
+  }
 }

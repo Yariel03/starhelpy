@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
+import { I18nService } from '../../core/services/i18n.service';
 
 type SighPhase = 'INHALE_1' | 'INHALE_2' | 'EXHALE_LONG';
 
@@ -16,26 +17,26 @@ type SighPhase = 'INHALE_1' | 'INHALE_2' | 'EXHALE_LONG';
           <div class="header-left">
             <span class="header-icon">⚡</span>
             <div>
-              <h3>Protocolo de Rescate por Pánico & Despertar Abrupto</h3>
-              <p class="subtitle">Desactivación rápida de amígdala · Suspiro Fisiológico & Verificación de Cabina</p>
+              <h3>{{ i18n.currentLang() === 'en' ? 'Acute Panic Rescue & Awakenings Protocol' : 'Protocolo de Rescate por Pánico & Despertar Abrupto' }}</h3>
+              <p class="subtitle">{{ i18n.currentLang() === 'en' ? 'Rapid amygdala de-escalation · Physiological Sigh & Cabin Verification' : 'Desactivación rápida de amígdala · Suspiro Fisiológico & Verificación de Cabina' }}</p>
             </div>
           </div>
-          <button class="close-btn" (click)="close()" title="Cerrar">✕</button>
+          <button class="close-btn" (click)="close()" [title]="i18n.currentLang() === 'en' ? 'Close' : 'Cerrar'">✕</button>
         </div>
 
         <!-- Telemetría en Descenso -->
         <div class="telemetry-bar">
           <div class="tele-item">
-            <span class="tele-label">Frecuencia Inicial:</span>
-            <span class="tele-val danger">122 LPM (Pánico)</span>
+            <span class="tele-label">{{ i18n.currentLang() === 'en' ? 'Initial Rate:' : 'Frecuencia Inicial:' }}</span>
+            <span class="tele-val danger">122 BPM ({{ i18n.t().status_panic }})</span>
           </div>
           <span class="tele-arrow">➔</span>
           <div class="tele-item">
-            <span class="tele-label">Frecuencia Proyectada:</span>
-            <span class="tele-val safe">{{ projectedLpm() }} LPM (Seguro)</span>
+            <span class="tele-label">{{ i18n.currentLang() === 'en' ? 'Projected Rate:' : 'Frecuencia Proyectada:' }}</span>
+            <span class="tele-val safe">{{ projectedLpm() }} BPM ({{ i18n.currentLang() === 'en' ? 'Safe' : 'Seguro' }})</span>
           </div>
           <div class="tele-item o2-check">
-            <span class="tele-label">O2 Cabina:</span>
+            <span class="tele-label">{{ i18n.currentLang() === 'en' ? 'Cabin O2:' : 'O2 Cabina:' }}</span>
             <span class="tele-val safe">21.2% (101.3 kPa)</span>
           </div>
         </div>
@@ -47,14 +48,14 @@ type SighPhase = 'INHALE_1' | 'INHALE_2' | 'EXHALE_LONG';
             [class.active]="currentTab() === 'sigh'"
             (click)="currentTab.set('sigh')"
           >
-            1. Suspiro Fisiológico Cíclico
+            {{ i18n.currentLang() === 'en' ? '1. Cyclic Physiological Sigh' : '1. Suspiro Fisiológico Cíclico' }}
           </button>
           <button
             class="tab-pill"
             [class.active]="currentTab() === 'safety'"
             (click)="currentTab.set('safety')"
           >
-            2. Anclaje & Seguridad de Cabina
+            {{ i18n.currentLang() === 'en' ? '2. Cabin Grounding & Safety' : '2. Anclaje & Seguridad de Cabina' }}
           </button>
         </div>
 
@@ -75,7 +76,7 @@ type SighPhase = 'INHALE_1' | 'INHALE_2' | 'EXHALE_LONG';
             </div>
 
             <div class="sigh-meta">
-              <span class="cycle-pill">Ciclo {{ cycle() }} de 3</span>
+              <span class="cycle-pill">{{ i18n.currentLang() === 'en' ? 'Cycle ' + cycle() + ' of 3' : 'Ciclo ' + cycle() + ' de 3' }}</span>
               <p class="sigh-instruction">{{ phaseTip() }}</p>
             </div>
           </div>
@@ -88,22 +89,22 @@ type SighPhase = 'INHALE_1' | 'INHALE_2' | 'EXHALE_LONG';
               <div class="check-item verified">
                 <span class="check-icon">✓</span>
                 <div class="check-texts">
-                  <strong>Presión Barométrica Nominal: 101.3 kPa</strong>
-                  <span>Sin despresurización. El soporte vital del módulo funciona al 100%.</span>
+                  <strong>{{ i18n.currentLang() === 'en' ? 'Nominal Barometric Pressure: 101.3 kPa' : 'Presión Barométrica Nominal: 101.3 kPa' }}</strong>
+                  <span>{{ i18n.currentLang() === 'en' ? 'No depressurization. Module life support functioning at 100%.' : 'Sin despresurización. El soporte vital del módulo funciona al 100%.' }}</span>
                 </div>
               </div>
               <div class="check-item verified">
                 <span class="check-icon">✓</span>
                 <div class="check-texts">
-                  <strong>Oxígeno y Flujo de Aire: 21.2% O2</strong>
-                  <span>Tus pulmones reciben aire puro; la sensación de asfixia es una ilusión adrenérgica.</span>
+                  <strong>{{ i18n.currentLang() === 'en' ? 'Oxygen & Airflow: 21.2% O2' : 'Oxígeno y Flujo de Aire: 21.2% O2' }}</strong>
+                  <span>{{ i18n.currentLang() === 'en' ? 'Your lungs are receiving pure oxygen; the feeling of breathlessness is an adrenergic illusion.' : 'Tus pulmones reciben aire puro; la sensación de asfixia es una ilusión adrenérgica.' }}</span>
                 </div>
               </div>
               <div class="check-item sensory">
                 <span class="check-icon">👁️</span>
                 <div class="check-texts">
-                  <strong>Anclaje Visual 3-2-1:</strong>
-                  <span>Fija la mirada en 3 puntos fijos iluminados de tu consola frontal. Siente la firmeza del arnés.</span>
+                  <strong>{{ i18n.currentLang() === 'en' ? 'Visual Grounding 3-2-1:' : 'Anclaje Visual 3-2-1:' }}</strong>
+                  <span>{{ i18n.currentLang() === 'en' ? 'Fix your gaze on 3 illuminated console points. Feel the firm security of your harness.' : 'Fija la mirada en 3 puntos fijos iluminados de tu consola frontal. Siente la firmeza del arnés.' }}</span>
                 </div>
               </div>
             </div>
@@ -112,9 +113,9 @@ type SighPhase = 'INHALE_1' | 'INHALE_2' | 'EXHALE_LONG';
 
         <!-- Footer -->
         <div class="modal-footer">
-          <button class="btn btn-secondary" (click)="close()">Cancelar</button>
+          <button class="btn btn-secondary" (click)="close()">{{ i18n.currentLang() === 'en' ? 'Cancel' : 'Cancelar' }}</button>
           <button class="btn btn-panic-finish" (click)="finish()">
-            ✓ Restablecer Sistema Vagal & Reposo
+            {{ i18n.currentLang() === 'en' ? '✓ Restore Vagal System & Rest' : '✓ Restablecer Sistema Vagal & Reposo' }}
           </button>
         </div>
       </div>
@@ -471,6 +472,7 @@ type SighPhase = 'INHALE_1' | 'INHALE_2' | 'EXHALE_LONG';
 })
 export class PanicGroundingComponent implements OnInit, OnDestroy {
   readonly neuro = inject(NeuroSleepService);
+  readonly i18n = inject(I18nService);
 
   readonly currentTab = signal<'sigh' | 'safety'>('sigh');
   readonly sighPhase = signal<SighPhase>('INHALE_1');
@@ -531,24 +533,26 @@ export class PanicGroundingComponent implements OnInit, OnDestroy {
   }
 
   phaseLabel(): string {
+    const isEn = this.i18n.currentLang() === 'en';
     switch (this.sighPhase()) {
       case 'INHALE_1':
-        return 'Inhala Profundo (Nariz)';
+        return isEn ? 'Deep Inhale (Nose)' : 'Inhala Profundo (Nariz)';
       case 'INHALE_2':
-        return 'Sorbo Extra (+ Aire)';
+        return isEn ? 'Extra Sip (+ Air)' : 'Sorbo Extra (+ Aire)';
       case 'EXHALE_LONG':
-        return 'Exhala Lento (Boca)';
+        return isEn ? 'Slow Exhale (Mouth)' : 'Exhala Lento (Boca)';
     }
   }
 
   phaseTip(): string {
+    const isEn = this.i18n.currentLang() === 'en';
     switch (this.sighPhase()) {
       case 'INHALE_1':
-        return 'Llena tus pulmones con aire por la nariz.';
+        return isEn ? 'Fill your lungs with air through your nose.' : 'Llena tus pulmones con aire por la nariz.';
       case 'INHALE_2':
-        return 'Inhala un poco más al final para expandir los alvéolos colapsados.';
+        return isEn ? 'Inhale a tiny bit more at the top to re-open collapsed alveoli.' : 'Inhala un poco más al final para expandir los alvéolos colapsados.';
       case 'EXHALE_LONG':
-        return 'Suelta todo el aire lentamente por la boca. Siente cómo tu ritmo cardíaco se desploma.';
+        return isEn ? 'Slowly exhale all air through your mouth. Feel your heart rate drop.' : 'Suelta todo el aire lentamente por la boca. Siente cómo tu ritmo cardíaco se desploma.';
     }
   }
 

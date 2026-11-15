@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NeuroCaseConfig, NeuroSleepService, NeuroStateId } from '../../core/services/neuro-sleep.service';
+import { I18nService } from '../../core/services/i18n.service';
 import { Brain3dComponent } from '../brain-3d/brain-3d.component';
 
 @Component({
@@ -17,7 +18,7 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
               {{ neuro.activeCase().icon }} {{ neuro.activeCase().severity }}
             </span>
             <span class="lpm-tag">
-              Telemetría Cardíaca: <strong>{{ neuro.liveLpm() }} LPM</strong> ({{ neuro.activeCase().lpmRange }})
+              {{ i18n.t().cardiac_telemetry }} <strong>{{ neuro.liveLpm() }} LPM</strong> ({{ neuro.activeCase().lpmRange }})
             </span>
           </div>
           <h2>{{ neuro.activeCase().name }}</h2>
@@ -26,17 +27,17 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
 
         <div class="header-metrics-group">
           <div class="metric-block">
-            <span class="metric-label">Calidad de Sueño</span>
+            <span class="metric-label">{{ i18n.t().sleep_quality }}</span>
             <span class="metric-value">{{ neuro.activeCase().sleepQuality }}</span>
           </div>
           <div class="metric-block">
-            <span class="metric-label">Fase Dominante</span>
+            <span class="metric-label">{{ i18n.t().dominant_stage }}</span>
             <span class="metric-value highlight">{{ neuro.activeCase().dominantStage }}</span>
           </div>
           <div class="metric-block">
-            <span class="metric-label">Tono Autonómico</span>
+            <span class="metric-label">{{ i18n.t().autonomic_tone }}</span>
             <span class="metric-value" [class.danger]="neuro.activeCase().severity !== 'NOMINAL'">
-              {{ neuro.activeCase().severity === 'NOMINAL' ? '🟢 Parasimpático' : '🔴 Simpático' }}
+              {{ neuro.activeCase().severity === 'NOMINAL' ? i18n.t().parasympathetic : i18n.t().sympathetic }}
             </span>
           </div>
         </div>
@@ -47,9 +48,9 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
         <div class="sim-header">
           <div class="sim-title-box">
             <span class="sim-icon">⚡</span>
-            <h4>SIMULADOR DE CASOS NEUROCONDUCTUALES ESPACIALES</h4>
+            <h4>{{ i18n.t().sim_header_title }}</h4>
           </div>
-          <span class="sim-badge">Interacción en Vivo · Eje Cerebro-Corazón</span>
+          <span class="sim-badge">{{ i18n.t().sim_header_sub }}</span>
         </div>
 
         <div class="simulator-buttons-grid">
@@ -63,10 +64,10 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
               <span class="btn-icon">{{ c.icon }}</span>
               <div class="btn-texts">
                 <span class="btn-title">{{ c.shortName }}</span>
-                <span class="btn-sub">{{ c.lpmAverage }} LPM promedio</span>
+                <span class="btn-sub">{{ c.lpmAverage }} {{ i18n.t().bpm_avg_sub }}</span>
               </div>
               @if (neuro.activeStateId() === c.id) {
-                <span class="active-badge">✓ Activo</span>
+                <span class="active-badge">{{ i18n.t().active_tag }}</span>
               }
             </button>
           }
@@ -81,10 +82,10 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
             <div class="card-header">
               <div class="header-left">
                 <span class="card-icon">🧠</span>
-                <h4>Mapeo Encefálico Tridimensional</h4>
+                <h4>{{ i18n.t().brain_map_title }}</h4>
               </div>
               <div class="header-right-actions">
-                <span class="card-hint">Rotación Orbital 360°</span>
+                <span class="card-hint">{{ i18n.t().orbital_rot_hint }}</span>
               </div>
             </div>
 
@@ -93,11 +94,11 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
 
             <!-- Diagnóstico de Activación Límbica -->
             <div class="brain-diagnostic-box">
-              <h5>🔍 Análisis Anatomofuncional del Estado Activo:</h5>
+              <h5>{{ i18n.t().diag_box_title }}</h5>
               <p class="diag-desc">{{ neuro.activeCase().clinicalDescription }}</p>
 
               <div class="zones-activated-pillbox">
-                <span class="pillbox-title">Zonas Encefálicas Involucradas:</span>
+                <span class="pillbox-title">{{ i18n.t().zones_involved }}</span>
                 <div class="pills-wrap">
                   @for (zone of neuro.activeCase().zonesActivated; track zone) {
                     <span class="zone-pill">{{ zone }}</span>
@@ -115,9 +116,9 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
             <div class="card-header">
               <div class="header-left">
                 <span class="card-icon">📈</span>
-                <h4>Arquitectura de Sueño y Telemetría Nocturna (8 Horas)</h4>
+                <h4>{{ i18n.t().sleep_arch_title }}</h4>
               </div>
-              <span class="card-hint">LPM por Hora & Fase</span>
+              <span class="card-hint">{{ i18n.t().sleep_arch_hint }}</span>
             </div>
 
             <div class="timeline-chart-wrapper">
@@ -141,10 +142,10 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
 
             <!-- Leyenda de Fases -->
             <div class="stages-legend">
-              <span class="legend-item"><span class="dot n3"></span> N3 (Profundo)</span>
-              <span class="legend-item"><span class="dot n2"></span> N2 (Ligero)</span>
-              <span class="legend-item"><span class="dot rem"></span> REM (Vívido)</span>
-              <span class="legend-item"><span class="dot vigilia"></span> Vigilia / Despertar</span>
+              <span class="legend-item"><span class="dot n3"></span> {{ i18n.t().stage_n3 }}</span>
+              <span class="legend-item"><span class="dot n2"></span> {{ i18n.t().stage_n2 }}</span>
+              <span class="legend-item"><span class="dot rem"></span> {{ i18n.t().stage_rem }}</span>
+              <span class="legend-item"><span class="dot vigilia"></span> {{ i18n.t().stage_wake }}</span>
             </div>
           </div>
 
@@ -154,7 +155,7 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
               <span class="cm-icon">🛡️</span>
               <div>
                 <h4>{{ neuro.activeCase().countermeasureTitle }}</h4>
-                <p class="cm-sub">Directrices médicas espaciales emitidas por el Cirujano de Vuelo</p>
+                <p class="cm-sub">{{ i18n.t().guidelines_sub }}</p>
               </div>
             </div>
 
@@ -172,9 +173,9 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
                 <button
                   class="btn btn-breath"
                   (click)="openBreathing()"
-                  title="Abrir protocolo de respiración guiada 4-7-8"
+                  title="4-7-8 Breathing"
                 >
-                  🌬️ Iniciar Respiración Guiada 4-7-8
+                  {{ i18n.t().btn_breath }}
                 </button>
               }
 
@@ -182,9 +183,9 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
                 <button
                   class="btn btn-panic"
                   (click)="openPanic()"
-                  title="Activar suspiro fisiológico y anclaje sensorial"
+                  title="Panic Rescue"
                 >
-                  ⚡ Suspiro Fisiológico & Anclaje 5-4-3-2-1
+                  {{ i18n.t().btn_panic }}
                 </button>
               }
 
@@ -192,18 +193,18 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
                 <button
                   class="btn btn-emergency"
                   (click)="openEmergency()"
-                  title="Emitir alerta SOS médica y activar bloqueo cautelar de seguridad"
+                  title="Flight Surgeon SOS"
                 >
-                  🚨 Alerta SOS Cirujano de Vuelo (Nivel 3)
+                  {{ i18n.t().btn_emergency }}
                 </button>
               }
 
               <button
                 class="btn btn-report"
                 (click)="openReport()"
-                title="Ver y descargar resumen de vuelo para el cirujano"
+                [title]="i18n.t().flight_report"
               >
-                📄 Reporte Médico de Vuelo
+                📄 {{ i18n.t().flight_report }}
               </button>
             </div>
           </div>
@@ -771,8 +772,11 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
 })
 export class NeuroSleepComponent {
   readonly neuro = inject(NeuroSleepService);
+  readonly i18n = inject(I18nService);
 
-  readonly caseList: NeuroCaseConfig[] = Object.values(this.neuro.cases);
+  get caseList(): NeuroCaseConfig[] {
+    return Object.values(this.neuro.cases);
+  }
 
   simulate(caseId: NeuroStateId): void {
     this.neuro.simulateCase(caseId);

@@ -6,6 +6,7 @@ import { DataLoaderService } from './data-loader.service';
 import { AnalysisService } from './analysis.service';
 import { NasaDonkiService } from './nasa-donki.service';
 import { NeuroSleepService } from './neuro-sleep.service';
+import { I18nService } from './i18n.service';
 import {
   BodyRegionKey,
   EvaluationResults,
@@ -23,6 +24,7 @@ export class MissionStateService {
   private analysisService = inject(AnalysisService);
   private nasa = inject(NasaDonkiService);
   private neuro = inject(NeuroSleepService);
+  private i18n = inject(I18nService);
   private http = inject(HttpClient);
 
   // Estados Base
@@ -104,7 +106,50 @@ export class MissionStateService {
   readonly currentExercises = computed(() => {
     const gid = this.missionConfig().trainingGoal?.id || this.selectedAstronaut();
     const all = this.exercisesList();
-    return all[gid] || all['A-01'];
+    const list = all[gid] || all['A-01'];
+    const isEn = this.i18n.currentLang() === 'en';
+
+    if (!isEn) return list;
+
+    const enDict: Record<string, { name: string; description: string; target: string }> = {
+      'cbum-1': {
+        name: 'Pneumatic Piston Squat on ARED',
+        description: 'Controlled axial load to preserve lumbar bone density and quadriceps muscle mass in zero-g.',
+        target: '4 sets × 8-10 reps · 140 kg simulated axial load',
+      },
+      'cbum-2': {
+        name: 'Anti-gravity Romanian Deadlift',
+        description: 'Continuous eccentric mechanical tension on hamstrings and posterior chain to prevent trunk atrophy.',
+        target: '4 sets × 10 reps · 120 kg simulated guided load',
+      },
+      'cbum-3': {
+        name: 'Bench Press with ARED Axial Bars',
+        description: 'Chest, anterior deltoid and triceps preservation to retain pushing strength in microgravity.',
+        target: '4 sets × 10-12 reps · 95 kg simulated axial load',
+      },
+      'spartacus-1': {
+        name: 'HIIT Protocol on CEVIS Cycle Ergometer',
+        description: 'High-demand anaerobic intervals to maintain VO2 max and myocardial contractile strength.',
+        target: '20 min · 30s sprint (95% HRmax) / 30s active recovery',
+      },
+      'spartacus-2': {
+        name: 'Loaded Harness Run on T2 Treadmill',
+        description: 'Biomechanical gravitational impact simulation to maintain bone mass and peripheral vascular resistance.',
+        target: '45 min continuous at 11.5 km/h · 1.0g simulated elastic harness',
+      },
+      'spartacus-3': {
+        name: 'Functional Circuits with Reactive Elastic Harness',
+        description: 'Full-body plyometric conditioning for agility and postural resistance against zero gravity.',
+        target: '3 rounds of 5 min · High-intensity continuous work',
+      },
+    };
+
+    return list.map((item) => {
+      const en = enDict[item.id];
+      return en
+        ? { ...item, name: en.name, description: en.description, target: en.target }
+        : item;
+    });
   });
 
   // Conteo de ejercicios completados hoy

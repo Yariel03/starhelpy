@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
+import { I18nService } from '../../core/services/i18n.service';
 
 @Component({
   selector: 'app-emergency-sos',
@@ -14,40 +15,40 @@ import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
           <div class="header-left">
             <span class="header-icon">🚨</span>
             <div>
-              <h3>Protocolo Médico de Emergencia Nivel 3 (Psicosis)</h3>
-              <p class="subtitle">Directriz Médica de Seguridad ISS · Alerta a Houston & Bloqueo Cautelar</p>
+              <h3>{{ i18n.currentLang() === 'en' ? 'Level 3 Emergency Medical Protocol (Psychosis)' : 'Protocolo Médico de Emergencia Nivel 3 (Psicosis)' }}</h3>
+              <p class="subtitle">{{ i18n.currentLang() === 'en' ? 'Space Safety Directive · Flight Surgeon Alert & Safety Lockdown' : 'Directriz Médica de Seguridad ISS · Alerta a Houston & Bloqueo Cautelar' }}</p>
             </div>
           </div>
-          <button class="close-btn" (click)="close()" title="Cerrar">✕</button>
+          <button class="close-btn" (click)="close()" [title]="i18n.currentLang() === 'en' ? 'Close' : 'Cerrar'">✕</button>
         </div>
 
         <!-- Telemetría Crítica -->
         <div class="emergency-telemetry-strip">
           <div class="tele-box danger-box">
-            <span class="label">Estado Clínico:</span>
-            <span class="val">Descompensación Neuroconductual</span>
+            <span class="label">{{ i18n.currentLang() === 'en' ? 'Clinical State:' : 'Estado Clínico:' }}</span>
+            <span class="val">{{ i18n.currentLang() === 'en' ? 'Neurobehavioral Decompensation' : 'Descompensación Neuroconductual' }}</span>
           </div>
           <div class="tele-box danger-box">
-            <span class="label">Frecuencia Crítica:</span>
-            <span class="val">138 LPM (Hipoactividad Prefrontal)</span>
+            <span class="label">{{ i18n.currentLang() === 'en' ? 'Critical Rate:' : 'Frecuencia Crítica:' }}</span>
+            <span class="val">138 BPM ({{ i18n.currentLang() === 'en' ? 'Prefrontal Hypoactivity' : 'Hipoactividad Prefrontal' }})</span>
           </div>
           <div class="tele-box secure-box">
-            <span class="label">Enlace con Tierra:</span>
-            <span class="val">CAPCOM / Médico Conectado</span>
+            <span class="label">{{ i18n.currentLang() === 'en' ? 'Ground Link:' : 'Enlace con Tierra:' }}</span>
+            <span class="val">{{ i18n.currentLang() === 'en' ? 'Flight Surgeon Connected' : 'CAPCOM / Médico Conectado' }}</span>
           </div>
         </div>
 
         <!-- Contramedidas de Emergencia en Lista Activa -->
         <div class="emergency-content">
-          <h4 class="section-title">Medidas Clínicas y Operacionales Ejecutadas de Inmediato:</h4>
+          <h4 class="section-title">{{ i18n.currentLang() === 'en' ? 'Clinical and Operational Measures Executed Immediately:' : 'Medidas Clínicas y Operacionales Ejecutadas de Inmediato:' }}</h4>
 
           <div class="action-card-list">
             <!-- 1. Bloqueo Cautelar -->
             <div class="action-card locked">
               <span class="action-badge-icon">🔒</span>
               <div class="action-text">
-                <strong>Bloqueo Cautelar de Mandos Críticos Activo</strong>
-                <p>Las esclusas de despresurización EVA y mandos de propulsión manual quedan asegurados bajo control automático de Tierra para salvaguardar a la tripulación.</p>
+                <strong>{{ i18n.currentLang() === 'en' ? 'Safety Lockdown of Critical Controls Active' : 'Bloqueo Cautelar de Mandos Críticos Activo' }}</strong>
+                <p>{{ i18n.currentLang() === 'en' ? 'Airlock controls (EVA) and orbital thruster manual navigation are secured under automatic ground control to safeguard crew.' : 'Las esclusas de despresurización EVA y mandos de propulsión manual quedan asegurados bajo control automático de Tierra para salvaguardar a la tripulación.' }}</p>
               </div>
             </div>
 
@@ -55,8 +56,8 @@ import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
             <div class="action-card transmitted">
               <span class="action-badge-icon">🛰️</span>
               <div class="action-text">
-                <strong>Telemetría Encefálica y Holter Transmitida al Cirujano</strong>
-                <p>El equipo de Psiquiatría Aeroespacial en Houston dispone del registro completo de hipocorteza y zonas de amígdala activadas para pautar el sedante oral de rescate.</p>
+                <strong>{{ i18n.currentLang() === 'en' ? 'Brain Telemetry & Holter Transmitted to Flight Surgeon' : 'Telemetría Encefálica y Holter Transmitida al Cirujano' }}</strong>
+                <p>{{ i18n.currentLang() === 'en' ? 'Mission Psychiatry and Flight Surgeon receive full cortical hypofunction mapping and amygdala telemetry to guide medical protocol.' : 'El equipo de Psiquiatría Aeroespacial en Houston dispone del registro completo de hipocorteza y zonas de amígdala activadas para pautar el sedante oral de rescate.' }}</p>
               </div>
             </div>
 
@@ -64,8 +65,8 @@ import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
             <div class="action-card ambient">
               <span class="action-badge-icon">🎧</span>
               <div class="action-text">
-                <strong>Reanclaje Cognitivo con Tierra & Audio Familiar</strong>
-                <p>Activada iluminación ámbar suave de cabina (sin espectro azul) y canal de audio de voz familiar de apoyo para reorientar al astronauta a la realidad.</p>
+                <strong>{{ i18n.currentLang() === 'en' ? 'Cognitive Grounding Link & Family Support Audio' : 'Reanclaje Cognitivo con Tierra & Audio Familiar' }}</strong>
+                <p>{{ i18n.currentLang() === 'en' ? 'Warm amber cabin lighting enabled (blue-spectrum cut) with private familiar audio channel to reorient the astronaut to reality.' : 'Activada iluminación ámbar suave de cabina (sin espectro azul) y canal de audio de voz familiar de apoyo para reorientar al astronauta a la realidad.' }}</p>
               </div>
             </div>
           </div>
@@ -74,17 +75,17 @@ import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
           <div class="helpy-sos-banner">
             <span class="helpy-avatar">⭐</span>
             <div class="helpy-sos-text">
-              <strong>Star Helpy te acompaña:</strong>
-              <p>"Comandante, no estás solo. Hemos asegurado la nave y el Cirujano de Vuelo tiene tu telemetría. Ahora tú solo debes descansar; nosotros nos encargamos de los sistemas."</p>
+              <strong>{{ i18n.currentLang() === 'en' ? 'Star Helpy is with you:' : 'Star Helpy te acompaña:' }}</strong>
+              <p>{{ i18n.currentLang() === 'en' ? '"Commander, you are safe. We have secured the ship and the Flight Surgeon has your telemetry. Now you must rest; we will manage the systems."' : '"Comandante, no estás solo. Hemos asegurado la nave y el Cirujano de Vuelo tiene tu telemetría. Ahora tú solo debes descansar; nosotros nos encargamos de los sistemas."' }}</p>
             </div>
           </div>
         </div>
 
         <!-- Footer -->
         <div class="modal-footer">
-          <button class="btn btn-secondary" (click)="close()">Cerrar Ventana</button>
+          <button class="btn btn-secondary" (click)="close()">{{ i18n.currentLang() === 'en' ? 'Close Window' : 'Cerrar Ventana' }}</button>
           <button class="btn btn-emergency-confirm" (click)="finish()">
-            ✓ Administrar Contramedida Médica y Pasar a Reposo Forzado
+            {{ i18n.currentLang() === 'en' ? '✓ Administer Medical Countermeasure & Enforce Rest' : '✓ Administrar Contramedida Médica y Pasar a Reposo Forzado' }}
           </button>
         </div>
       </div>
@@ -373,6 +374,7 @@ import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
 })
 export class EmergencySosComponent {
   readonly neuro = inject(NeuroSleepService);
+  readonly i18n = inject(I18nService);
 
   close(): void {
     this.neuro.closeEmergencySos();

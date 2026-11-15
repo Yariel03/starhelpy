@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MissionStateService } from '../../core/services/mission-state.service';
 import { ConfigService } from '../../core/services/config.service';
+import { I18nService } from '../../core/services/i18n.service';
 import {
   MissionDestination,
   TrainingGoal,
@@ -18,6 +19,7 @@ import {
 export class MissionWizardComponent {
   private state = inject(MissionStateService);
   readonly config = inject(ConfigService);
+  readonly i18n = inject(I18nService);
 
   readonly currentStep = signal<number>(1);
   readonly totalSteps = 3;
@@ -34,7 +36,9 @@ export class MissionWizardComponent {
   // Meses aproximados como número entero (sin decimales)
   readonly approxMonths = computed(() => {
     const months = Math.max(1, Math.round(this.daysInSpace() / 30));
-    return `${months} ${months === 1 ? 'mes' : 'meses'}`;
+    const isEn = this.i18n.currentLang() === 'en';
+    const unit = isEn ? (months === 1 ? 'month' : 'months') : (months === 1 ? 'mes' : 'meses');
+    return `${months} ${unit}`;
   });
 
   setStep(step: number): void {

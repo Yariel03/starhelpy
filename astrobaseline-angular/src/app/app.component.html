@@ -162,8 +162,8 @@
         <div class="tab-pane telemetry-pane">
           <!-- Cabecera de la sección de telemetría -->
           <div class="telemetry-section-header">
-            <h3>Indicadores Biológicos y Fisiológicos en Tiempo Real</h3>
-            <p>Monitoreo continuo de signos vitales, desviaciones z-score vs línea base personal y acciones clínicas.</p>
+            <h3>{{ i18n.t().telemetry_title }}</h3>
+            <p>{{ i18n.t().telemetry_subtitle }}</p>
           </div>
 
           <!-- Cuadrícula de Tarjetas de Indicadores -->
@@ -177,7 +177,7 @@
                 [class.attention-border]="res && res.level === 1"
                 [class.selected-trend]="state.selectedIndicatorForTrends() === key"
                 (click)="state.selectedIndicatorForTrends.set(key)"
-                title="Haz clic para graficar la evolución temporal de este indicador"
+                [title]="i18n.t().telemetry_card_title"
               >
                 <div class="card-header">
                   <span class="metric-title">{{ cfg.label }}</span>
@@ -191,10 +191,10 @@
                   <div class="metric-delta">
                     @if (res && res.z !== null) {
                       <span class="z-score" [class.negative]="res.z < 0" [class.positive]="res.z > 0">
-                        {{ res.z >= 0 ? '+' : '' }}{{ res.z }} σ vs línea base
+                        {{ res.z >= 0 ? '+' : '' }}{{ res.z }} {{ i18n.t().z_vs_baseline }}
                       </span>
                     } @else {
-                      <span class="no-delta">Sin variación de línea base</span>
+                      <span class="no-delta">{{ i18n.t().no_delta }}</span>
                     }
                   </div>
                 </div>
@@ -205,22 +205,22 @@
                     class="expand-btn"
                     (click)="toggleExpand(key)"
                   >
-                    {{ expandedMetric() === key ? 'Ocultar detalles ▲' : '¿Por qué importa? / Acciones ▼' }}
+                    {{ expandedMetric() === key ? i18n.t().hide_details : i18n.t().show_details }}
                   </button>
 
                   @if (expandedMetric() === key) {
                     <div class="expanded-content">
-                      <p><strong>Importancia clínica:</strong> {{ cfg.why }}</p>
-                      <p><strong>Cómo medir:</strong> {{ cfg.how }}</p>
-                      <p><strong>Riesgo espacial:</strong> {{ cfg.hazard }}</p>
+                      <p><strong>{{ i18n.t().clinical_why }}</strong> {{ cfg.why }}</p>
+                      <p><strong>{{ i18n.t().clinical_how }}</strong> {{ cfg.how }}</p>
+                      <p><strong>{{ i18n.t().clinical_hazard }}</strong> {{ cfg.hazard }}</p>
                       @if (res && res.reasons && res.reasons.length > 0) {
-                        <p class="flags"><strong>Alertas:</strong> {{ res.reasons.join('; ') }}</p>
+                        <p class="flags"><strong>{{ i18n.t().alerts_label }}</strong> {{ res.reasons.join('; ') }}</p>
                       }
                       @if (res && res.level === 1) {
-                        <p class="action-attention"><strong>Acción sugerida:</strong> {{ cfg.attention }}</p>
+                        <p class="action-attention"><strong>{{ i18n.t().action_suggested }}</strong> {{ cfg.attention }}</p>
                       }
                       @if (res && res.level === 2) {
-                        <p class="action-alert"><strong>Acción urgente:</strong> {{ cfg.alert }}</p>
+                        <p class="action-alert"><strong>{{ i18n.t().action_urgent }}</strong> {{ cfg.alert }}</p>
                       }
                     </div>
                   }
@@ -241,42 +241,42 @@
 
             <div class="details-column">
               <div class="region-selector-bar">
-                <span class="selector-label">Seleccionar región anatómica:</span>
+                <span class="selector-label">{{ i18n.t().select_region }}</span>
                 <div class="pill-group">
                   <button
                     class="pill-btn"
                     [class.active]="state.selectedBodyRegion() === 'head'"
                     (click)="state.selectedBodyRegion.set('head')"
                   >
-                    Cabeza
+                    {{ i18n.t().region_head }}
                   </button>
                   <button
                     class="pill-btn"
                     [class.active]="state.selectedBodyRegion() === 'chest'"
                     (click)="state.selectedBodyRegion.set('chest')"
                   >
-                    Tórax
+                    {{ i18n.t().region_chest }}
                   </button>
                   <button
                     class="pill-btn"
                     [class.active]="state.selectedBodyRegion() === 'abdomen'"
                     (click)="state.selectedBodyRegion.set('abdomen')"
                   >
-                    Abdomen
+                    {{ i18n.t().region_abdomen }}
                   </button>
                   <button
                     class="pill-btn"
                     [class.active]="state.selectedBodyRegion() === 'arms'"
                     (click)="state.selectedBodyRegion.set('arms')"
                   >
-                    Brazos
+                    {{ i18n.t().region_arms }}
                   </button>
                   <button
                     class="pill-btn"
                     [class.active]="state.selectedBodyRegion() === 'legs'"
                     (click)="state.selectedBodyRegion.set('legs')"
                   >
-                    Piernas
+                    {{ i18n.t().region_legs }}
                   </button>
                 </div>
               </div>
@@ -290,7 +290,7 @@
                       [style.background-color]="neuro.activeCase().severityColor + '18'"
                       [style.color]="neuro.activeCase().severityColor"
                       [style.border-color]="neuro.activeCase().severityColor + '66'"
-                      title="Caso neuroconductual simulado en vivo"
+                      [title]="i18n.t().sim_case_hint"
                     >
                       {{ neuro.activeCase().icon }} {{ neuro.activeCase().shortName }} ({{ neuro.liveLpm() }} LPM)
                     </span>
@@ -301,15 +301,15 @@
                 @if (state.selectedBodyRegion() === 'head') {
                   <div class="neuro-live-summary-box" [style.border-left-color]="neuro.activeCase().severityColor">
                     <div class="summary-item">
-                      <span class="s-label">Calidad de Sueño:</span>
+                      <span class="s-label">{{ i18n.t().sleep_quality }}</span>
                       <strong class="s-val">{{ neuro.activeCase().sleepQuality }}</strong>
                     </div>
                     <div class="summary-item">
-                      <span class="s-label">Fase Dominante:</span>
+                      <span class="s-label">{{ i18n.t().dominant_stage }}</span>
                       <strong class="s-val">{{ neuro.activeCase().dominantStage }}</strong>
                     </div>
                     <div class="summary-item">
-                      <span class="s-label">Activación Encefálica:</span>
+                      <span class="s-label">{{ i18n.t().brain_activation }}</span>
                       <strong class="s-val">{{ neuro.activeCase().zonesActivated.join(' · ') }}</strong>
                     </div>
                   </div>
@@ -326,7 +326,7 @@
                       <p class="indicator-caption">{{ item.config.why }}</p>
                     </div>
                   } @empty {
-                    <p class="empty-text">No hay indicadores biológicos activos en esta región.</p>
+                    <p class="empty-text">{{ i18n.t().no_indicators_region }}</p>
                   }
                 </div>
               </div>

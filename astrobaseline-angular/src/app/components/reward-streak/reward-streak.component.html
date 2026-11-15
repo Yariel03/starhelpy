@@ -9,38 +9,38 @@
 
       <div class="streak-texts">
         <div class="streak-title-row">
-          <h2 class="streak-title">¡Racha de {{ streakDays() }} Días Activa!</h2>
-          <span class="streak-status-badge">⚡ En Llamas</span>
+          <h2 class="streak-title">{{ i18n.t().streak_active_title.replace('{days}', streakDays().toString()) }}</h2>
+          <span class="streak-status-badge">{{ i18n.t().streak_badge }}</span>
         </div>
         <p class="streak-motto">
-          ¡Disciplina espacial ejemplar! Has cumplido el protocolo de entrenamiento y telemetría sin interrupciones.
+          {{ i18n.t().streak_motto }}
         </p>
       </div>
     </div>
 
     <!-- Píldoras de Recompensas y XP -->
     <div class="rewards-pills">
-      <div class="reward-pill xp-pill" title="Puntos de experiencia acumulados en microgravedad">
+      <div class="reward-pill xp-pill" [title]="i18n.t().orbital_points">
         <span class="pill-icon">⚡</span>
         <div class="pill-meta">
           <span class="pill-val">{{ xpPoints() }} XP</span>
-          <span class="pill-lbl">Puntos Orbitales</span>
+          <span class="pill-lbl">{{ i18n.t().orbital_points }}</span>
         </div>
       </div>
 
-      <div class="reward-pill level-pill" title="Nivel alcanzado según la disciplina física">
+      <div class="reward-pill level-pill" [title]="i18n.t().perf_rank">
         <span class="pill-icon">🏆</span>
         <div class="pill-meta">
           <span class="pill-val">{{ currentLevel() }}</span>
-          <span class="pill-lbl">Rango de Rendimiento</span>
+          <span class="pill-lbl">{{ i18n.t().perf_rank }}</span>
         </div>
       </div>
 
-      <div class="reward-pill shield-pill" title="Escudo de protección de racha activo">
+      <div class="reward-pill shield-pill" [title]="i18n.t().active_shield">
         <span class="pill-icon">🛡️</span>
         <div class="pill-meta">
-          <span class="pill-val">Escudo Activo</span>
-          <span class="pill-lbl">Protección Cero-G</span>
+          <span class="pill-val">{{ i18n.t().active_shield }}</span>
+          <span class="pill-lbl">{{ i18n.t().zero_g_shield }}</span>
         </div>
       </div>
     </div>
@@ -49,8 +49,8 @@
   <!-- PISTA VISUAL DE DÍAS CON CÍRCULOS QUE SE ENCIENDEN -->
   <div class="streak-timeline-section">
     <div class="timeline-header">
-      <span class="timeline-label">🔥 Historial de Racha y Próximos Hitos:</span>
-      <span class="timeline-sub">Los días completados se iluminan con fuego orbital</span>
+      <span class="timeline-label">{{ i18n.t().streak_history_title }}</span>
+      <span class="timeline-sub">{{ i18n.t().streak_history_sub }}</span>
     </div>
 
     <div class="timeline-track-wrapper">
@@ -61,7 +61,7 @@
             [class.completed]="node.isCompleted"
             [class.today]="node.isToday"
             [class.future]="node.isFuture"
-            [title]="node.isCompleted ? 'Día ' + node.day + ' completado con éxito' : (node.isToday ? 'Día ' + node.day + ' (HOY en curso)' : 'Día ' + node.day + ' próximo')"
+            [title]="node.isCompleted ? (i18n.currentLang() === 'en' ? 'Day ' + node.day + ' completed' : 'Día ' + node.day + ' completado') : (node.isToday ? (i18n.currentLang() === 'en' ? 'Day ' + node.day + ' (TODAY)' : 'Día ' + node.day + ' (HOY)') : (i18n.currentLang() === 'en' ? 'Day ' + node.day + ' upcoming' : 'Día ' + node.day + ' próximo'))"
           >
             <!-- Conector entre círculos -->
             @if (node.day > 1) {
@@ -83,9 +83,9 @@
 
             <span class="node-caption">
               @if (node.isToday) {
-                <strong class="today-tag">HOY</strong>
+                <strong class="today-tag">{{ i18n.t().chip_today }}</strong>
               } @else {
-                Sol {{ node.day }}
+                {{ i18n.t().sol }} {{ node.day }}
               }
             </span>
 
@@ -106,7 +106,7 @@
       <div class="goal-identity">
         <img [src]="currentGoal().avatar" [alt]="currentGoal().name" class="goal-header-avatar" />
         <div class="goal-header-meta">
-          <div class="goal-pill-tag">Meta de Entrenamiento Asignada</div>
+          <div class="goal-pill-tag">{{ i18n.t().assigned_goal }}</div>
           <h3 class="goal-header-title">{{ currentGoal().name }}</h3>
           <span class="goal-focus-text">{{ currentGoal().archetype }}</span>
         </div>
@@ -114,8 +114,8 @@
 
       <div class="routine-progress-box">
         <div class="progress-labels">
-          <span class="progress-title">Progreso de Hoy</span>
-          <span class="progress-stat">{{ completedCount() }} / {{ currentExercises().length }} ejercicios ({{ progressPercentage() }}%)</span>
+          <span class="progress-title">{{ i18n.t().today_progress }}</span>
+          <span class="progress-stat">{{ completedCount() }} / {{ currentExercises().length }} {{ i18n.t().exercises_unit }} ({{ progressPercentage() }}%)</span>
         </div>
         <div class="progress-bar-bg">
           <div class="progress-bar-fill" [style.width.%]="progressPercentage()"></div>
@@ -139,7 +139,7 @@
               class="exercise-checkbox"
               [class.checked]="ex.completed"
               (click)="toggleCompletion(ex.id, $event)"
-              [title]="ex.completed ? 'Marcar como pendiente' : 'Marcar como completado'"
+              [title]="ex.completed ? i18n.t().mark_pending : i18n.t().mark_completed"
               [attr.aria-checked]="ex.completed"
             >
               @if (ex.completed) {
@@ -159,7 +159,7 @@
 
             <div class="row-right-actions">
               <span class="status-chip" [class.done]="ex.completed">
-                {{ ex.completed ? '✓ Completado' : '⏳ Pendiente' }}
+                {{ ex.completed ? i18n.t().completed_status : i18n.t().pending_status }}
               </span>
               <span class="expand-chevron" [class.rotated]="expandedExerciseId() === ex.id">
                 ▼
@@ -171,12 +171,12 @@
           @if (expandedExerciseId() === ex.id) {
             <div class="exercise-details-drawer">
               <div class="detail-line target-line">
-                <span class="detail-label">🎯 Series & Repeticiones:</span>
+                <span class="detail-label">{{ i18n.t().sets_reps }}</span>
                 <span class="detail-value highlight">{{ ex.target }}</span>
               </div>
 
               <div class="detail-line desc-line">
-                <span class="detail-label">📋 Descripción Biomecánica:</span>
+                <span class="detail-label">{{ i18n.t().biomech_desc }}</span>
                 <p class="detail-desc">{{ ex.description }}</p>
               </div>
             </div>
@@ -189,8 +189,8 @@
       <div class="all-done-banner">
         <span class="trophy-icon">🎉</span>
         <div class="banner-texts">
-          <strong>¡Sesión Diaria Completada al 100%!</strong>
-          <p>Has asegurado la preservación muscular y cardiovascular de hoy. Racha protegida y +120 XP acreditados.</p>
+          <strong>{{ i18n.t().all_done_title }}</strong>
+          <p>{{ i18n.t().all_done_desc }}</p>
         </div>
       </div>
     }

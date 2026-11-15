@@ -39,11 +39,11 @@
         <span
           class="telemetry-pill"
           [class]="nasa.radiationLevel().toLowerCase()"
-          title="Clima espacial NASA DONKI"
+          [title]="i18n.currentLang() === 'en' ? 'NASA DONKI Space Weather' : 'Clima espacial NASA DONKI'"
         >
-          🛰️ {{ nasa.radiationLevel() === 'SAFE' ? 'DONKI Nominal' : (nasa.radiationLevel() === 'WARNING' ? 'DONKI Alerta' : 'DONKI Peligro') }}
+          🛰️ {{ nasa.radiationLevel() === 'SAFE' ? 'DONKI Nominal' : (nasa.radiationLevel() === 'WARNING' ? (i18n.currentLang() === 'en' ? 'DONKI Warning' : 'DONKI Alerta') : (i18n.currentLang() === 'en' ? 'DONKI Danger' : 'DONKI Peligro')) }}
         </span>
-        <span class="telemetry-pill neuro-pill" title="Frecuencia cardíaca en reposo">
+        <span class="telemetry-pill neuro-pill" [title]="i18n.t().heart_resting">
           🧠 {{ neuro.liveLpm() }} LPM
         </span>
       </div>

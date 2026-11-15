@@ -13,6 +13,7 @@ import {
 import { CommonModule } from '@angular/common';
 import * as THREE from 'three';
 import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
+import { I18nService } from '../../core/services/i18n.service';
 
 @Component({
   selector: 'app-brain-3d',
@@ -36,7 +37,7 @@ import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
               [style.--zone-color]="zone.colorHex"
               (mouseenter)="highlightZone(zone.id)"
               (mouseleave)="unhighlightZone()"
-              [title]="zone.name + ' (' + zone.subsystem + '): ' + zone.activationLevel + '% BOLD vs reposo — ' + zone.statusText"
+              [title]="zone.name + ' (' + zone.subsystem + '): ' + zone.activationLevel + '% BOLD — ' + zone.statusText"
             >
               <span class="zone-dot" [style.background-color]="zone.colorHex"></span>
               <span class="zone-name">{{ zone.name }}</span>
@@ -53,10 +54,10 @@ import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
           <div class="pulse-indicator">
             <span class="pulse-dot" [style.background-color]="activeColor()"></span>
             <span class="pulse-text">
-              Frecuencia: <strong>{{ neuroService.liveLpm() }} BPM</strong>
+              {{ i18n.currentLang() === 'en' ? 'Heart Rate:' : 'Frecuencia:' }} <strong>{{ neuroService.liveLpm() }} BPM</strong>
             </span>
           </div>
-          <span class="rot-hint">🔄 Rotación 360°</span>
+          <span class="rot-hint">{{ i18n.currentLang() === 'en' ? '🔄 360° Rotation' : '🔄 Rotación 360°' }}</span>
         </div>
 
         <!-- Barra de Acciones Superiores Derechas -->
@@ -64,37 +65,37 @@ import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
           <button
             class="ctrl-btn info-btn"
             (click)="togglePctGuide()"
-            title="Ver qué significa el porcentaje de activación BOLD"
+            [title]="i18n.currentLang() === 'en' ? 'Learn about BOLD activation' : 'Ver qué significa el porcentaje de activación BOLD'"
           >
-            ℹ️ ¿Qué es el %?
+            {{ i18n.currentLang() === 'en' ? 'ℹ️ What is %?' : 'ℹ️ ¿Qué es el %?' }}
           </button>
           <button
             class="ctrl-btn zoom-btn"
             (click)="zoomIn()"
-            title="Acercar modelo 3D (+)"
+            [title]="i18n.currentLang() === 'en' ? 'Zoom in (+)' : 'Acercar modelo 3D (+)'"
           >
             🔍+
           </button>
           <button
             class="ctrl-btn zoom-btn"
             (click)="zoomOut()"
-            title="Alejar modelo 3D (-)"
+            [title]="i18n.currentLang() === 'en' ? 'Zoom out (-)' : 'Alejar modelo 3D (-)'"
           >
             🔍-
           </button>
           <button
             class="ctrl-btn reset-cam-btn"
             (click)="resetCamera()"
-            title="Recentrar vista orbital"
+            [title]="i18n.currentLang() === 'en' ? 'Recenter orbital view' : 'Recentrar vista orbital'"
           >
-            🎯 Recentrar
+            {{ i18n.currentLang() === 'en' ? '🎯 Recenter' : '🎯 Recentrar' }}
           </button>
           <button
             class="ctrl-btn max-btn"
             (click)="toggleFullscreen()"
-            title="Maximizar a pantalla completa"
+            [title]="i18n.currentLang() === 'en' ? 'Fullscreen 3D' : 'Maximizar a pantalla completa'"
           >
-            ⛶ Maximizar 3D
+            {{ i18n.currentLang() === 'en' ? '⛶ Maximize 3D' : '⛶ Maximizar 3D' }}
           </button>
         </div>
       }
@@ -104,7 +105,7 @@ import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
         <!-- Barra Superior en Pantalla Completa (Sin superposiciones) -->
         <header class="fs-top-bar">
           <div class="fs-bar-left">
-            <span class="fs-bar-title">🧠 Mapeo Encefálico Tridimensional</span>
+            <span class="fs-bar-title">{{ i18n.currentLang() === 'en' ? '🧠 3D Brain Mapping' : '🧠 Mapeo Encefálico Tridimensional' }}</span>
             <span class="fs-state-chip" [style.background-color]="activeColor()">
               {{ neuroService.activeCase().name }}
             </span>
@@ -117,21 +118,21 @@ import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
             <button
               class="fs-btn info-btn"
               (click)="togglePctGuide()"
-              title="¿Qué significan los porcentajes BOLD?"
+              [title]="i18n.currentLang() === 'en' ? 'Learn about BOLD activation' : '¿Qué significan los porcentajes BOLD?'"
             >
-              ℹ️ ¿Qué significa el %?
+              {{ i18n.currentLang() === 'en' ? 'ℹ️ What is %?' : 'ℹ️ ¿Qué significa el %?' }}
             </button>
             <div class="fs-zoom-group">
-              <button class="fs-btn zoom-btn" (click)="zoomIn()" title="Acercar (+)">🔍+</button>
-              <button class="fs-btn zoom-btn" (click)="zoomOut()" title="Alejar (-)">🔍-</button>
-              <button class="fs-btn" (click)="resetCamera()" title="Recentrar vista">🎯 Recentrar</button>
+              <button class="fs-btn zoom-btn" (click)="zoomIn()" [title]="i18n.currentLang() === 'en' ? 'Zoom in (+)' : 'Acercar (+)'">🔍+</button>
+              <button class="fs-btn zoom-btn" (click)="zoomOut()" [title]="i18n.currentLang() === 'en' ? 'Zoom out (-)' : 'Alejar (-)'">🔍-</button>
+              <button class="fs-btn" (click)="resetCamera()" [title]="i18n.currentLang() === 'en' ? 'Recenter view' : 'Recentrar vista'">{{ i18n.currentLang() === 'en' ? '🎯 Recenter' : '🎯 Recentrar' }}</button>
             </div>
             <button
               class="fs-btn close-btn"
               (click)="toggleFullscreen()"
-              title="Salir de pantalla completa (Esc)"
+              [title]="i18n.currentLang() === 'en' ? 'Exit Fullscreen (Esc)' : 'Salir de pantalla completa (Esc)'"
             >
-              ✕ Salir de Pantalla Completa (Esc)
+              {{ i18n.currentLang() === 'en' ? '✕ Exit Fullscreen (Esc)' : '✕ Salir de Pantalla Completa (Esc)' }}
             </button>
           </div>
         </header>
@@ -139,20 +140,20 @@ import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
         <!-- Panel Lateral HUD Derecho (Fijado a 340px, sin tapar el canvas) -->
         <aside class="fs-sidebar-panel">
           <div class="fs-panel-header">
-            <h5>Telemetría Regional Encefálica</h5>
-            <p class="fs-panel-sub">Señal BOLD vs. Línea Base Terrestre (1g)</p>
+            <h5>{{ i18n.currentLang() === 'en' ? 'Regional Brain Telemetry' : 'Telemetría Regional Encefálica' }}</h5>
+            <p class="fs-panel-sub">{{ i18n.currentLang() === 'en' ? 'BOLD Signal vs. Earth Baseline (1g)' : 'Señal BOLD vs. Línea Base Terrestre (1g)' }}</p>
           </div>
 
           <div class="fs-vitals-card">
-            <span class="lbl">Diagnóstico Activo:</span>
+            <span class="lbl">{{ i18n.currentLang() === 'en' ? 'Active Diagnosis:' : 'Diagnóstico Activo:' }}</span>
             <strong class="headline-txt">{{ neuroService.activeCase().headline }}</strong>
-            <span class="fase-txt">Fase: {{ neuroService.activeCase().dominantStage }} · Tasa: {{ neuroService.liveLpm() }} LPM</span>
+            <span class="fase-txt">{{ i18n.t().dominant_stage }} {{ neuroService.activeCase().dominantStage }} · {{ neuroService.liveLpm() }} LPM</span>
           </div>
 
           <div class="fs-zones-scroll">
             <div class="list-heading">
-              <span>ESTRUCTURA CEREBRAL</span>
-              <span>ACTIVACIÓN BOLD</span>
+              <span>{{ i18n.currentLang() === 'en' ? 'BRAIN STRUCTURE' : 'ESTRUCTURA CEREBRAL' }}</span>
+              <span>{{ i18n.currentLang() === 'en' ? 'BOLD ACTIVATION' : 'ACTIVACIÓN BOLD' }}</span>
             </div>
 
             @for (zone of neuroService.brainZones(); track zone.id) {
@@ -924,6 +925,7 @@ export class Brain3dComponent implements OnInit, OnDestroy {
   @ViewChild('canvasContainer', { static: true }) containerRef!: ElementRef<HTMLDivElement>;
 
   readonly neuroService = inject(NeuroSleepService);
+  readonly i18n = inject(I18nService);
 
   readonly activeColor = computed(() => this.neuroService.activeCase().severityColor);
   readonly isFullscreen = signal<boolean>(false);

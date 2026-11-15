@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
+import { I18nService } from '../../core/services/i18n.service';
 
 type BreathPhase = 'INSPECT' | 'HOLD' | 'EXHALE';
 
@@ -16,11 +17,11 @@ type BreathPhase = 'INSPECT' | 'HOLD' | 'EXHALE';
           <div class="header-left">
             <span class="header-icon">🌬️</span>
             <div>
-              <h3>Protocolo de Respiración Guiada 4-7-8</h3>
-              <p class="subtitle">Contramedida neuroconductual para despresurizar el sistema simpático</p>
+              <h3>{{ i18n.currentLang() === 'en' ? '4-7-8 Guided Breathing Protocol' : 'Protocolo de Respiración Guiada 4-7-8' }}</h3>
+              <p class="subtitle">{{ i18n.currentLang() === 'en' ? 'Neurobehavioral countermeasure to decompress sympathetic arousal' : 'Contramedida neuroconductual para despresurizar el sistema simpático' }}</p>
             </div>
           </div>
-          <button class="close-btn" (click)="close()" title="Cerrar">✕</button>
+          <button class="close-btn" (click)="close()" [title]="i18n.currentLang() === 'en' ? 'Close' : 'Cerrar'">✕</button>
         </div>
 
         <!-- Visualizador interactivo de respiración -->
@@ -40,19 +41,19 @@ type BreathPhase = 'INSPECT' | 'HOLD' | 'EXHALE';
 
           <!-- Barra de Ciclo -->
           <div class="cycle-indicator">
-            Ciclo {{ currentCycle() }} de {{ totalCycles }}
+            {{ i18n.currentLang() === 'en' ? 'Cycle ' + currentCycle() + ' of ' + totalCycles : 'Ciclo ' + currentCycle() + ' de ' + totalCycles }}
           </div>
         </div>
 
         <!-- Indicador de telemetría de LPM en descenso -->
         <div class="telemetry-feedback">
           <div class="stat-pill">
-            <span class="stat-label">LPM Inicial:</span>
+            <span class="stat-label">{{ i18n.currentLang() === 'en' ? 'Initial Heart Rate:' : 'LPM Inicial:' }}</span>
             <span class="stat-val red">{{ initialLpm }} BPM</span>
           </div>
           <span class="arrow-trans">➔</span>
           <div class="stat-pill">
-            <span class="stat-label">LPM Proyectado:</span>
+            <span class="stat-label">{{ i18n.currentLang() === 'en' ? 'Projected Heart Rate:' : 'LPM Proyectado:' }}</span>
             <span class="stat-val green">{{ currentTargetLpm() }} BPM</span>
           </div>
         </div>
@@ -60,14 +61,16 @@ type BreathPhase = 'INSPECT' | 'HOLD' | 'EXHALE';
         <!-- Instrucciones y Controles -->
         <div class="instruction-box">
           <p>
-            Esta técnica de la NASA estimula el <strong>nervio vago</strong>, reduce los niveles de cortisol salival en microgravedad e induce el tono parasimpático para permitir la fase N3 de sueño profundo.
+            {{ i18n.currentLang() === 'en'
+              ? 'This NASA-derived technique stimulates the vagus nerve, reduces salivary cortisol in microgravity and induces parasympathetic tone for deep restorative sleep.'
+              : 'Esta técnica de la NASA estimula el nervio vago, reduce los niveles de cortisol salival en microgravedad e induce el tono parasimpático para permitir la fase N3 de sueño profundo.' }}
           </p>
         </div>
 
         <div class="modal-footer">
-          <button class="btn btn-secondary" (click)="close()">Cancelar</button>
+          <button class="btn btn-secondary" (click)="close()">{{ i18n.currentLang() === 'en' ? 'Cancel' : 'Cancelar' }}</button>
           <button class="btn btn-primary" (click)="finish()">
-            ✓ Finalizar y Restaurar Tono Vagotónico
+            {{ i18n.currentLang() === 'en' ? '✓ Finish & Restore Vagal Tone' : '✓ Finalizar y Restaurar Tono Vagotónico' }}
           </button>
         </div>
       </div>
@@ -317,6 +320,7 @@ type BreathPhase = 'INSPECT' | 'HOLD' | 'EXHALE';
 })
 export class GuidedBreathingComponent implements OnInit, OnDestroy {
   readonly neuroService = inject(NeuroSleepService);
+  readonly i18n = inject(I18nService);
 
   readonly phase = signal<BreathPhase>('INSPECT');
   readonly secondsLeft = signal<number>(4);
@@ -339,9 +343,10 @@ export class GuidedBreathingComponent implements OnInit, OnDestroy {
   }
 
   private runCycle(): void {
+    const isEn = this.i18n.currentLang() === 'en';
     // 1. INHALE 4 seconds
     this.phase.set('INSPECT');
-    this.phaseText.set('Inhala (Nariz)');
+    this.phaseText.set(isEn ? 'Inhale (Nose)' : 'Inhala (Nariz)');
     this.secondsLeft.set(4);
 
     this.timer = setInterval(() => {
@@ -356,9 +361,10 @@ export class GuidedBreathingComponent implements OnInit, OnDestroy {
   }
 
   private runHold(): void {
+    const isEn = this.i18n.currentLang() === 'en';
     // 2. HOLD 7 seconds
     this.phase.set('HOLD');
-    this.phaseText.set('Retén el Aire');
+    this.phaseText.set(isEn ? 'Hold Breath' : 'Retén el Aire');
     this.secondsLeft.set(7);
 
     this.timer = setInterval(() => {
@@ -373,9 +379,10 @@ export class GuidedBreathingComponent implements OnInit, OnDestroy {
   }
 
   private runExhale(): void {
+    const isEn = this.i18n.currentLang() === 'en';
     // 3. EXHALE 8 seconds
     this.phase.set('EXHALE');
-    this.phaseText.set('Exhala (Boca)');
+    this.phaseText.set(isEn ? 'Exhale (Mouth)' : 'Exhala (Boca)');
     this.secondsLeft.set(8);
 
     // Reducción paulatina de LPM en la telemetría
@@ -395,7 +402,7 @@ export class GuidedBreathingComponent implements OnInit, OnDestroy {
           this.runCycle();
         } else {
           // Completado
-          this.phaseText.set('¡Completado!');
+          this.phaseText.set(isEn ? 'Completed!' : '¡Completado!');
           this.secondsLeft.set(0);
         }
       }

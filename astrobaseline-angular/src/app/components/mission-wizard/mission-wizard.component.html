@@ -7,27 +7,27 @@
           <img src="/assets/images/logo/logo-dark.png" alt="Start Helpy" class="wizard-header-logo" />
           <span class="badge-tag">Start Helpy · NASA Space Apps 2026</span>
         </div>
-        <h2>Configuración de la Misión Espacial</h2>
-        <p class="subtitle">Define la duración, el destino y el protocolo de entrenamiento físico del astronauta</p>
+        <h2>{{ i18n.t().wizard_title }}</h2>
+        <p class="subtitle">{{ i18n.t().wizard_subtitle }}</p>
       </div>
-      <button class="close-btn" (click)="skipWizard()" title="Cerrar y ver dashboard">✕</button>
+      <button class="close-btn" (click)="skipWizard()" [title]="i18n.t().btn_skip">✕</button>
     </div>
 
     <!-- Stepper Indicator (3 PASOS) -->
     <div class="stepper">
       <div class="step-item" [class.active]="currentStep() === 1" [class.completed]="currentStep() > 1">
         <div class="step-circle">1</div>
-        <span class="step-label">Duración</span>
+        <span class="step-label">{{ i18n.t().step_duration }}</span>
       </div>
       <div class="step-line" [class.filled]="currentStep() > 1"></div>
       <div class="step-item" [class.active]="currentStep() === 2" [class.completed]="currentStep() > 2">
         <div class="step-circle">2</div>
-        <span class="step-label">Destino</span>
+        <span class="step-label">{{ i18n.t().step_dest }}</span>
       </div>
       <div class="step-line" [class.filled]="currentStep() > 2"></div>
       <div class="step-item" [class.active]="currentStep() === 3" [class.completed]="currentStep() > 3">
         <div class="step-circle">3</div>
-        <span class="step-label">Meta de Ejercicio</span>
+        <span class="step-label">{{ i18n.t().step_goal }}</span>
       </div>
     </div>
 
@@ -37,14 +37,14 @@
       @if (currentStep() === 1) {
         <div class="step-content">
           <div class="step-intro">
-            <h3>¿Cuántos días estará en el espacio?</h3>
-            <p>Define la ventana de misión para calcular los días de línea base y monitorear la adaptación fisiológica.</p>
+            <h3>{{ i18n.t().step1_q }}</h3>
+            <p>{{ i18n.t().step1_desc }}</p>
           </div>
 
           <div class="duration-display">
             <span class="days-count">{{ daysInSpace() }}</span>
-            <span class="days-unit">días en órbita</span>
-            <span class="months-approx">(aprox. {{ approxMonths() }})</span>
+            <span class="days-unit">{{ i18n.t().days_in_orbit }}</span>
+            <span class="months-approx">({{ i18n.t().approx }} {{ approxMonths() }})</span>
           </div>
 
           <div class="slider-wrapper">
@@ -58,20 +58,20 @@
               class="large-range"
             />
             <div class="slider-ticks">
-              <span>14 días</span>
-              <span>180 días (6 meses)</span>
-              <span>365 días (1 año)</span>
+              <span>14 {{ i18n.t().days_unit }}</span>
+              <span>180 {{ i18n.t().days_unit }} (6 {{ i18n.t().months }})</span>
+              <span>365 {{ i18n.t().days_unit }} (1 {{ i18n.currentLang() === 'en' ? 'year' : 'año' }})</span>
             </div>
           </div>
 
           <div class="presets-row">
-            <span class="presets-label">Preajustes habituales:</span>
+            <span class="presets-label">{{ i18n.t().presets_label }}</span>
             <div class="preset-buttons">
-              <button class="preset-btn" [class.selected]="daysInSpace() === 30" (click)="setDaysPreset(30)">30 días (Corta)</button>
-              <button class="preset-btn" [class.selected]="daysInSpace() === 60" (click)="setDaysPreset(60)">60 días (Estándar)</button>
-              <button class="preset-btn" [class.selected]="daysInSpace() === 90" (click)="setDaysPreset(90)">90 días (Media)</button>
-              <button class="preset-btn" [class.selected]="daysInSpace() === 180" (click)="setDaysPreset(180)">180 días (ISS Semestre)</button>
-              <button class="preset-btn" [class.selected]="daysInSpace() === 365" (click)="setDaysPreset(365)">365 días (Misión Marte)</button>
+              <button class="preset-btn" [class.selected]="daysInSpace() === 30" (click)="setDaysPreset(30)">30 {{ i18n.t().days_unit }} ({{ i18n.currentLang() === 'en' ? 'Short' : 'Corta' }})</button>
+              <button class="preset-btn" [class.selected]="daysInSpace() === 60" (click)="setDaysPreset(60)">60 {{ i18n.t().days_unit }} ({{ i18n.currentLang() === 'en' ? 'Standard' : 'Estándar' }})</button>
+              <button class="preset-btn" [class.selected]="daysInSpace() === 90" (click)="setDaysPreset(90)">90 {{ i18n.t().days_unit }} ({{ i18n.currentLang() === 'en' ? 'Medium' : 'Media' }})</button>
+              <button class="preset-btn" [class.selected]="daysInSpace() === 180" (click)="setDaysPreset(180)">180 {{ i18n.t().days_unit }} (ISS 6 {{ i18n.t().months }})</button>
+              <button class="preset-btn" [class.selected]="daysInSpace() === 365" (click)="setDaysPreset(365)">365 {{ i18n.t().days_unit }} ({{ i18n.currentLang() === 'en' ? 'Mars Mission' : 'Misión Marte' }})</button>
             </div>
           </div>
         </div>
@@ -81,8 +81,8 @@
       @if (currentStep() === 2) {
         <div class="step-content">
           <div class="step-intro">
-            <h3>¿En dónde estará la tripulación?</h3>
-            <p>Selecciona la ubicación: el fondo de la aplicación cambiará automáticamente con vistas reales del destino.</p>
+            <h3>{{ i18n.t().step2_q }}</h3>
+            <p>{{ i18n.t().step2_desc }}</p>
           </div>
 
           <div class="destinations-grid">
@@ -95,7 +95,7 @@
                 <div class="dest-image-box">
                   <img [src]="dest.image" [alt]="dest.name" class="dest-img" />
                   @if (selectedDestination().id === dest.id) {
-                    <span class="check-badge">✓ Destino Activo</span>
+                    <span class="check-badge">{{ i18n.t().active_dest }}</span>
                   }
                 </div>
                 <div class="dest-info">
@@ -112,8 +112,8 @@
       @if (currentStep() === 3) {
         <div class="step-content">
           <div class="step-intro">
-            <h3>¿Cuál es la meta del astronauta para brindar su ejercicio?</h3>
-            <p>Elige el arquetipo de acondicionamiento físico y protocolo de entrenamiento contra el deterioro en microgravedad.</p>
+            <h3>{{ i18n.t().step3_q }}</h3>
+            <p>{{ i18n.t().step3_desc }}</p>
           </div>
 
           <div class="goals-grid">
@@ -126,17 +126,17 @@
                 <div class="goal-avatar-box">
                   <img [src]="goal.avatar" [alt]="goal.name" class="goal-avatar" />
                   @if (selectedGoal().id === goal.id) {
-                    <span class="check-badge">✓ Meta Asignada</span>
+                    <span class="check-badge">{{ i18n.t().assigned_meta }}</span>
                   }
                 </div>
                 <div class="goal-details">
-                  <div class="goal-subject-tag">{{ goal.id }} — Arquetipo</div>
+                  <div class="goal-subject-tag">{{ goal.id }} — {{ i18n.t().archetype_tag }}</div>
                   <h4>{{ goal.name }}</h4>
                   <span class="goal-archetype">{{ goal.archetype }}</span>
                   <p class="goal-desc">{{ goal.description }}</p>
 
                   <div class="routine-focus-box">
-                    <strong>Protocolo de Ejercicio:</strong>
+                    <strong>{{ i18n.t().protocol_label }}</strong>
                     <span>{{ goal.routineFocus }}</span>
                   </div>
                 </div>
@@ -149,16 +149,16 @@
 
     <!-- Footer Controls -->
     <div class="wizard-footer">
-      <button class="btn btn-outline" (click)="skipWizard()">Omitir y ver panel</button>
+      <button class="btn btn-outline" (click)="skipWizard()">{{ i18n.t().btn_skip }}</button>
 
       <div class="nav-buttons">
         @if (currentStep() > 1) {
-          <button class="btn btn-secondary" (click)="prevStep()">← Atrás</button>
+          <button class="btn btn-secondary" (click)="prevStep()">{{ i18n.t().btn_back }}</button>
         }
         @if (currentStep() < totalSteps) {
-          <button class="btn btn-primary" (click)="nextStep()">Siguiente →</button>
+          <button class="btn btn-primary" (click)="nextStep()">{{ i18n.t().btn_next }}</button>
         } @else {
-          <button class="btn btn-launch" (click)="finishWizard()">🚀 Aplicar Meta e Iniciar Misión</button>
+          <button class="btn btn-launch" (click)="finishWizard()">{{ i18n.t().btn_launch }}</button>
         }
       </div>
     </div>
