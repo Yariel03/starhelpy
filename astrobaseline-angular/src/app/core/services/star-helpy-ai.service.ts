@@ -409,7 +409,7 @@ DIRECTRICES OPERATIVAS DE RESPUESTA:
       } else if (level === 'WARNING') {
         return `[NASA DONKI - ${time}] ESTADO: PRECAUCIÓN (Moderado).\n\n${headline}\n\nDetalles: ${details}\n\nRecomendación: Se registran perturbaciones solares moderadas. Mantener comunicación constante con el control de misión. Próximo escaneo en ${nextSeconds}s.`;
       } else {
-        return `[NASA DONKI - ${time}] ESTADO: SEGURO (Nominal).\n\n${headline}\n\nDetalles: ${details}\n\nEl flujo de protones y electrones energéticos está por debajo del umbral de riesgo. No es peligroso. Puedes continuar con tu rutina de entrenamiento físico con normalidad. Próximo escaneo en ${nextSeconds}s.`;
+        return `[NASA DONKI - ${time}] ESTADO: SEGURO\n\n${headline}\n\nDetalles: ${details}\n\nEl flujo de protones y electrones energéticos está por debajo del umbral de riesgo. No es peligroso. Puedes continuar con tu rutina de entrenamiento físico con normalidad. Próximo escaneo en ${nextSeconds}s.`;
       }
     }
 

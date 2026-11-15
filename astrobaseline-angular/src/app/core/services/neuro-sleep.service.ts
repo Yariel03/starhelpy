@@ -80,7 +80,7 @@ export class NeuroSleepService {
       clinicalDescription:
         'El astronauta presenta ciclos de sueño regulares de 90 minutos con predominio de sueño N3 delta. Descenso fisiológico de la presión arterial y frecuencia cardíaca. Consolidación de memoria sinusal y regeneración celular en microgravedad.',
       zonesActivated: ['Hipocampo (Consolidación)', 'Corteza Frontal (Reposo Oscilatorio)', 'Tálamo Sincronizado'],
-      countermeasureTitle: 'Protocolo de Mantenimiento Nominal',
+      countermeasureTitle: 'Protocolo de Mantenimiento y Reposo',
       countermeasures: [
         'Mantener temperatura de cabina entre 18°C y 20°C.',
         'Iluminación circadiana en espectro azul atenuado (480nm filtrado).',
@@ -195,7 +195,7 @@ export class NeuroSleepService {
       clinicalDescription:
         'Astronaut displays regular 90-minute sleep architecture with dominant slow-wave N3 delta cycles. Physiological drop in blood pressure and heart rate. Sinus memory consolidation and cellular regeneration under microgravity.',
       zonesActivated: ['Hippocampus (Consolidation)', 'Frontal Cortex (Oscillatory Rest)', 'Synchronized Thalamus'],
-      countermeasureTitle: 'Nominal Maintenance Protocol',
+      countermeasureTitle: 'Maintenance & Recovery Protocol',
       countermeasures: [
         'Maintain cabin temperature between 18°C and 20°C.',
         'Circadian lighting in attenuated blue spectrum (480nm filtered).',
