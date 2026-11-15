@@ -336,32 +336,37 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
         display: flex;
         justify-content: space-between;
         align-items: center;
+        flex-wrap: wrap;
+        gap: 0.5rem;
 
         .sim-title-box {
           display: flex;
           align-items: center;
-          gap: 0.45rem;
+          gap: 0.55rem;
 
           .sim-icon {
-            font-size: 1.1rem;
+            font-size: 1.25rem;
+            filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.6));
           }
 
           h4 {
             margin: 0;
-            font-size: 0.88rem;
+            font-size: 0.95rem;
             font-weight: 800;
             color: #ffffff;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.4px;
           }
         }
 
         .sim-badge {
-          font-size: 0.68rem;
+          font-size: 0.7rem;
           font-weight: 700;
-          background: #eff6ff;
-          color: #2563eb;
-          padding: 2px 8px;
-          border-radius: 10px;
+          background: rgba(37, 99, 235, 0.2);
+          color: #93c5fd;
+          border: 1px solid rgba(59, 130, 246, 0.35);
+          padding: 3px 10px;
+          border-radius: 999px;
+          letter-spacing: 0.3px;
         }
       }
 
@@ -378,37 +383,46 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
         }
 
         .sim-btn {
-          background: #f8fafc;
-          border: 2px solid #e2e8f0;
-          border-radius: 10px;
-          padding: 0.75rem 0.9rem;
+          background: rgba(15, 23, 42, 0.6);
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
+          border: 1.5px solid rgba(255, 255, 255, 0.15);
+          border-radius: 12px;
+          padding: 0.85rem 1rem;
           display: flex;
           align-items: center;
-          gap: 0.75rem;
+          gap: 0.85rem;
           cursor: pointer;
-          transition: all 0.2s ease;
+          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
           position: relative;
           text-align: left;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
 
           &:hover {
             border-color: var(--case-color);
-            background: #ffffff;
+            background: rgba(30, 41, 59, 0.8);
             transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35), 0 0 12px rgba(255, 255, 255, 0.1);
           }
 
           &.active {
             border-color: var(--case-color);
-            background: #ffffff;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12), 0 4px 12px rgba(0, 0, 0, 0.06);
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(30, 41, 59, 0.9) 100%);
+            box-shadow: 0 0 0 2px var(--case-color), 0 6px 20px rgba(0, 0, 0, 0.45);
 
             .btn-title {
-              color: var(--case-color);
+              color: #ffffff;
+              text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+            }
+
+            .btn-sub {
+              color: #ffffff;
             }
           }
 
           .btn-icon {
-            font-size: 1.5rem;
+            font-size: 1.6rem;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
           }
 
           .btn-texts {
@@ -416,29 +430,33 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
             flex-direction: column;
 
             .btn-title {
-              font-size: 0.82rem;
+              font-size: 0.85rem;
               font-weight: 800;
               color: #ffffff;
               transition: color 0.2s;
             }
 
             .btn-sub {
-              font-size: 0.72rem;
-              color: #cbd5e1;
-              margin-top: 0.1rem;
+              font-size: 0.74rem;
+              color: #94a3b8;
+              margin-top: 0.15rem;
+              font-weight: 600;
+              transition: color 0.2s;
             }
           }
 
           .active-badge {
             position: absolute;
-            top: 6px;
+            top: 7px;
             right: 8px;
             font-size: 0.62rem;
             font-weight: 800;
             background: var(--case-color);
             color: #ffffff;
-            padding: 1px 6px;
+            padding: 2px 7px;
             border-radius: 999px;
+            letter-spacing: 0.3px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
           }
         }
       }
@@ -612,11 +630,11 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
                 border-radius: 4px;
                 text-transform: uppercase;
 
-                &.n3 { background: #dcfce7; color: #15803d; }
-                &.n2 { background: #e0f2fe; color: #0369a1; }
-                &.n1 { background: #fef3c7; color: #b45309; }
-                &.rem { background: #f3e8ff; color: #7e22ce; }
-                &.vigilia { background: #fee2e2; color: #b91c1c; }
+                &.n3 { background: rgba(34, 197, 94, 0.25); color: #86efac; border: 1px solid rgba(34, 197, 94, 0.4); }
+                &.n2 { background: rgba(56, 189, 248, 0.25); color: #7dd3fc; border: 1px solid rgba(56, 189, 248, 0.4); }
+                &.n1 { background: rgba(245, 158, 11, 0.25); color: #fde047; border: 1px solid rgba(245, 158, 11, 0.4); }
+                &.rem { background: rgba(168, 85, 247, 0.25); color: #d8b4fe; border: 1px solid rgba(168, 85, 247, 0.4); }
+                &.vigilia { background: rgba(239, 68, 68, 0.25); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.4); }
               }
 
               .bar-hour-label {
