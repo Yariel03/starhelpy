@@ -25,7 +25,7 @@ import { I18nService } from '../../core/services/i18n.service';
         <!-- Encabezado Oficial del Reporte Clínico de Misión -->
         <div class="clinical-header">
           <div class="header-branding">
-            <img src="/assets/images/logo/logo-dark.png" alt="Start Helpy" class="report-header-logo" />
+            <img src="/assets/images/logo/logo-dark.png" alt="Star Helpy" class="report-header-logo" />
             <div class="brand-text">
               <h2>{{ i18n.t().report_title }}</h2>
               <p class="agency-sub">{{ i18n.t().report_sub }}</p>
@@ -172,7 +172,7 @@ import { I18nService } from '../../core/services/i18n.service';
             <span class="system-sub">{{ i18n.currentLang() === 'en' ? 'Validated and synchronized in real time for orbital mission' : 'Datos validados y sincronizados en tiempo real para misión orbital' }}</span>
           </div>
           <div class="system-stamp">
-            <span class="stamp-pill">PROCESSED BY START HELPY v2.0</span>
+            <span class="stamp-pill">PROCESSED BY STAR HELPY v2.0</span>
             <span class="stamp-time">{{ i18n.currentLang() === 'en' ? 'Synchronized Telemetry' : 'Telemetría Sincronizada' }}</span>
           </div>
         </div>

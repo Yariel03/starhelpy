@@ -16,7 +16,7 @@ import { I18nService } from './i18n.service';
 export class ConfigService {
   private readonly i18n = inject(I18nService);
 
-  readonly APP_NAME = 'Start Helpy';
+  readonly APP_NAME = 'Star Helpy';
 
   get TAGLINE(): string {
     return this.i18n.t().tagline;
