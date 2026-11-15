@@ -53,26 +53,18 @@
     align-items: center;
     gap: 0.35rem;
 
-    .mode-switch-btn {
-      background: #1e293b;
-      border: 1px solid #334155;
-      color: #cbd5e1;
-      font-size: 0.7rem;
-      font-weight: 600;
+    .case-badge {
+      font-size: 0.65rem;
+      font-weight: 700;
       padding: 2px 7px;
       border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.2s;
-
-      &:hover {
-        background: #334155;
-      }
-
-      &.exercise {
-        background: rgba(239, 68, 68, 0.2);
-        border-color: #ef4444;
-        color: #f87171;
-      }
+      border: 1px solid transparent;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      letter-spacing: 0.2px;
+      transition: all 0.3s ease;
+      white-space: nowrap;
     }
 
     .pause-btn {

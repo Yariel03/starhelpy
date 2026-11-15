@@ -85,18 +85,11 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
               </div>
               <div class="header-right-actions">
                 <span class="card-hint">Rotación Orbital 360°</span>
-                <button
-                  class="btn-expand-header"
-                  (click)="brainViewer.toggleFullscreen()"
-                  title="Maximizar Mapeo Encefálico 3D"
-                >
-                  ⛶ Maximizar 3D
-                </button>
               </div>
             </div>
 
             <!-- Visor 3D -->
-            <app-brain-3d #brainViewer></app-brain-3d>
+            <app-brain-3d></app-brain-3d>
 
             <!-- Diagnóstico de Activación Límbica -->
             <div class="brain-diagnostic-box">
@@ -499,24 +492,6 @@ import { Brain3dComponent } from '../brain-3d/brain-3d.component';
             font-size: 0.68rem;
             color: #94a3b8;
             font-weight: 600;
-          }
-
-          .btn-expand-header {
-            background: linear-gradient(135deg, #0284c7, #2563eb);
-            color: #ffffff;
-            border: none;
-            border-radius: 6px;
-            padding: 3px 9px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25);
-            transition: all 0.2s ease;
-
-            &:hover {
-              transform: translateY(-1px);
-              box-shadow: 0 4px 10px rgba(37, 99, 235, 0.4);
-            }
           }
         }
 

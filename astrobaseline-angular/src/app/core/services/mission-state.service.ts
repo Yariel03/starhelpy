@@ -183,7 +183,24 @@ export class MissionStateService {
     if (!curr || records.length === 0) {
       return {} as EvaluationResults;
     }
-    return this.analysisService.evaluateHealth(records, curr, days);
+    const results = this.analysisService.evaluateHealth(records, curr, days);
+
+    // Reflejar la telemetría cardíaca en vivo del caso neuroconductual simulado
+    const stateId = this.neuro.activeStateId();
+    if (stateId && results['heart_rate']) {
+      const liveLpm = this.neuro.liveLpm();
+      let lvl: 0 | 1 | 2 = 0;
+      if (stateId === 'ANXIETY') lvl = 1;
+      else if (stateId === 'PANIC' || stateId === 'PSYCHOSIS') lvl = 2;
+
+      results['heart_rate'] = {
+        ...results['heart_rate'],
+        recent: liveLpm,
+        level: lvl,
+      };
+    }
+
+    return results;
   });
 
   // Nivel global (-1: Sin dato, 0: Normal, 1: Atención, 2: Alerta)

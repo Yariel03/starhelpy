@@ -2,19 +2,25 @@
   <!-- Header con indicador EN VIVO -->
   <div class="telemetry-header">
     <div class="live-pill">
-      <span class="live-pulse" [class.paused]="!isRunning()"></span>
+      <span
+        class="live-pulse"
+        [class.paused]="!isRunning()"
+        [style.background-color]="activeColor()"
+        [style.box-shadow]="'0 0 8px ' + activeColor()"
+      ></span>
       <span class="live-text">{{ isRunning() ? 'EN VIVO · TELEMETRÍA' : 'PAUSADO' }}</span>
     </div>
 
     <div class="telemetry-controls">
-      <button
-        class="mode-switch-btn"
-        [class.exercise]="mode() === 'exercise'"
-        (click)="toggleMode()"
-        title="Cambiar entre reposo y entrenamiento en microgravedad"
+      <span
+        class="case-badge"
+        [style.background-color]="activeColor() + '22'"
+        [style.color]="activeColor()"
+        [style.border-color]="activeColor() + '55'"
+        title="Caso neuroconductual simulado en el mapeo"
       >
-        {{ mode() === 'exercise' ? '🏋️ Ejercicio' : '🧘 Reposo' }}
-      </button>
+        {{ neuro.activeCase().icon }} {{ neuro.activeCase().shortName }}
+      </span>
 
       <button
         class="pause-btn"
@@ -39,7 +45,7 @@
     </div>
 
     <div class="bpm-numbers">
-      <span class="bpm-value">{{ currentBpm() }}</span>
+      <span class="bpm-value" [style.color]="activeColor()">{{ currentBpm() }}</span>
       <span class="bpm-unit">LPM</span>
     </div>
 
@@ -60,12 +66,10 @@
       <span class="stat-label">MÍN</span>
       <span class="stat-val">{{ minBpm() }}</span>
     </div>
-    <div class="stat-divider"></div>
     <div class="stat-col">
       <span class="stat-label">PROM</span>
-      <span class="stat-val highlight">{{ avgBpm() }}</span>
+      <span class="stat-val">{{ avgBpm() }}</span>
     </div>
-    <div class="stat-divider"></div>
     <div class="stat-col">
       <span class="stat-label">MÁX</span>
       <span class="stat-val">{{ maxBpm() }}</span>
