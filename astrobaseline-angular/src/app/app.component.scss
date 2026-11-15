@@ -386,6 +386,28 @@
           justify-content: flex-start;
         }
 
+        .flight-report-pill {
+          background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+          border: 1px solid #38bdf8;
+          color: #ffffff;
+          padding: 6px 14px;
+          border-radius: 20px;
+          font-size: 0.85rem;
+          font-weight: 700;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 0.35rem;
+          box-shadow: 0 2px 8px rgba(2, 132, 199, 0.35);
+          transition: all 0.2s ease;
+
+          &:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(2, 132, 199, 0.5);
+            background: linear-gradient(135deg, #0369a1 0%, #075985 100%);
+          }
+        }
+
         .config-mission-pill {
           background: #ffffff;
           border: 1px solid #cbd5e1;
@@ -470,7 +492,33 @@
           display: none;
         }
       }
+
+      &.tab-btn-highlight {
+        background: rgba(99, 102, 241, 0.08);
+        color: #4f46e5;
+        border: 1px dashed rgba(99, 102, 241, 0.35);
+
+        &:hover {
+          background: rgba(99, 102, 241, 0.16);
+          color: #3730a3;
+        }
+
+        &.active {
+          background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+          color: #ffffff;
+          border-style: solid;
+          border-color: #818cf8;
+          box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
+        }
+      }
     }
+  }
+
+  // TAB 5: NEURO-SUEÑO
+  .neuro-sleep-pane {
+    display: flex;
+    flex-direction: column;
+    animation: fadeIn 0.25s ease-out;
   }
 
   // TAB 1: DASHBOARD

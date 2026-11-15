@@ -9,14 +9,19 @@
   @if (isBubbleVisible() && !isChatOpen()) {
     <div
       class="pet-speech-bubble"
-      [class]="mood()"
+      [class]="currentMood()"
       [class.radiation-danger-bubble]="nasa.isDangerous()"
+      [class.neuro-alert-bubble]="!nasa.isDangerous() && neuro.activeStateId() !== 'REPAIR_SLEEP'"
     >
       <div class="bubble-header">
         <div class="sender-info">
           <span class="bubble-sender">⭐ Star Helpy</span>
           @if (nasa.isDangerous()) {
             <span class="danger-tag-pill">☢️ ¡PELIGRO!</span>
+          } @else if (neuro.activeStateId() !== 'REPAIR_SLEEP') {
+            <span class="danger-tag-pill neuro-tag-pill" [style.background]="neuro.activeCase().helpyAuraColor">
+              {{ neuro.activeCase().helpyBadge }}
+            </span>
           }
         </div>
         <button
@@ -30,6 +35,15 @@
 
       <!-- TEXTO PRINCIPAL DE LA MASCOTA -->
       <p class="bubble-message">{{ bubbleText() }}</p>
+
+      <!-- ACCIÓN DIRECTA SI HAY ALTERACIÓN NEUROCONDUCTUAL -->
+      @if (neuro.activeStateId() !== 'REPAIR_SLEEP') {
+        <div class="bubble-neuro-action">
+          <button class="neuro-breathe-btn" (click)="neuro.openBreathingExercise()">
+            🫁 Iniciar Respiración 4-7-8
+          </button>
+        </div>
+      }
 
       <!-- TARJETA EN TIEMPO REAL: NASA DONKI (MONITOREO CADA 1 MINUTO) -->
       <div class="donki-radiation-card" [class]="nasa.radiationLevel().toLowerCase()">
@@ -78,13 +92,18 @@
   <!-- MASCOTA ESTRELLA ANIMADA (SVG INTERACTIVO CON EXPRESIONES EMOCIONALES) -->
   <div
     class="star-mascot"
-    [class]="mood()"
+    [class]="currentMood()"
     [class.radiation-hazard-star]="nasa.isDangerous()"
+    [class.neuro-alert-star]="!nasa.isDangerous() && neuro.activeStateId() !== 'REPAIR_SLEEP'"
     (click)="onStarClick()"
     [title]="'Star Helpy (' + moodTitle() + ') — Arrástrame o haz clic para chatear'"
   >
     @if (nasa.isDangerous()) {
       <div class="hazard-top-banner">☢️ RADIACIÓN PELIGROSA</div>
+    } @else if (neuro.activeStateId() !== 'REPAIR_SLEEP') {
+      <div class="hazard-top-banner neuro-banner" [style.background]="neuro.activeCase().helpyAuraColor">
+        {{ neuro.activeCase().helpyBadge }}
+      </div>
     }
     <svg
       viewBox="0 0 100 100"
@@ -135,7 +154,7 @@
            L 5,35
            L 38,32
            Z"
-        [attr.fill]="mood() === 'happy' ? 'url(#happyGrad)' : (mood() === 'sad' ? 'url(#sadGrad)' : 'url(#angryGrad)')"
+        [attr.fill]="currentMood() === 'happy' ? 'url(#happyGrad)' : (currentMood() === 'sad' ? 'url(#sadGrad)' : 'url(#angryGrad)')"
         stroke="#ffffff"
         stroke-width="2.5"
         stroke-linejoin="round"
@@ -143,7 +162,7 @@
       />
 
       <!-- ================= EXPRESIÓN 1: FELIZ ================= -->
-      @if (mood() === 'happy') {
+      @if (currentMood() === 'happy') {
         <!-- Ojos con brillo de estrella -->
         <ellipse cx="40" cy="46" rx="4.5" ry="6" fill="#1e293b" />
         <circle cx="38.5" cy="44" r="2" fill="#ffffff" />
@@ -174,7 +193,7 @@
       }
 
       <!-- ================= EXPRESIÓN 2: TRISTE ================= -->
-      @if (mood() === 'sad') {
+      @if (currentMood() === 'sad') {
         <!-- Cejas caídas preocupadas -->
         <path d="M 35,39 Q 41,43 45,42" fill="none" stroke="#1e293b" stroke-width="2" stroke-linecap="round" />
         <path d="M 65,39 Q 59,43 55,42" fill="none" stroke="#1e293b" stroke-width="2" stroke-linecap="round" />
@@ -203,7 +222,7 @@
       }
 
       <!-- ================= EXPRESIÓN 3: ENOJADO ================= -->
-      @if (mood() === 'angry') {
+      @if (currentMood() === 'angry') {
         <!-- Cejas afiladas de enojo -->
         <path d="M 33,40 L 46,46" fill="none" stroke="#7f1d1d" stroke-width="3" stroke-linecap="round" />
         <path d="M 67,40 L 54,46" fill="none" stroke="#7f1d1d" stroke-width="3" stroke-linecap="round" />
@@ -237,12 +256,20 @@
     </svg>
 
     <!-- Píldora de estado de la mascota -->
-    <div class="mood-badge" [class]="mood()">
-      {{ mood() === 'happy' ? '⭐ Feliz' : (mood() === 'sad' ? '🥺 Triste' : '😡 ¡A entrenar!') }}
+    <div
+      class="mood-badge"
+      [class]="currentMood()"
+      [style.background]="neuro.activeStateId() !== 'REPAIR_SLEEP' ? neuro.activeCase().helpyAuraColor : null"
+    >
+      {{ neuro.activeStateId() !== 'REPAIR_SLEEP' ? neuro.activeCase().helpyBadge : (currentMood() === 'happy' ? '⭐ Feliz' : (currentMood() === 'sad' ? '🥺 Triste' : '😡 ¡A entrenar!')) }}
     </div>
 
     <!-- Aura de partículas -->
-    <div class="pet-glow-aura" [class]="mood()"></div>
+    <div
+      class="pet-glow-aura"
+      [class]="currentMood()"
+      [style.background]="neuro.activeStateId() !== 'REPAIR_SLEEP' ? neuro.activeCase().helpyAuraColor : null"
+    ></div>
   </div>
 
   <!-- PANEL DE CHAT FLOTANTE CON STAR HELPY -->
@@ -251,11 +278,11 @@
       <!-- Header del Chat -->
       <div class="chat-header">
         <div class="chat-header-profile">
-          <div class="avatar-mini" [class]="mood()">⭐</div>
+          <div class="avatar-mini" [class]="currentMood()">⭐</div>
           <div class="header-texts">
             <h4>Star Helpy</h4>
             <span class="status-indicator">
-              <span class="dot" [class.danger-dot]="nasa.isDangerous()"></span> En línea · {{ moodTitle() }}
+              <span class="dot" [class.danger-dot]="nasa.isDangerous() || neuro.activeStateId() === 'PSYCHOSIS'"></span> En línea · {{ moodTitle() }}
             </span>
           </div>
         </div>

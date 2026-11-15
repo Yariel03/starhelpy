@@ -13,6 +13,7 @@ import { FormsModule } from '@angular/forms';
 import { MissionStateService } from '../../core/services/mission-state.service';
 import { ConfigService } from '../../core/services/config.service';
 import { NasaDonkiService } from '../../core/services/nasa-donki.service';
+import { NeuroSleepService } from '../../core/services/neuro-sleep.service';
 
 export interface ChatMessage {
   sender: 'helpy' | 'astronaut';
@@ -33,6 +34,7 @@ export class StarPetComponent implements OnInit {
   readonly state = inject(MissionStateService);
   readonly config = inject(ConfigService);
   readonly nasa = inject(NasaDonkiService);
+  readonly neuro = inject(NeuroSleepService);
   private el = inject(ElementRef);
 
   // Posición flotante arrastrable
@@ -55,7 +57,7 @@ export class StarPetComponent implements OnInit {
   readonly messages = signal<ChatMessage[]>([
     {
       sender: 'helpy',
-      text: '¡Hola, astronauta! Soy Star Helpy, tu mascota y asistente orbital ⭐. Estoy monitoreando tu racha, tus ejercicios y el clima de radiación espacial en tiempo real cada minuto con NASA DONKI 🛰️.',
+      text: '¡Hola, astronauta! Soy Star Helpy, tu mascota y copiloto orbital ⭐. Monitoreo tus entrenamientos, la radiación con NASA DONKI y tu salud cerebral 3D y sueño en tiempo real 🛰️🧠.',
       time: 'Ahora',
       mood: 'happy',
     },
@@ -63,33 +65,50 @@ export class StarPetComponent implements OnInit {
 
   // Preguntas rápidas
   readonly quickPrompts = [
+    '🧠 ¿Cómo está mi cerebro y sueño?',
+    '🫁 Guiar respiración 4-7-8',
     '☢️ ¿La radiación espacial es peligrosa?',
     '🛰️ Reporte NASA DONKI en vivo',
+    '📄 Reporte Médico de Vuelo',
     '🔥 ¿Cómo va mi racha hoy?',
     '🏋️ ¿Qué ejercicios me tocan?',
-    '🚀 Dame ánimos para entrenar',
   ];
 
   // Estado emocional de la mascota estrella
-  // Reacciona en tiempo real a los ejercicios completados en MissionStateService
+  // Reacciona a los ejercicios Y a los estados neuroconductuales (sueño, ansiedad, pánico, psicosis)
   readonly mood = this.state.petMood;
 
-  // Texto contextual de la burbuja según el estado emocional y radiación DONKI
+  readonly currentMood = computed<'happy' | 'sad' | 'angry'>(() => {
+    if (this.nasa.isDangerous()) return 'angry';
+    const nCase = this.neuro.activeCase();
+    if (nCase.id === 'PSYCHOSIS') return 'angry';
+    if (nCase.id === 'PANIC') return 'angry';
+    if (nCase.id === 'ANXIETY') return 'sad';
+    return this.mood();
+  });
+
+  // Texto contextual de la burbuja según el estado emocional, radiación DONKI y neuroconducta
   readonly bubbleText = computed(() => {
-    // Si la radiación es peligrosa según NASA DONKI, la prioridad número 1 es alertar
+    // Prioridad 1: Radiación espacial crítica
     if (this.nasa.isDangerous()) {
-      return `☢️ ¡ALERTA NASA DONKI! Radiación espacial PELIGROSA detectada. Flujo crítico de partículas energéticas (>1000 pfu). ¡Protégete en zona blindada!`;
+      return `☢️ ¡ALERTA NASA DONKI! Radiación espacial PELIGROSA detectada (>1000 pfu). ¡Protégete en zona blindada!`;
     }
 
-    const m = this.mood();
+    // Prioridad 2: Alteración neuroconductual aguda (Ansiedad, Pánico o Psicosis)
+    const nCase = this.neuro.activeCase();
+    if (nCase.id !== 'REPAIR_SLEEP') {
+      return `[${nCase.helpyBadge}] ${nCase.helpyMessage} · (${this.neuro.liveLpm()} LPM en reposo)`;
+    }
+
+    const m = this.currentMood();
     const completed = this.state.completedExercisesCount();
     const total = this.state.currentExercises().length;
     const day = this.state.missionDay();
     const radLevel = this.nasa.radiationLevel();
-    const radTag = radLevel === 'SAFE' ? '🛡️ Radiación DONKI: Segura' : '🟡 Radiación DONKI: Precaución';
+    const radTag = radLevel === 'SAFE' ? '🛡️ DONKI: Nominal' : '🟡 DONKI: Precaución';
 
     if (m === 'happy') {
-      return `¡Genial, astronauta! Has completado ${completed}/${total} ejercicios. Racha de ${day} días asegurada ⭐ · [${radTag}]`;
+      return `¡Genial, astronauta! Has completado ${completed}/${total} ejercicios. Racha de ${day} días asegurada ⭐ · [${radTag}] · [🧠 Neuro: Óptimo]`;
     } else if (m === 'sad') {
       return `Llevas ${completed}/${total} ejercicios completados... ¡La atrofia muscular no espera! Vamos por el segundo 🥺 · [${radTag}]`;
     } else {
@@ -97,18 +116,24 @@ export class StarPetComponent implements OnInit {
     }
   });
 
-  // Título del estado emocional / radiación
+  // Título del estado emocional / radiación / neuroconductual
   readonly moodTitle = computed(() => {
     if (this.nasa.isDangerous()) {
       return '☢️ ¡Alerta de Radiación Espacial Peligrosa Activa!';
     }
-    const m = this.mood();
+    const nCase = this.neuro.activeCase();
+    if (nCase.id === 'PSYCHOSIS') return '🔴 Alerta Crítica: Psicosis y Confinamiento Espacial';
+    if (nCase.id === 'PANIC') return '🟠 Alerta Cardioneural: Taquicardia y Despertar';
+    if (nCase.id === 'ANXIETY') return '🟡 Ansiedad y Estrés del Sueño Detectado';
+
+    const m = this.currentMood();
     if (m === 'happy') return 'Feliz & Radiante (Meta Cumplida)';
     if (m === 'sad') return 'Preocupado (Entrenamiento Incompleto)';
     return 'Enojado (Cero Ejercicios Hoy)';
   });
 
   private previousCheckCount = 0;
+  private lastNeuroState = 'REPAIR_SLEEP';
 
   constructor() {
     // Efecto reactivo para anunciar el estado de radiación de NASA DONKI cada minuto
@@ -116,14 +141,12 @@ export class StarPetComponent implements OnInit {
       const count = this.nasa.checkCount();
       if (count > this.previousCheckCount && count > 1) {
         this.previousCheckCount = count;
-        // Cada minuto se reactiva la burbuja con el nuevo estado
         this.isBubbleVisible.set(true);
 
         const timeStr = this.nasa.lastCheckedTime().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         const isDanger = this.nasa.isDangerous();
         const headline = this.nasa.radiationHeadline();
 
-        // Notificación automática en el chat si es peligroso o para mantener al día
         if (isDanger) {
           this.addMessage(
             'helpy',
@@ -133,6 +156,23 @@ export class StarPetComponent implements OnInit {
         }
       } else {
         this.previousCheckCount = count;
+      }
+    });
+
+    // Efecto reactivo para reaccionar a cambios en los casos neuroconductuales simulados
+    effect(() => {
+      const curr = this.neuro.activeStateId();
+      if (curr !== this.lastNeuroState) {
+        this.lastNeuroState = curr;
+        this.isBubbleVisible.set(true);
+        const nCase = this.neuro.activeCase();
+        if (curr === 'PSYCHOSIS' || curr === 'PANIC') {
+          this.addMessage(
+            'helpy',
+            `🚨 ¡ALERTA CLÍNICA [${nCase.name}]! Frecuencia en reposo: ${this.neuro.liveLpm()} LPM.\n\n${nCase.clinicalDescription}\n\nRecomendación: Inicia Respiración 4-7-8 para calmar la amígdala.`,
+            true
+          );
+        }
       }
     });
   }
@@ -271,13 +311,13 @@ export class StarPetComponent implements OnInit {
         sender,
         text,
         time: timeStr,
-        mood: sender === 'helpy' ? this.mood() : undefined,
+        mood: sender === 'helpy' ? this.currentMood() : undefined,
         isAlert,
       },
     ]);
   }
 
-  // Cerebro conversacional orbital de Star Helpy con NASA DONKI integrado
+  // Cerebro conversacional orbital de Star Helpy con NASA DONKI y Neuroconducta integrado
   private generateHelpyResponse(userQuery: string): void {
     const q = userQuery.toLowerCase();
     const completed = this.state.completedExercisesCount();
@@ -288,8 +328,32 @@ export class StarPetComponent implements OnInit {
 
     let reply = '';
 
-    // Consulta de Radiación y NASA DONKI
+    // Consulta de Neuro-Sueño, Cerebro 3D o Ansiedad
     if (
+      q.includes('sueño') ||
+      q.includes('sueno') ||
+      q.includes('dormir') ||
+      q.includes('cerebro') ||
+      q.includes('ansiedad') ||
+      q.includes('psicosis') ||
+      q.includes('panico') ||
+      q.includes('pánico') ||
+      q.includes('pesadilla') ||
+      q.includes('neuro') ||
+      q.includes('3d')
+    ) {
+      const nCase = this.neuro.activeCase();
+      const lpm = this.neuro.liveLpm();
+      reply = `🧠 [ANÁLISIS NEUROCONDUCTUAL & SUEÑO EN TIEMPO REAL]\n\n• Estado Activo: ${nCase.name} (${lpm} LPM)\n• Fase del Hipnograma: ${nCase.dominantStage}\n• Zonas Cerebrales Estimuladas: ${nCase.zonesActivated.join(', ')}\n\n🔍 Diagnóstico Clínico:\n${nCase.clinicalDescription}\n\n💡 Contramedida Médica (${nCase.countermeasureTitle}):\n${nCase.countermeasures.join('\n')}\n\n⭐ Consejo de Helpy: Puedes probar la pestaña "🧠 Neuro-Sueño 3D" o presionar "🫁 Respiración 4-7-8" para estabilizar el ritmo cardíaco.`;
+    } else if (q.includes('respirar') || q.includes('respiracion') || q.includes('respiración') || q.includes('4-7-8') || q.includes('calmar')) {
+      this.neuro.openBreathingExercise();
+      reply = `🫁 ¡Iniciando protocolo de Respiración Guiada 4-7-8! Sigue el orbe en pantalla (Inhala 4s, Retén 7s, Exhala 8s) durante 3 ciclos para regularizar tu tono vagal y bajar tus LPM a reposo.`;
+    } else if (q.includes('reporte') || q.includes('informe') || q.includes('medico') || q.includes('médico') || q.includes('cirujano')) {
+      this.neuro.openFlightReport();
+      reply = `📄 Abriendo el Resumen Médico de Vuelo para el Cirujano de Vuelo (Flight Surgeon Briefing). Puedes imprimirlo o guardarlo como PDF oficial de la misión.`;
+    }
+    // Consulta de Radiación y NASA DONKI
+    else if (
       q.includes('radiacion') ||
       q.includes('radiación') ||
       q.includes('donki') ||

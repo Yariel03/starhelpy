@@ -3,12 +3,16 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MissionStateService } from './core/services/mission-state.service';
 import { ConfigService } from './core/services/config.service';
+import { NeuroSleepService } from './core/services/neuro-sleep.service';
 import { BadgeComponent } from './components/badge/badge.component';
 import { BodyMapComponent } from './components/body-map/body-map.component';
 import { MissionWizardComponent } from './components/mission-wizard/mission-wizard.component';
 import { RealtimeBpmComponent } from './components/realtime-bpm/realtime-bpm.component';
 import { RewardStreakComponent } from './components/reward-streak/reward-streak.component';
 import { StarPetComponent } from './components/star-pet/star-pet.component';
+import { NeuroSleepComponent } from './components/neuro-sleep/neuro-sleep.component';
+import { GuidedBreathingComponent } from './components/guided-breathing/guided-breathing.component';
+import { FlightReportComponent } from './components/flight-report/flight-report.component';
 import { BodyRegionKey, IndicatorKey } from './core/models/indicator.model';
 
 @Component({
@@ -23,6 +27,9 @@ import { BodyRegionKey, IndicatorKey } from './core/models/indicator.model';
     RealtimeBpmComponent,
     RewardStreakComponent,
     StarPetComponent,
+    NeuroSleepComponent,
+    GuidedBreathingComponent,
+    FlightReportComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
@@ -30,8 +37,9 @@ import { BodyRegionKey, IndicatorKey } from './core/models/indicator.model';
 export class AppComponent {
   readonly state = inject(MissionStateService);
   readonly config = inject(ConfigService);
+  readonly neuro = inject(NeuroSleepService);
 
-  readonly activeTab = signal<'dashboard' | 'trends' | 'body' | 'quality'>('dashboard');
+  readonly activeTab = signal<'dashboard' | 'trends' | 'body' | 'quality' | 'neuro-sleep'>('dashboard');
   readonly expandedMetric = signal<string | null>(null);
 
   // Entornos disponibles
@@ -98,7 +106,7 @@ export class AppComponent {
     }));
   });
 
-  setTab(tab: 'dashboard' | 'trends' | 'body' | 'quality') {
+  setTab(tab: 'dashboard' | 'trends' | 'body' | 'quality' | 'neuro-sleep') {
     this.activeTab.set(tab);
   }
 

@@ -53,6 +53,38 @@
     animation: bubbleDangerPulse 1.4s infinite alternate ease-in-out;
   }
 
+  &.neuro-alert-bubble {
+    border-color: #f97316;
+    box-shadow: 0 10px 30px rgba(249, 115, 22, 0.25), 0 0 16px rgba(249, 115, 22, 0.2);
+  }
+
+  .bubble-neuro-action {
+    margin: 0.2rem 0;
+
+    .neuro-breathe-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      box-shadow: 0 2px 6px rgba(16, 185, 129, 0.35);
+      transition: all 0.2s ease;
+
+      &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 10px rgba(16, 185, 129, 0.45);
+      }
+    }
+  }
+
   .bubble-header {
     display: flex;
     justify-content: space-between;
@@ -302,6 +334,15 @@
     }
   }
 
+  &.neuro-alert-star {
+    animation: sadSway 2s infinite ease-in-out;
+
+    .pet-glow-aura {
+      opacity: 0.7;
+      filter: blur(16px);
+    }
+  }
+
   .hazard-top-banner {
     position: absolute;
     top: -18px;
@@ -317,6 +358,11 @@
     z-index: 10;
     border: 1px solid #ffffff;
     letter-spacing: 0.4px;
+
+    &.neuro-banner {
+      box-shadow: 0 0 10px rgba(249, 115, 22, 0.6);
+      animation: blinkPill 1.2s infinite alternate;
+    }
   }
 
   .mood-badge {
